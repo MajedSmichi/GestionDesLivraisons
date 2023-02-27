@@ -1,0 +1,81 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
+
+
+nav {
+  display: flex;
+  padding: 10px 10px 0 0 ;
+  font-size: 20px;  
+ 
+}
+header ul li a {
+  color: #19335A;;
+  font-weight: 500;
+  transition: 0.5s;
+ 
+}
+.titlee{
+  
+  margin-right: 0px;
+}
+header{
+  
+  margin-left: 5%;
+}
+header nav ul li a:hover {
+  color: #54a8f6 
+}
+.flexSB {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 40%;
+
+}
+
+ul li {
+  margin-right: 30px;
+  margin-top: 15px;
+  list-style-type: none;
+
+}
+
+.toggle {
+  display: none;
+}
+
+
+@media (max-width: 768px) {
+  
+  header {
+    background-color: #0b3891;
+    position: relative;
+  }
+  header ul.flexSB {
+    display: none;
+  }
+  header ul li {
+    margin-bottom: 20px;
+  }
+  .toggle {
+    display: block;
+    background: none;
+    color: #0b3891;
+    font-size: 30px;
+    position: absolute;
+    right: 10px;
+    z-index:1;
+    top: 10px;
+    
+  }
+  .mobile-nav {
+    position: absolute;
+    top: 10vh;
+    right:0;
+    z-index:1;
+    width: 100px;
+    background-color: #eaecef;
+    border-radius: 5px 0 0 5px;
+    opacity: 0.8;
+  }
+}

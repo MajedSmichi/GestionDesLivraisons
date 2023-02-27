@@ -1,0 +1,44 @@
+.cards {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10%;
+    
+}
+
+
+.cards > div  {
+   
+    width: 45%;
+    text-align: center;
+    border-radius: 50px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgb(112, 237, 239);
+   
+}
+
+.cards > div h1 {
+  white-space: inherit;
+}  
+
+
+.cards > div  img {
+   width: 250px;
+   height: 250px;
+}
+
+@media screen and (max-width: 920px) {
+    .cards {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 30px;
+        margin-top: 25%;
+    }
+
+    .cards > div {
+        width: 90%;
+    }
+
+
+}
