@@ -81,7 +81,7 @@ const Default = (props) => {
    
     return (
         <>
-            <Loader/>
+            {/* <Loader/> */}
             <Sidebar />
                 <main className="main-content">
                     <div className="position-relative">
@@ -92,7 +92,7 @@ const Default = (props) => {
                         
                 </main>
                 
-            <SettingOffcanvas  />
+            {/* <SettingOffcanvas  /> */}
             
             
         </> 
