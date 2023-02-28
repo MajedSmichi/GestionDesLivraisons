@@ -6,8 +6,7 @@ import HeaderStyle1  from '../../components/partials/dashboard/HeaderStyle/heade
 //footer
 import Footer from '../../components/partials/dashboard/FooterStyle/footer'
 
-//default 
-import HorizontalRouter from '../../router/horizontal-router'
+
 
 // store
 import {NavbarstyleAction, getDirMode, getcustomizerMode, getcustomizerprimaryMode, getcustomizerinfoMode,  SchemeDirAction, ColorCustomizerAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode,  getSidebarTypeMode} from '../../store/setting/setting'
@@ -77,7 +76,7 @@ const Horizontal = (props) => {
             <main className="main-content">
                 <HeaderStyle1 />
                 <div className="conatiner-fluid content-inner">
-                   <HorizontalRouter />
+                 
                 </div>
                 <Footer />
             </main>

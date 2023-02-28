@@ -34,7 +34,7 @@ const signup = async (req, res) => {
     return res.status(201).json({ message: "user create" });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: "mzamra 3lik" });
+    res.status(500).json({ error: e });
   }
 };
 

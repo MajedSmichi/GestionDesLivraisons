@@ -1,17 +1,14 @@
 import React, {useEffect} from 'react'
 import {bindActionCreators} from "redux"
 
-import {Button} from 'react-bootstrap'
+
 //header
 import Header from '../../components/partials/dashboard/HeaderStyle/header'
 //subheader
 import SubHeader from '../../components/partials/dashboard/HeaderStyle/sub-header'
 //sidebar
 import Sidebar from '../../components/partials/dashboard/SidebarStyle/sidebar'
-//footer
-import Footer from '../../components/partials/dashboard/FooterStyle/footer'
-//default 
-import DefaultRouter from '../../router/default-router'
+
 
 import SettingOffcanvas from '../../components/partials/components/settingoffcanvas'
 import Loader from '../../components/Loader'
@@ -19,6 +16,7 @@ import Loader from '../../components/Loader'
 // store
 import {NavbarstyleAction, getDirMode, getcustomizerMode, getcustomizerprimaryMode, getcustomizerinfoMode,  SchemeDirAction, ColorCustomizerAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode, getSidebarTypeMode} from '../../store/setting/setting'
 import {connect} from "react-redux"
+import { Outlet } from 'react-router-dom'
 
 const mapStateToProps = (state) => {
     return {
@@ -89,13 +87,14 @@ const Default = (props) => {
                     <div className="position-relative">
                         <Header />
                         <SubHeader />
+                        <Outlet />
                     </div>
-                    <div className="py-0 conatiner-fluid content-inner mt-n5">
-                        <DefaultRouter />
-                    </div>
-                        <Footer />
+                        
                 </main>
+                
             <SettingOffcanvas  />
+            
+            
         </> 
     )
 }

@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="footer">
             <div className="footer-body">
                
-                <div className="right-panel">
+                <div className="right-panel" style={{textAlign:"center"}}>
                     Copyright ©2023 All rights reserved  
                     <span className="text-gray">
                         <svg width="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

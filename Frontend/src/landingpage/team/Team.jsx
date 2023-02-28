@@ -1,6 +1,7 @@
 import React from "react"
 import TeamCard from "./TeamCard"
 import "./team.css"
+import { Outlet } from "react-router-dom"
 
 
 
@@ -14,6 +15,7 @@ const Team = () => {
           <TeamCard/>
         </div>
       </section>
+      
 
     </>
   )
