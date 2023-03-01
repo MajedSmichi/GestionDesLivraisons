@@ -1,13 +1,14 @@
 import axios from 'axios'
 import React,{useState} from 'react'
 import {Row,Col,Image,Form,Button} from 'react-bootstrap'
-import {Link,useNavigate} from 'react-router-dom'
+import {Link,useNavigate, useParams} from 'react-router-dom'
 import Card from '../../components/Card'
 import auth1 from './deliv.jpg'
 import Header from '../header/Header'
 
 const SignIn = () => {
-   let history =useNavigate()
+   const {id} = useParams()
+   let navigate =useNavigate()
    const [data,setData]=useState({
       email:'',
       password:''
@@ -25,9 +26,13 @@ const SignIn = () => {
             return
        }
        try{
-         const res=await axios.post(server,data)
-         console.log("res", res)
+         const res=await axios.post(server,{...data, role:id})
          localStorage.setItem('user', res.data.token)
+         if(id==="1")
+         {navigate("/dashboardCustomer"); }
+         else
+         {navigate("/dashboardAgent"); }
+      
        }
        catch(e){
          console.log("error", e.response.data.error)
@@ -71,7 +76,7 @@ const SignIn = () => {
                                     <Button  onClick={onLogin} type="submit" variant="btn btn-primary">Sign In</Button>
                                  </div>
                                  <p className="mt-3 text-center">
-                                    Don’t have an account? <Link to="/SignUp" className="text-underline">Click here to sign up.</Link>
+                                    Don’t have an account? <Link to={`/SignUp/${id}`} className="text-underline">Click here to sign up.</Link>
                                  </p>
                               </Form>
                            </Card.Body>

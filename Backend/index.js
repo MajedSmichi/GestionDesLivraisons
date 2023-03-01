@@ -13,7 +13,7 @@ app.use("/users", router)
 mongoose.set("strictQuery", false);
 mongoose.connect(
     process.env.MONGODB_URI,
-    { useNewUrlParser: true, useUnifiedTopology: true },
+     { useNewUrlParser: true, useUnifiedTopology: true },
     () => console.log(" Mongoose is connected")
   );
 

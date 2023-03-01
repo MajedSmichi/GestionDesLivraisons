@@ -36,8 +36,8 @@ const IndexRouters = () => {
         <Route path="Habout" element={<HAbout />} />
         <Route path="team" element={<Team />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="SignIn" element={<SignIn />} />
-        <Route path="SignUp" element={<SignUp />} />
+        <Route path="SignIn/:id" element={<SignIn />} />
+        <Route path="SignUp/:id" element={<SignUp />} />
         <Route path="Recoverpw" element={<Recoverpw />} />
         <Route path="LockScreen" element={<LockScreen />} />
         <Route path="confirmmail" element={<ConfirmMail />} />

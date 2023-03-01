@@ -7,4 +7,4 @@ const clientSchema = mongoose.Schema({
   password: { type: String, required: true },
   role:{type:String, required: true}
 });
-module.exports = mongoose.model("client", clientSchema);
+module.exports = mongoose.model("agent", clientSchema);

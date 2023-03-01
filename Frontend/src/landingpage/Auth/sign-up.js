@@ -1,6 +1,6 @@
-import React,{useState} from 'react'
-import {Row,Col,Image,Form,Button} from 'react-bootstrap'
-import {Link,useNavigate} from 'react-router-dom'
+import React,{useEffect, useState} from 'react'
+import {Row,Col,Image,Form,Button, Alert} from 'react-bootstrap'
+import {Link,useNavigate, useParams} from 'react-router-dom'
 import Card from '../../components/Card'
 import axios from 'axios'
 import validateEmail from '../../components/helpers'
@@ -9,7 +9,8 @@ import Header from '../header/Header'
 import auth1 from'./deliv.jpg'
 
 const SignUp = () => {
-   let history =useNavigate();
+   const {id} = useParams()
+   const navigate = useNavigate();
    const [data,setData]=useState({
       firstName:'',
       lastName:'',
@@ -17,7 +18,7 @@ const SignUp = () => {
       phone:'',
       password:''
    })
-   
+   const [successMessage, setSuccessMessage] = useState('');
    const [confirmPassword,setconfirmPassword]=useState('');
    const [error,setError] = useState('');
    const server='http://localhost:5000/users/signup';
@@ -45,11 +46,14 @@ const SignUp = () => {
 
       
       
-      try{ 
-         await axios.post(server,data)
+      try{
+         await axios.post(server,{...data,role:id});
+         setSuccessMessage('User created');
+         setTimeout(()=>{
+            navigate(`/SignIn/${id}`); 
+         },2000)
       }
       catch(e){
-         console.log("error", e.response.data.error)
          setError(e.response.data.error)
       }
   }
@@ -68,6 +72,7 @@ const SignUp = () => {
                            <Card.Body>
                               <h2 className="mb-2 text-center">Sign Up</h2>
                               <p className="text-center">Create your Delivery account.</p>
+                             {successMessage && <div className="alert alert-success text-center" role="alert">{successMessage}</div>}
                               <Form >
                                  <Row >
                                     <Col lg="6" >
@@ -121,9 +126,10 @@ const SignUp = () => {
                                  </div>
                                  <p className="text-center my-3">or sign in with other accounts?</p>
                                  <p className="mt-3 text-center">
-                                    Already have an Account <Link to="/SignIn" className="text-underline">Sign In</Link>
+                                    Already have an Account <Link to={`/SignIn/${id}`} className="text-underline">Sign In</Link>
                                  </p>
                               </Form>
+                             
                            </Card.Body>
                         </Card>    
                      </Col>

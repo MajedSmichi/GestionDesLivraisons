@@ -2,11 +2,10 @@
     display: flex;
     justify-content: space-around;
     margin-top: 10%;
-    
 }
 
 
-.cards > div  {
+.cards > div   {
    
     width: 45%;
     text-align: center;
