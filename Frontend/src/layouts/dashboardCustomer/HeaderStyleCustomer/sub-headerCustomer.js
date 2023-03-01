@@ -3,10 +3,10 @@ import { Row,Col,Container} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import {bindActionCreators} from "redux"
 //img
-import topHeader from '../../../../assets/images/dashboard/top-header.png'
+import topHeader from '../../../assets/images/dashboard/top-header.png'
 
 // store
-import {NavbarstyleAction, getDirMode, SchemeDirAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode, getSidebarTypeMode} from '../../../../store/setting/setting'
+import {NavbarstyleAction, getDirMode, SchemeDirAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode, getSidebarTypeMode} from '../../../store/setting/setting'
 import {connect} from "react-redux"
 
 const mapStateToProps = (state) => {
@@ -33,7 +33,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-const SubHeader = (props) => {
+const SubHeaderCustomer = (props) => {
 
     useEffect(() => {
         // navbarstylemode
@@ -47,7 +47,7 @@ const SubHeader = (props) => {
                     <Row>
                         <Col md="12">
                             <div className="d-flex justify-content-between flex-wrap">
-                                    <h1>Hello Admin!</h1>
+                                    <h1>Hello Client!</h1>
                             </div>
                         </Col>
                     </Row>
@@ -58,4 +58,4 @@ const SubHeader = (props) => {
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubHeader)
+export default connect(mapStateToProps, mapDispatchToProps)(SubHeaderCustomer)

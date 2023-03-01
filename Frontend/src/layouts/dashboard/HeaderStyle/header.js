@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CustomToggle from "../../../dropdowns";
+import CustomToggle from "../../../components/dropdowns";
 import { bindActionCreators } from "redux";
 
 //img
 
-import shapes1 from "../../../../assets/images/shapes/01.png";
+import shapes1 from "../../../assets/images/shapes/01.png";
 
-import avatars1 from "../../../../assets/images/avatars/01.png";
+import avatars1 from "../../../assets/images/avatars/01.png";
 
-// logo
-import Logo from "../../components/logo";
+
 
 // store
 import {
@@ -26,7 +25,7 @@ import {
   SidebarColorAction,
   getSidebarColorMode,
   getSidebarTypeMode,
-} from "../../../../store/setting/setting";
+} from "../../../store/setting/setting";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => {

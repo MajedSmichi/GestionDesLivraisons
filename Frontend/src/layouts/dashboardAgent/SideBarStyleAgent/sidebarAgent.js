@@ -1,6 +1,6 @@
 import React,{useEffect} from 'react'
 import { Link } from 'react-router-dom'
-import VerticalNav from '../SidebarStyle/vertical-nav'
+import VerticalNavAgent from './vertical-navAgent'
 import Scrollbar from 'smooth-scrollbar'
 import {bindActionCreators} from "redux"
 // import SidebarDark from '../../components/settingoffcanvas'
@@ -10,7 +10,7 @@ import {bindActionCreators} from "redux"
 // }
 
 // store
-import {NavbarstyleAction, getDirMode, SchemeDirAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode, getSidebarTypeMode} from '../../../../store/setting/setting'
+import {NavbarstyleAction, getDirMode, SchemeDirAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode, getSidebarTypeMode} from '../../../store/setting/setting'
 import {connect} from "react-redux"
 
 const mapStateToProps = (state) => {
@@ -37,7 +37,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-const Sidebar = (props) => {
+const SidebarAgent = (props) => {
     
     
     
@@ -92,7 +92,7 @@ const Sidebar = (props) => {
                 <div className="pt-0 sidebar-body data-scrollbar" data-scroll="1" id="my-scrollbar">
                     {/* sidebar-list class to be added after replace css */}
                     <div className="sidebar-list navbar-collapse" id="sidebar">
-                      <VerticalNav />
+                      <VerticalNavAgent />
                     </div>
                 </div>
                 <div className="sidebar-footer"></div>
@@ -101,5 +101,5 @@ const Sidebar = (props) => {
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarAgent)
 

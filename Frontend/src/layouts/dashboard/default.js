@@ -3,11 +3,11 @@ import {bindActionCreators} from "redux"
 
 
 //header
-import Header from '../../components/partials/dashboard/HeaderStyle/header'
+import Header from './HeaderStyle/header'
 //subheader
-import SubHeader from '../../components/partials/dashboard/HeaderStyle/sub-header'
+import SubHeader from './HeaderStyle/sub-header'
 //sidebar
-import Sidebar from '../../components/partials/dashboard/SidebarStyle/sidebar'
+import Sidebar from './SidebarStyle/sidebar'
 
 
 import SettingOffcanvas from '../../components/partials/components/settingoffcanvas'

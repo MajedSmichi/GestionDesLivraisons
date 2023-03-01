@@ -8,7 +8,8 @@ import Team from "../landingpage/team/Team.jsx";
 import ClientAgent from "../landingpage/Auth/Client-Agent";
 import Contact from "../landingpage/contact/Conatct";
 import Default from "../layouts/dashboard/default";
-
+import DefaultAgent from "../layouts/dashboardAgent/defaultAgent";
+import DefaultCustomer from "../layouts/dashboardCustomer/defaultCustomer";
 //Authentification
 import SignIn from "../landingpage/Auth/sign-in";
 import SignUp from "../landingpage/Auth/sign-up";
@@ -52,6 +53,8 @@ const IndexRouters = () => {
           {/* map */}
           <Route path="google" exact element={<Google />} />
         </Route>
+        <Route path="dashboardAgent" element={<DefaultAgent/>}/>
+        <Route path="dashboardCustomer" element={<DefaultCustomer />}/>
       </Routes>
     </>
   );
