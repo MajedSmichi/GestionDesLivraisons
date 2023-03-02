@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs"); // import bcrypt to hash passwords
 const jwt = require("jsonwebtoken"); // import jwt to sign tokens
 const { body, validationResult } = require('express-validator');
 const agent = require("../models/agentModel");
+const sendEmail = require("../utils/sendEmail");
+const admin = require("../models/adminModel");
 
 
 //register route
@@ -67,5 +69,49 @@ const login = async (req, res) => {
   }
 };
 
+
+const recoverPassword = async(req,res) => {
+  console.log(req.body)
+  const {email,role} = req.body
+  try {
+    const user =role ==="1" ? await client.findOne({email }):await agent.findOne({email});
+    if(!user)
+    return res.status(400).json({error:'email is not exist'})
+
+    const subject = "recover password"
+    const newPassword= Math.random().toString(36).slice(-8);
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password=hashPassword;
+    await user.save();
+    await sendEmail(email,subject,newPassword);
+    return res.status(200).json({message:'sent succus'})
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+}
+
+const AdminLog = async (req, res) => {
+ 
+  try {
+
+    const user = await admin.findOne()
+    
+    
+    if (req.body.password===user.password) {
+      // sign token and send it in response
+      console.log(user)
+      const token = await jwt.sign({ username: user.email }, process.env.SECRET);
+      res.json({ token });
+    } else {
+      res.status(400).json({ error: "Password is false" });
+    }
+    
+  } catch (e) {
+    console.log(e)
+    res.status(400).json({ error: e });
+  }
+};
+exports.recoverPassword=recoverPassword;
 exports.login = login;
 exports.signup = signup;
+exports.AdminLog = AdminLog;

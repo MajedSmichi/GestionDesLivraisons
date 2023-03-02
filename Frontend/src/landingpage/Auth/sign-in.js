@@ -69,7 +69,7 @@ const SignIn = () => {
                                     </Col>
                                     {error && <p class="danger"style={{color: "red"}} >{error}</p>}
                                     <Col lg="12" className="d-flex justify-content-between">
-                                       <Link to="/Recoverpw">Forgot Password?</Link>
+                                       <Link to={`/Recoverpw/${id}`}>Forgot Password?</Link>
                                     </Col>
                                  </Row>
                                  <div className="d-flex justify-content-center">

@@ -1,14 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {Row,Col,Image,Form,Button} from 'react-bootstrap'
 import {useNavigate} from 'react-router-dom'
 import Card from '../../components/Card'
 
 // img
 import avatars1 from '../../assets/images/avatars/01.png'
-import auth1 from '../../assets/images/auth/04.png'
+
+import auth1 from './deliv.jpg'
+import axios from 'axios'
 
 const LockScreen = () => {
-   let history =useNavigate()
+   let navigate =useNavigate()
+   const [data,setData]=useState({
+      password:''
+   })
+   const [error,setError] = useState('')
+   const server='http://localhost:5000/users/Admin';
+   const onAdmin=async(e)=>{
+       e.preventDefault()
+       if(data.password==''){
+         setError("Please enter your password")
+         return
+       }
+       try {
+         const res=await axios.post(server,{...data});
+         localStorage.setItem('admin', res.data.token);
+         navigate('/dashboard');
+         
+       } catch (e) {
+         console.log("error",e.response.data.error);
+         setError(e.response.data.error);
+       }
+
+   }
       return (
          <>
             <section className="login-content">
@@ -25,11 +49,13 @@ const LockScreen = () => {
                                  <Col lg="12">
                                     <Form.Group className="floating-label form-group">
                                        <Form.Label htmlFor="password" className="">Password</Form.Label>
-                                       <Form.Control  type="password" className="" id="password" aria-describedby="password" placeholder=" "/>
+                                       <Form.Control  type="password" className="" id="password" aria-describedby="password" placeholder=" " value={data.password} required
+                                       onChange={(e)=>setData({...data,password:e.target.value})} onFocus={()=>setError('')}/>
                                     </Form.Group>
                                  </Col>
                               </Row>
-                              <Button onClick={() => history.push('/dashboard')} type="button" variant="btn btn-primary">Login</Button>
+                              {error && <p class="danger"style={{color: "red"}} >{error}</p>}
+                              <Button onClick={onAdmin} type="button" variant="btn btn-primary">Login</Button>
                            </Form>
                         </Card.Body>
                      </Card>

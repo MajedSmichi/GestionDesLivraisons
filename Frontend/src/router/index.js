@@ -38,7 +38,7 @@ const IndexRouters = () => {
         <Route path="contact" element={<Contact />} />
         <Route path="SignIn/:id" element={<SignIn />} />
         <Route path="SignUp/:id" element={<SignUp />} />
-        <Route path="Recoverpw" element={<Recoverpw />} />
+        <Route path="Recoverpw/:id" element={<Recoverpw />} />
         <Route path="LockScreen" element={<LockScreen />} />
         <Route path="confirmmail" element={<ConfirmMail />} />
         <Route path="ClientAgent" element={<ClientAgent />} />
