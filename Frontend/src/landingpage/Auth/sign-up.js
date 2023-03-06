@@ -9,7 +9,7 @@ import Header from '../header/Header'
 import auth1 from'./deliv.jpg'
 
 const SignUp = () => {
-   const {id} = useParams()
+   const {role} = useParams()
    const navigate = useNavigate();
    const [data,setData]=useState({
       firstName:'',
@@ -47,10 +47,10 @@ const SignUp = () => {
       
       
       try{
-         await axios.post(server,{...data,role:id});
+         await axios.post(server,{...data,role});
          setSuccessMessage('User created');
          setTimeout(()=>{
-            navigate(`/SignIn/${id}`); 
+            navigate(`/SignIn/${role}`); 
          },2000)
       }
       catch(e){
@@ -126,7 +126,7 @@ const SignUp = () => {
                                  </div>
                                  <p className="text-center my-3">or sign in with other accounts?</p>
                                  <p className="mt-3 text-center">
-                                    Already have an Account <Link to={`/SignIn/${id}`} className="text-underline">Sign In</Link>
+                                    Already have an Account <Link to={`/SignIn/${role}`} className="text-underline">Sign In</Link>
                                  </p>
                               </Form>
                              

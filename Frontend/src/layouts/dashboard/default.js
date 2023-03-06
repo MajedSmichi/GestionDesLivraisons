@@ -18,6 +18,7 @@ import {NavbarstyleAction, getDirMode, getcustomizerMode, getcustomizerprimaryMo
 import {connect} from "react-redux"
 import { Outlet } from 'react-router-dom'
 
+
 const mapStateToProps = (state) => {
     return {
         darkMode: getDarkMode(state),

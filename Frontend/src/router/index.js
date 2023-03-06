@@ -18,9 +18,12 @@ import LockScreen from "../landingpage/Auth/lock-screen";
 import ConfirmMail from "../landingpage/Auth/confirm-mail";
 //users
 import UserProfile from "../views/dashboard/app/user-profile";
+import UserProfileClient from "../views/dashboardClient/app/user-profileClient";
+
 import UserAdd from "../views/dashboard/app/user-add";
 import UserList from "../views/dashboard/app/user-list";
 //special pages
+import CalenderClient from "../views/dashboardClient/special-pages/calenderClient";
 import Calender from "../views/dashboard/special-pages/calender";
 import Pricing from "../views/dashboard/special-pages/pricing";
 
@@ -36,9 +39,9 @@ const IndexRouters = () => {
         <Route path="Habout" element={<HAbout />} />
         <Route path="team" element={<Team />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="SignIn/:id" element={<SignIn />} />
-        <Route path="SignUp/:id" element={<SignUp />} />
-        <Route path="Recoverpw/:id" element={<Recoverpw />} />
+        <Route path="SignIn/:role" element={<SignIn />} />
+        <Route path="SignUp/:role" element={<SignUp />} />
+        <Route path="Recoverpw/:role" element={<Recoverpw />} />
         <Route path="LockScreen" element={<LockScreen />} />
         <Route path="confirmmail" element={<ConfirmMail />} />
         <Route path="ClientAgent" element={<ClientAgent />} />
@@ -47,6 +50,7 @@ const IndexRouters = () => {
           <Route path="user-add" element={<UserAdd />} />
           <Route path="user-list" element={<UserList />} />
           <Route path="user-profile" element={<UserProfile />} />
+          
           {/*special pages */}
           <Route path="pricing" element={<Pricing />} />
           <Route path="calendar" element={<Calender />} />
@@ -54,7 +58,10 @@ const IndexRouters = () => {
           <Route path="google" exact element={<Google />} />
         </Route>
         <Route path="dashboardAgent" element={<DefaultAgent/>}/>
-        <Route path="dashboardCustomer" element={<DefaultCustomer />}/>
+        <Route path="dashboardCustomer" element={<DefaultCustomer />}>
+        <Route path="user-profileClient" element={<UserProfileClient />} />
+        <Route path="calendarClient" element={<CalenderClient />} />
+        </Route>
       </Routes>
     </>
   );

@@ -5,9 +5,10 @@ import {Link,useNavigate, useParams} from 'react-router-dom'
 import Card from '../../components/Card'
 import auth1 from './deliv.jpg'
 import Header from '../header/Header'
+import { apiUrl } from '../../Constants'
 
 const SignIn = () => {
-   const {id} = useParams()
+   const {role} = useParams()
    let navigate =useNavigate()
    const [data,setData]=useState({
       email:'',
@@ -15,7 +16,6 @@ const SignIn = () => {
    })
 
    const [error,setError] = useState('')
-   const server='http://localhost:5000/users/login';
    
    const onLogin=async(e)=>{
        e.preventDefault()
@@ -26,9 +26,11 @@ const SignIn = () => {
             return
        }
        try{
-         const res=await axios.post(server,{...data, role:id})
-         localStorage.setItem('user', res.data.token)
-         if(id==="1")
+         console.log(role)
+         const res=await axios.post(`${apiUrl}/users/login`,{...data, role})
+         localStorage.setItem('token', res.data.token);
+         localStorage.setItem('user',res.data.user)
+         if(role==="1")
          {navigate("/dashboardCustomer"); }
          else
          {navigate("/dashboardAgent"); }
@@ -69,14 +71,14 @@ const SignIn = () => {
                                     </Col>
                                     {error && <p class="danger"style={{color: "red"}} >{error}</p>}
                                     <Col lg="12" className="d-flex justify-content-between">
-                                       <Link to={`/Recoverpw/${id}`}>Forgot Password?</Link>
+                                       <Link to={`/Recoverpw/${role}`}>Forgot Password?</Link>
                                     </Col>
                                  </Row>
                                  <div className="d-flex justify-content-center">
                                     <Button  onClick={onLogin} type="submit" variant="btn btn-primary">Sign In</Button>
                                  </div>
                                  <p className="mt-3 text-center">
-                                    Don’t have an account? <Link to={`/SignUp/${id}`} className="text-underline">Click here to sign up.</Link>
+                                    Don’t have an account? <Link to={`/SignUp/${role}`} className="text-underline">Click here to sign up.</Link>
                                  </p>
                               </Form>
                            </Card.Body>

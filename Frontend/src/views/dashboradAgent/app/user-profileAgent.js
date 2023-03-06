@@ -32,7 +32,7 @@ import pages2 from "../../../assets/images/pages/02-page.png";
 
 import ShareOffcanvas from "../../../components/partials/components/shareoffcanvas";
 
-const UserProfile = () => {
+const UserProfileAgent = () => {
   const [data, setData] = useState("majed");
   const [editData, setEditData] = useState(false);
   const [toggler, setToggler] = useState(false);
@@ -311,4 +311,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserProfileAgent;

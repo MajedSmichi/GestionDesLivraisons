@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {bindActionCreators} from "redux"
 
 
@@ -18,7 +18,9 @@ import {NavbarstyleAction, getDirMode, getcustomizerMode, getcustomizerprimaryMo
 import {connect} from "react-redux"
 import { Outlet } from 'react-router-dom'
 
-
+import { useParams } from 'react-router-dom';
+import axios from 'axios'
+import { apiUrl } from '../../Constants'
 const mapStateToProps = (state) => {
     return {
         darkMode: getDarkMode(state),
@@ -47,6 +49,9 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const DefaultCustomer = (props) => {
+    
+    
+
     useEffect(() => {
         //   darkmode
         const colorMode = sessionStorage.getItem('color-mode');
