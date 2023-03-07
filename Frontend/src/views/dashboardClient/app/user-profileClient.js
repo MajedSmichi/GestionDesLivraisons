@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Row, Col, Image, Form, Nav, Tab, Button } from "react-bootstrap";
+import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 
 import { Link } from "react-router-dom";
@@ -10,9 +10,11 @@ import { FiSave } from "react-icons/fi";
 import avatars11 from "../../../assets/images/avatars/01.png";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
+import {format } from 'date-fns'
+
 
 const UserProfileClient = () => {
-
+  
   const [editData, setEditData] = useState(false);
   const [userData, setUserData] = useState({
     firstName: "",
@@ -21,8 +23,10 @@ const UserProfileClient = () => {
     phone: "",
     whatsApp: "",
     adresse: "",
+    // joindate: new Date().toISOString()
+    dateOfBirth:"",
   });
-  
+
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -36,17 +40,19 @@ const UserProfileClient = () => {
     getUserData();
   }, []);
 
-  const updateData = async() => {
-    setEditData(false)
-    
+  const updateData = async () => {
+    setEditData(false);
+
     try {
       const user = localStorage.getItem("user");
-      const res= await axios.put(`${apiUrl}/users/update/${user}`);
+      await axios.put(`${apiUrl}/users/update/${user}`, userData);
+      const response = await axios.get(`${apiUrl}/users/user/${user}`);
+      console.log(response);
+      setUserData(response.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-
+  };
 
   return (
     <>
@@ -193,8 +199,13 @@ const UserProfileClient = () => {
                         />
                       </div>
                       <div className="mt-3">
-                        <h3 className="d-inline-block">Austin Robertson</h3>
-                        <p className="d-inline-block pl-3"> - Web developer</p>
+                        <h3 className="d-inline-block">
+                          {userData.firstName} {userData.lastName}{" "}
+                        </h3>
+                        <p className="d-inline-block pl-3">
+                          {" "}
+                          - Delivery Client
+                        </p>
                         <p className="mb-0">
                           Lorem Ipsum is simply dummy p of the printing and
                           typesetting industry. Lorem Ipsum has been the
@@ -212,32 +223,34 @@ const UserProfileClient = () => {
                   </Card.Header>
                   <Card.Body>
                     <div>
-                      <h5 class="label label-default">First Name:</h5>
+                      <h5 className="label label-default">First Name:</h5>
                       {!editData ? (
                         <div className="mb-3">
                           <p>{userData.firstName}</p>
                           <br />
                           <br />
                           <h5>
-                            <span class="label label-default">Last Name:</span>
+                            <span className="label label-default">
+                              Last Name:
+                            </span>
                           </h5>
                           <p>{userData.lastName}</p>
                           <br />
                           <br />
                           <h5>
-                            <span class="label label-default">Email:</span>
+                            <span className="label label-default">Email:</span>
                           </h5>
                           <p>{userData.email}</p>
                           <br />
                           <br />
                           <h5>
-                            <span class="label label-default">Phone:</span>
+                            <span className="label label-default">Phone:</span>
                           </h5>
                           <p>{userData.phone}</p>
                           <br />
                           <br />
                           <h5>
-                            <span class="label label-default">
+                            <span className="label label-default">
                               WhatsAppPhone:
                             </span>
                           </h5>
@@ -245,11 +258,19 @@ const UserProfileClient = () => {
                           <br />
                           <br />
                           <h5>
-                            <span class="label label-default">Adresse:</span>
+                            <span className="label label-default">
+                              Adresse:
+                            </span>
                           </h5>
                           <p>{userData.adresse}</p>
                           <br />
                           <br />
+                          <h5>
+                            <span className="label label-default">
+                            Date of birth:
+                            </span>
+                          </h5>
+                          <p>{userData.dateOfBirth}</p>
                           <Button
                             className="btn-inner "
                             onClick={() => setEditData(true)}
@@ -270,242 +291,112 @@ const UserProfileClient = () => {
                                 firstName: e.target.value,
                               })
                             }
-                            
                           />
                           <br />
                           <h5>
-                            <span class="label label-default">Last Name:</span>
+                            <span className="label label-default">
+                              Last Name:
+                            </span>
                           </h5>
                           <input
                             className="form-control"
                             value={userData.lastName}
                             onChange={(e) =>
-                              setUserData({ ...userData, lastName: e.target.value })
+                              setUserData({
+                                ...userData,
+                                lastName: e.target.value,
+                              })
                             }
-                            
                           />
                           <br />
                           <h5>
-                            <span class="label label-default">Email:</span>
+                            <span className="label label-default">Email:</span>
                           </h5>
                           <input
                             className="form-control"
                             value={userData.email}
                             onChange={(e) =>
-                              setUserData({ ...userData, email: e.target.value })
+                              setUserData({
+                                ...userData,
+                                email: e.target.value,
+                              })
                             }
-                            
                           />
                           <br />
                           <h5>
-                            <span class="label label-default">Phone:</span>
+                            <span className="label label-default">Phone:</span>
                           </h5>
                           <input
                             className="form-control"
                             value={userData.phone}
                             onChange={(e) =>
-                              setUserData({ ...userData, phone: e.target.value })
+                              setUserData({
+                                ...userData,
+                                phone: e.target.value,
+                              })
                             }
-                            
                           />
                           <br />
                           <h5>
-                            <span class="label label-default">
+                            <span className="label label-default">
                               WhatsAppPhone:
                             </span>
                           </h5>
                           <input
                             className="form-control"
-                            value={userData.whatsApp}
+                            value={userData.whatsApp || ""}
                             onChange={(e) =>
-                              setUserData({ ...userData, whatsApp: e.target.value })
+                              setUserData({
+                                ...userData,
+                                whatsApp: e.target.value,
+                              })
                             }
-                            
                           />
                           <br />
                           <h5>
-                            <span class="label label-default">Adresse:</span>
+                            <span className="label label-default">
+                              Adresse:
+                            </span>
                           </h5>
                           <input
                             className="form-control"
                             value={userData.adresse}
                             onChange={(e) =>
-                              setUserData({ ...userData, adresse: e.target.value })
+                              setUserData({
+                                ...userData,
+                                adresse: e.target.value,
+                              })
                             }
-                           
                           />
                           <br />
-                          <Button
-                            onClick={updateData}
-                            className=" btn-inner"
-                          >
+                          
+                          <h5>
+                            <span className="label label-default">
+                              Date of birth :
+                            </span>
+                          </h5>
+                            <input
+                              type="date"
+                              min="1960-01-01"
+                              max="2010-12-31"
+                              className="form-control"
+                              value={userData.dateOfBirth}
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  dateOfBirth: e.target.value,
+                                })
+                              }
+                            />
+                          <br />
+                          <br />
+                          <Button onClick={updateData} className=" btn-inner">
                             Save
                             <FiSave />
                           </Button>
                         </div>
                       )}
                     </div>
-                    {/* <div> 
-                    <h5><span class="label label-default">Last Name:</span></h5>
-                      {!editData ? (
-                        <div className="mb-3">
-                          <p>{data.lastName}</p>
-                          
-                          <Link
-                            className="btn btn-sm btn-icon btn-warning border"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title=""
-                            data-original-title="Edit"
-                            to="#"
-                            onClick={() => setEditData(true)}
-                          >
-                            <span className="btn-inner">
-                              <FaEdit/>
-                            </span>
-                          </Link>
-                        </div>
-                      ) : (
-                        <div className="input-group mb-3">
-                          <input className="form-control" 
-                            value={data.lastName}
-                            onChange={(e) => setUserData({...data,lastName:e.target.value})} onFocus={()=>setError('')}
-                          />
-                          <button onClick={() => setEditData(false)} className="btn btn-md btn-icon btn-warning btn-inner" >
-                            <FiSave/>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div> 
-                    <h5><span class="label label-default">Email:</span></h5>
-                      {!editData ? (
-                        <div className="mb-3">
-                          <p>{data.email}</p>
-                          
-                          <Link
-                            className="btn btn-sm btn-icon btn-warning border"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title=""
-                            data-original-title="Edit"
-                            to="#"
-                            onClick={() => setEditData(true)}
-                          >
-                            <span className="btn-inner">
-                              <FaEdit/>
-                            </span>
-                          </Link>
-                        </div>
-                      ) : (
-                        <div className="input-group mb-3">
-                          <input className="form-control" 
-                            value={data.email}
-                            onChange={(e) => setUserData({...data,email:e.target.value})} onFocus={()=>setError('')}
-                          />
-                          <button onClick={() => setEditData(false)} className="btn btn-md btn-icon btn-warning btn-inner" >
-                            <FiSave/>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div> 
-                    <h5><span class="label label-default">Phone:</span></h5>
-                      {!editData ? (
-                        <div className="mb-3">
-                          <p>{data.phone}</p>
-                          
-                          <Link
-                            className="btn btn-sm btn-icon btn-warning border"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title=""
-                            data-original-title="Edit"
-                            to="#"
-                            onClick={() => setEditData(true)}
-                          >
-                            <span className="btn-inner">
-                              <FaEdit/>
-                            </span>
-                          </Link>
-                        </div>
-                      ) : (
-                        <div className="input-group mb-3">
-                          <input className="form-control" 
-                            value={data.phone}
-                            onChange={(e) => setUserData({...data,phone:e.target.value})}
-                          />
-                          <button onClick={() => setEditData(false)} className="btn btn-md btn-icon btn-warning btn-inner" >
-                            <FiSave/>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div> 
-                    <h5><span class="label label-default">WhatsAppPhone:</span></h5>
-                      {!editData ? (
-                        <div className="mb-3">
-                          <p>{data.whatsApp}</p>
-                          
-                          <Link
-                            className="btn btn-sm btn-icon btn-warning border"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title=""
-                            data-original-title="Edit"
-                            to="#"
-                            onClick={() => setEditData(true)}
-                          >
-                            <span className="btn-inner">
-                              <FaEdit/>
-                            </span>
-                          </Link>
-                        </div>
-                      ) : (
-                        <div className="input-group mb-3">
-                          <input className="form-control" 
-                            value={data.whatsApp}
-                            onChange={(e) => setUserData({...data,whatsApp:e.target.value})} onFocus={()=>setError('')}
-                          />
-                          <button onClick={() => setEditData(false)} className="btn btn-md btn-icon btn-warning btn-inner" >
-                            <FiSave/>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div> 
-                    <h5><span class="label label-default">Adresse:</span></h5>
-                      {!editData ? (
-                        <div className="mb-3">
-                          <p>{data.adresse}</p>
-                          
-                          <Link
-                            className="btn btn-sm btn-icon btn-warning border"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title=""
-                            data-original-title="Edit"
-                            to="#"
-                            onClick={() => setEditData(true)}
-                          >
-                            <span className="btn-inner">
-                              <FaEdit/>
-                            </span>
-                          </Link>
-                        </div>
-                      ) : (
-                        <div className="input-group mb-3">
-                          <input className="form-control" 
-                            value={data.adresse}
-                            onChange={(e) => setUserData({...data,adresse:e.target.value}) } onFocus={()=>setError('')}
-                          />
-                          <button onClick={() => setEditData(false)} className="btn btn-md btn-icon btn-warning btn-inner" >
-                            <FiSave/>
-                          </button>
-                        </div>
-                      )}
-                    </div> */}
-                    
                   </Card.Body>
                 </Card>
               </Tab.Pane>

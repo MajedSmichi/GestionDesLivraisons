@@ -5,7 +5,7 @@ const client = require("../models/clientModel");
 
 
 const update = async (req, res) => {
-    const {  firstName, lastName, email, phone, whatsApp, adresse } = req.body;
+    const {  firstName, lastName, email, phone, whatsApp, adresse,dateOfBirth  } = req.body;
     const { id } = req.params;
     try {
 
@@ -15,7 +15,8 @@ const update = async (req, res) => {
         if (exist ) return res.status(400).json({ error: "User already exist" });
        }
     
-        await client.findByIdAndUpdate({ _id:id }, { $set: { firstName, lastName,email, phone, whatsApp, adresse } });
+        await client.findByIdAndUpdate({ _id:id }, { $set: { firstName, lastName,email, phone, whatsApp, adresse,dateOfBirth } });
+        console.log({user});
         return res.status(200).json({ message: "User data updated" });
       
     } catch (error) {
@@ -42,10 +43,9 @@ const getuser=async (req, res) => {
     }
   };
 
-  const getAllUsers=async (req, res) => {
-    const{id:role}=req.params;
+  const getAllCustomersUsers=async (req, res) => {
     try {
-      const users =role ==="1" ? await client.find():await agent.find();
+      const users = await client.find();
       if (users.length === 0) {
         return res.status(404).json({ message: "No users found" });
       }
@@ -55,8 +55,19 @@ const getuser=async (req, res) => {
       return res.status(500).json({ error: "Internal server error" });
     }
   };
-  
 
+ 
+  const deleteuser=async(req,res)=>{
+       try {
+        await client.find({email:req.body.email}).deleteOne();
+        
+        return res.status(200).json({message: "delete succesfuly"});
+       } catch (error) {
+        return res.status(500).json({ error: "Internal server error" });
+       }
+  }
+  
+exports.deleteuser=deleteuser;
 exports.update=update;
 exports.getuser=getuser;
-exports.getAllUsers=getAllUsers;
+exports.getAllCustomersUsers=getAllCustomersUsers;

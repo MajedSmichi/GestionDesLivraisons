@@ -50,17 +50,17 @@ const IndexRouters = () => {
           <Route path="user-add" element={<UserAdd />} />
           <Route path="user-list" element={<UserList />} />
           <Route path="user-profile" element={<UserProfile />} />
-          
+
           {/*special pages */}
           <Route path="pricing" element={<Pricing />} />
           <Route path="calendar" element={<Calender />} />
           {/* map */}
           <Route path="google" exact element={<Google />} />
         </Route>
-        <Route path="dashboardAgent" element={<DefaultAgent/>}/>
+        <Route path="dashboardAgent" element={<DefaultAgent />} />
         <Route path="dashboardCustomer" element={<DefaultCustomer />}>
-        <Route path="user-profileClient" element={<UserProfileClient />} />
-        <Route path="calendarClient" element={<CalenderClient />} />
+          <Route path="user-profileClient" element={<UserProfileClient />} />
+          <Route path="calendarClient" element={<CalenderClient />} />
         </Route>
       </Routes>
     </>

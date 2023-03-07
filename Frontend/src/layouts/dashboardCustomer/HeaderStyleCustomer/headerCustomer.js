@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
-import { bindActionCreators } from "redux";
+
 
 //img
 
@@ -11,59 +11,31 @@ import shapes1 from "../../../assets/images/shapes/01.png";
 import avatars1 from "../../../assets/images/avatars/01.png";
 
 
+import axios from "axios";
+import { apiUrl } from "../../../Constants";
 
-// store
-import {
-  NavbarstyleAction,
-  getDirMode,
-  SchemeDirAction,
-  getNavbarStyleMode,
-  getSidebarActiveMode,
-  SidebarActiveStyleAction,
-  getDarkMode,
-  ModeAction,
-  SidebarColorAction,
-  getSidebarColorMode,
-  getSidebarTypeMode,
-} from "../../../store/setting/setting";
-import { connect } from "react-redux";
-
-const mapStateToProps = (state) => {
-  return {
-    darkMode: getDarkMode(state),
-    schemeDirMode: getDirMode(state),
-    sidebarcolorMode: getSidebarColorMode(state),
-    sidebarTypeMode: getSidebarTypeMode(state),
-    sidebaractivestyleMode: getSidebarActiveMode(state),
-    navbarstylemode: getNavbarStyleMode(state),
-  };
-};
-const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(
-    {
-      ModeAction,
-      SchemeDirAction,
-      SidebarColorAction,
-      SidebarActiveStyleAction,
-      NavbarstyleAction,
-    },
-    dispatch
-  ),
-});
 
 const HeaderCustomer = (props) => {
-  useEffect(() => {
-    // navbarstylemode
-    const navbarstyleMode1 = sessionStorage.getItem("Navbarstyle-mode");
-    if (navbarstyleMode1 === null) {
-      props.NavbarstyleAction(props.navbarstylemode);
-    } else {
-      props.NavbarstyleAction(navbarstyleMode1);
-    }
-  });
+ 
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+  });
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const user = localStorage.getItem("user");
+        const response = await axios.get(`${apiUrl}/users/user/${user}`);
+        setUserData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+  }, []);
 
   return (
     <>
@@ -214,7 +186,7 @@ const HeaderCustomer = (props) => {
                   />
 
                   <div className="caption ms-3 d-none d-md-block ">
-                    <h6 className="mb-0 caption-title">Majed Smichi</h6>
+                    <h6 className="mb-0 caption-title">{userData.firstName} {userData.lastName}</h6>
                     <p className="mb-0 caption-sub-title">
                       Delivery Client
                     </p>
@@ -224,10 +196,10 @@ const HeaderCustomer = (props) => {
                   className="dropdown-menu-end"
                   aria-labelledby="navbarDropdown"
                 >
-                  <Dropdown.Item href="">Profile</Dropdown.Item>
+                  <Dropdown.Item href="/dashboardCustomer/user-profileClient">Profile</Dropdown.Item>
                   <Dropdown.Item href="">Privacy Setting</Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href="">Logout</Dropdown.Item>
+                  <Dropdown.Item href='/'>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Nav>
@@ -238,4 +210,4 @@ const HeaderCustomer = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderCustomer);
+export default HeaderCustomer;

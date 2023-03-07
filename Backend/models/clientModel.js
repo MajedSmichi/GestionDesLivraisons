@@ -7,6 +7,7 @@ const clientSchema = mongoose.Schema({
   whatsApp: { type: Number, required: false },
   password: { type: String, required: true },
   adresse:{type: String, required: false },
-  role:{type:String, required: false}
+  role:{type:String, required: false},
+  dateOfBirth:{type:Date,required:false}
 });
 module.exports = mongoose.model("client", clientSchema);
