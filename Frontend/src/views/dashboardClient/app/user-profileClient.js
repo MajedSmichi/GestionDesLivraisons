@@ -10,7 +10,7 @@ import { FiSave } from "react-icons/fi";
 import avatars11 from "../../../assets/images/avatars/01.png";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
-import {format } from 'date-fns'
+
 
 
 const UserProfileClient = () => {
@@ -47,7 +47,6 @@ const UserProfileClient = () => {
       const user = localStorage.getItem("user");
       await axios.put(`${apiUrl}/users/update/${user}`, userData);
       const response = await axios.get(`${apiUrl}/users/user/${user}`);
-      console.log(response);
       setUserData(response.data);
     } catch (error) {
       console.log(error);

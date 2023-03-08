@@ -8,7 +8,7 @@ const update = async (req, res) => {
     const {  firstName, lastName, email, phone, whatsApp, adresse,dateOfBirth  } = req.body;
     const { id } = req.params;
     try {
-
+       console.log(req.body);
        const user=await client.findById(id)
        if(email !== user.email){
         const exist = await client.findOne({email})
@@ -16,7 +16,6 @@ const update = async (req, res) => {
        }
     
         await client.findByIdAndUpdate({ _id:id }, { $set: { firstName, lastName,email, phone, whatsApp, adresse,dateOfBirth } });
-        console.log({user});
         return res.status(200).json({ message: "User data updated" });
       
     } catch (error) {
@@ -58,8 +57,9 @@ const getuser=async (req, res) => {
 
  
   const deleteuser=async(req,res)=>{
+    const{id}=req.params
        try {
-        await client.find({email:req.body.email}).deleteOne();
+        await client.findByIdAndDelete({ _id:id });
         
         return res.status(200).json({message: "delete succesfuly"});
        } catch (error) {

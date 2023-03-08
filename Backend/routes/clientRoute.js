@@ -7,7 +7,7 @@ const { update, getuser, getAllCustomersUsers, deleteuser } = require("../contro
 
 
 //delete route
-router.delete("/delete/:email",deleteuser);
+router.delete("/delete/:id",deleteuser);
 //get route
 router.get("/user/:id",getuser);
 router.get("/AllCustomersUsers",getAllCustomersUsers);
