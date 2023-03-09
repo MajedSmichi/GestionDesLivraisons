@@ -9,7 +9,6 @@ const admin = require("../models/adminModel");
 
 //register route
 const signup = async (req, res) => {
-  console.log('body',req.body)
   const { role,firstName, lastName, email, phone, password } = req.body;
   
 
@@ -46,7 +45,6 @@ const signup = async (req, res) => {
 
 //login route
 const login = async (req, res) => {
-  console.log(req.body);
   try {
     // check if the user exists
     

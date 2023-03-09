@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const agent = require("../models/agentModel");
 const client = require("../models/clientModel");
+const bcrypt = require("bcryptjs"); 
 
 
 
@@ -25,7 +26,34 @@ const update = async (req, res) => {
   };
 
 
-
+const addCustomer=async(req,res)=>{
+  const {firstName, lastName, email, phone, password,whatsApp,adresse} = req.body;
+  role="1";
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors)
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const exist = await client.findOne({ email: req.body.email })
+    if (exist) {
+      return res.status(400).json({ error: "User already exist" });
+    }
+    const hashPassword = await bcrypt.hash(password, 10);
+    const user = {  firstName,
+      lastName,
+      email,
+      phone,
+      password: hashPassword,
+      whatsApp,
+      adresse,
+      role};
+      await client.create(user);
+      return res.status(201).json({ message: "user create" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });}
+};
 
 
 const getuser=async (req, res) => {
@@ -71,3 +99,4 @@ exports.deleteuser=deleteuser;
 exports.update=update;
 exports.getuser=getuser;
 exports.getAllCustomersUsers=getAllCustomersUsers;
+exports.addCustomer=addCustomer;

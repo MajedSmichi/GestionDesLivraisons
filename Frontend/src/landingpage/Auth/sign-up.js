@@ -9,7 +9,7 @@ import Header from '../header/Header'
 import auth1 from'./deliv.jpg'
 
 const SignUp = () => {
-   const {role} = useParams()
+   const {role} = useParams();
    const navigate = useNavigate();
    const [data,setData]=useState({
       firstName:'',

@@ -17,7 +17,7 @@ import Recoverpw from "../landingpage/Auth/recoverpw";
 import LockScreen from "../landingpage/Auth/lock-screen";
 import ConfirmMail from "../landingpage/Auth/confirm-mail";
 //users
-import UserProfile from "../views/dashboard/app/user-profile";
+
 import UserProfileClient from "../views/dashboardClient/app/user-profileClient";
 
 import UserAdd from "../views/dashboard/app/user-add";
@@ -49,7 +49,7 @@ const IndexRouters = () => {
           {/* user */}
           <Route path="user-add" element={<UserAdd />} />
           <Route path="user-list" element={<UserList />} />
-          <Route path="user-profile" element={<UserProfile />} />
+         
 
           {/*special pages */}
           <Route path="pricing" element={<Pricing />} />

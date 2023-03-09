@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { signup, login, recoverPassword, AdminLog } = require("../controllers/authentification");
 const router = Router(); // create router to create route bundle
 const { body, validationResult } = require('express-validator');
-const { update, getuser, getAllCustomersUsers, deleteuser } = require("../controllers/userData");
+const { update, getuser, getAllCustomersUsers, deleteuser, addCustomer } = require("../controllers/userData");
 
 
 
@@ -11,6 +11,8 @@ router.delete("/delete/:id",deleteuser);
 //get route
 router.get("/user/:id",getuser);
 router.get("/AllCustomersUsers",getAllCustomersUsers);
+//addCustomer
+router.post("/addCustomer",addCustomer);
 //save route
 router.put("/update/:id",update);
 // Login route

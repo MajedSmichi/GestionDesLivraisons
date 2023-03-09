@@ -139,8 +139,8 @@ const VerticalNav = () => {
                         </ul>
                     </Accordion.Collapse>
                 </Accordion.Item>
-                <Accordion.Item as="li" eventKey="sidebar-user" bsPrefix="nav-item" style={{marginRight:"0px"}}>
-                    <CustomToggle eventKey="sidebar-user" onClick={(activeKey) => setActiveMenu(activeKey)}>
+                <Accordion.Item as="li" eventKey="sidebar-user1" bsPrefix="nav-item" style={{marginRight:"0px"}}>
+                    <CustomToggle eventKey="sidebar-user1" onClick={(activeKey) => setActiveMenu(activeKey)}>
                         <i className="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M11.9488 14.54C8.49884 14.54 5.58789 15.1038 5.58789 17.2795C5.58789 19.4562 8.51765 20.0001 11.9488 20.0001C15.3988 20.0001 18.3098 19.4364 18.3098 17.2606C18.3098 15.084 15.38 14.54 11.9488 14.54Z" fill="currentColor"></path>
@@ -158,21 +158,8 @@ const VerticalNav = () => {
                             </svg>
                         </i>
                     </CustomToggle>
-                    <Accordion.Collapse eventKey="sidebar-user">
+                    <Accordion.Collapse eventKey="sidebar-user1">
                         <ul className="sub-nav" style={{marginRight:"0px"}}>
-                            <li className="nav-item">
-                                <Link className={`${location.pathname === 'user-profile' ? 'active' : ''} nav-link`} to="user-profile">
-                                    <i className="icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> U </i>
-                                    <span className="item-name">User Profile</span>
-                                </Link>
-                            </li>
                             <li className="nav-item">
                                 <Link className={`${location.pathname === 'user-add' ? 'active' : ''} nav-link`} to="user-add">
                                     <i className="icon">
@@ -202,8 +189,8 @@ const VerticalNav = () => {
                         </ul>
                     </Accordion.Collapse>
                 </Accordion.Item>
-                <Accordion.Item as="li" eventKey="sidebar-user" bsPrefix="nav-item" style={{marginRight:"0px"}}>
-                    <CustomToggle eventKey="sidebar-user" onClick={(activeKey) => setActiveMenu(activeKey)}>
+                <Accordion.Item as="li" eventKey="sidebar-user2" bsPrefix="nav-item" style={{marginRight:"0px"}}>
+                    <CustomToggle eventKey="sidebar-user2" onClick={(activeKey) => setActiveMenu(activeKey)}>
                         <i className="icon">
                             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M11.9488 14.54C8.49884 14.54 5.58789 15.1038 5.58789 17.2795C5.58789 19.4562 8.51765 20.0001 11.9488 20.0001C15.3988 20.0001 18.3098 19.4364 18.3098 17.2606C18.3098 15.084 15.38 14.54 11.9488 14.54Z" fill="currentColor"></path>
@@ -221,21 +208,8 @@ const VerticalNav = () => {
                             </svg>
                         </i>
                     </CustomToggle>
-                    <Accordion.Collapse eventKey="sidebar-user">
+                    <Accordion.Collapse eventKey="sidebar-user2">
                         <ul className="sub-nav" style={{marginRight:"0px"}}>
-                            <li className="nav-item">
-                                <Link className={`${location.pathname === 'user-profile' ? 'active' : ''} nav-link`} to="user-profile">
-                                    <i className="icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
-                                            <g>
-                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                    <i className="sidenav-mini-icon"> U </i>
-                                    <span className="item-name">User Profile</span>
-                                </Link>
-                            </li>
                             <li className="nav-item">
                                 <Link className={`${location.pathname === 'user-add' ? 'active' : ''} nav-link`} to="user-add">
                                     <i className="icon">
