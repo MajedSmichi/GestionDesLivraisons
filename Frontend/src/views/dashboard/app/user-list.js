@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Image } from "react-bootstrap";
 
 import Card from "../../../components/Card";
-
+import "../../../style.css"
 import { Rings } from "react-loader-spinner";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
@@ -193,10 +193,10 @@ const UserList = () => {
 
                           return (
                             <tr key={idx}>
-                              <td className="text-center">
+                              <td className="text-center grow">
                                 <Image
                                   className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                  src={item.photoUrl}
+                                  src={"http://localhost:5000/"+item.photoUrl}
                                   alt="profile"
                                 />
                               </td>

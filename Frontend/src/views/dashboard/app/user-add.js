@@ -19,7 +19,7 @@ const UserAdd = () => {
     whatsApp: "",
     adresse: "",
     dateOfBirth: "",
-    photoUrl:""
+    photo:""
   });
   const role = "1";
   const [successMessage, setSuccessMessage] = useState("");
@@ -41,7 +41,7 @@ const UserAdd = () => {
       data.adresse === "" ||
       data.whatsApp === "" ||
       data.dateOfBirth === "" ||
-      data.photoUrl === ""
+      data.photo === ""
     ) {
       setError("Please enter your data!");
       return;
@@ -58,13 +58,28 @@ const UserAdd = () => {
     }
 
     try {
-      await axios.post(server, { ...data, role });
+      const body = new FormData();
+      body.append("firstName",data.firstName);
+      body.append("lastName",data.lastName);
+      body.append("email", data.email);
+      body.append("phone",data.phone);
+      body.append("whatsApp",data.whatsApp)
+      body.append("photo", data.photo, data.photo.name);
+      body.append("adresse",data.adresse);
+      body.append("date of birth",data.dateOfBirth);
+      body.append("password",data.password);
+      body.append("confirmPassword",confirmPassword);
+      body.append("role",role);
+      console.log(body)
+      await axios.post(server, body);
       setSuccessMessage("User created");
       setTimeout(() => {
         Navigate("/dashboard/user-list");
       }, 2000);
     } catch (e) {
-      setError(e.response.data.error);
+      console.log(e)
+      setError(e.response);
+      
     }
   };
   return (
@@ -81,23 +96,20 @@ const UserAdd = () => {
               </Card.Header>
               <Card.Body>
                 <div className="new-user-info">
-                  <form action="/Backend/uploads" method="post" enctype="multipart/form-data">
+                  <form action="/uploads" method="POST" encType="multipart/form-data">
                     <div className="row">
                       <Form.Group className="col-md-6 form-group">
                         <Form.Label htmlFor="photo">User Photo:</Form.Label>
                         <div className="profile-img-edit position-relative">
                           <Form.Control
                             className="file-upload" 
-                            action="/uploadfile"
-                            encType="multipart/form-data"
                             type="file"
                             accept="image/*"
-                            method="POST"
                             id="photo"
                             name="photo"
                             onChange={(e) =>
                               
-                              setData({ ...data, photoUrl: e.target.photoUrl} )
+                              setData({ ...data, photo: e.target.files[0]} )
                               
                             }
                             

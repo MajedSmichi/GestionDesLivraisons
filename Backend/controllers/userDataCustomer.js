@@ -8,7 +8,7 @@ const update = async (req, res) => {
   const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
   const { id } = req.params;
   try {
-    console.log(req.body);
+    
     const user = await client.findById(id);
     if (email !== user.email) {
       const exist = await client.findOne({ email });
@@ -36,11 +36,44 @@ const update = async (req, res) => {
   }
 };
 
-//add user in admin dashboard
+//upload photo
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const fileName = Date.now() + "-" + file.originalname;
+    
+    req["locals"] = {filePath : "uploads/" + fileName}
+    cb(null, fileName);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+const uploadPhoto=async (req, res) => {
+  const userId = req.params.userId;
+  
+
+  const user = await client.findById(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+  user.photoUrl = req.locals.filePath
+ 
+
+  await user.save();
+  res.send("File uploaded successfully!");
+};
+
+
+//add customer in admin dashboard
 const addCustomer = async (req, res) => {
-  const { firstName, lastName, email, phone, password, whatsApp, adresse } =
+  const { firstName, lastName, email, phone, password, whatsApp, adresse,photoUrl} =
     req.body;
   role = "1";
+ 
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -61,6 +94,7 @@ const addCustomer = async (req, res) => {
       whatsApp,
       adresse,
       role,
+      photoUrl: req.locals.filePath
     };
     await client.create(user);
     return res.status(201).json({ message: "user create" });
@@ -114,35 +148,7 @@ const deleteuser = async (req, res) => {
 
 
 
-//upload photo
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const fileName = Date.now() + "-" + file.originalname;
-    
-    req["locals"] = {filePath : "uploads/" + fileName}
-    cb(null, fileName);
-  }
-});
 
-const upload = multer({ storage: storage });
-
-const uploadPhoto=async (req, res) => {
-  const userId = req.params.userId;
-
-  const user = await client.findById(userId);
-  if (!user) {
-    return res.status(404).send("User not found");
-  }
-
-  user.photoUrl = req.locals.filePath
-  console.log(req.locals.filePath);
-
-  await user.save();
-  res.send("File uploaded successfully!");
-};
 
 
 

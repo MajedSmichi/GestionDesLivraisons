@@ -37,8 +37,9 @@ router.get("/getCustomer/:id", getuser);
 
 router.get("/AllCustomersUsers", getAllCustomersUsers);
 
+
 //addCustomer
-router.post("/addCustomer", addCustomer);
+router.post("/addCustomer", upload.single("photo") ,addCustomer);
 
 //update Customerr oute
 router.put("/update/:id", update);
@@ -60,9 +61,8 @@ router.get("/getAllAgent", getAllAgent);
 router.put("/updateAgent/:id", updateAgent);
 
 //post photo
-router.post("/upload/:userId", upload.single("photo"), uploadPhoto);
 
-/****************************************Authentification route *****************************/
+/****************************************Authentification route ****************************************/
 // Login route
 router.post("/login", login);
 
