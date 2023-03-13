@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
-import { bindActionCreators } from "redux";
+
 
 //img
 
@@ -12,55 +12,11 @@ import avatars1 from "../../../assets/images/avatars/01.png";
 
 
 
-// store
-import {
-  NavbarstyleAction,
-  getDirMode,
-  SchemeDirAction,
-  getNavbarStyleMode,
-  getSidebarActiveMode,
-  SidebarActiveStyleAction,
-  getDarkMode,
-  ModeAction,
-  SidebarColorAction,
-  getSidebarColorMode,
-  getSidebarTypeMode,
-} from "../../../store/setting/setting";
-import { connect } from "react-redux";
 
-const mapStateToProps = (state) => {
-  return {
-    darkMode: getDarkMode(state),
-    schemeDirMode: getDirMode(state),
-    sidebarcolorMode: getSidebarColorMode(state),
-    sidebarTypeMode: getSidebarTypeMode(state),
-    sidebaractivestyleMode: getSidebarActiveMode(state),
-    navbarstylemode: getNavbarStyleMode(state),
-  };
-};
-const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(
-    {
-      ModeAction,
-      SchemeDirAction,
-      SidebarColorAction,
-      SidebarActiveStyleAction,
-      NavbarstyleAction,
-    },
-    dispatch
-  ),
-});
+
 
 const Header = (props) => {
-  useEffect(() => {
-    // navbarstylemode
-    const navbarstyleMode1 = sessionStorage.getItem("Navbarstyle-mode");
-    if (navbarstyleMode1 === null) {
-      props.NavbarstyleAction(props.navbarstylemode);
-    } else {
-      props.NavbarstyleAction(navbarstyleMode1);
-    }
-  });
+
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
@@ -238,4 +194,4 @@ const Header = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;

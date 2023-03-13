@@ -1,57 +1,62 @@
-import React, { useState } from "react";
-import FsLightbox from "fslightbox-react";
+import React, { useEffect, useState } from "react";
 
-import { Row, Col, Image, Form, Nav, Dropdown, Tab } from "react-bootstrap";
+import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 
 import { Link } from "react-router-dom";
 // img
-
+import { AiOutlineEdit } from "react-icons/ai";
+import { FiSave } from "react-icons/fi";
 import avatars11 from "../../../assets/images/avatars/01.png";
-import avatars22 from "../../../assets/images/avatars/avtar_1.png";
-import avatars33 from "../../../assets/images/avatars/avtar_2.png";
-import avatars44 from "../../../assets/images/avatars/avtar_3.png";
-import avatars55 from "../../../assets/images/avatars/avtar_4.png";
-import avatars66 from "../../../assets/images/avatars/avtar_5.png";
-import avatars2 from "../../../assets/images/avatars/02.png";
-import avatars3 from "../../../assets/images/avatars/03.png";
-import avatars4 from "../../../assets/images/avatars/04.png";
-import avatars5 from "../../../assets/images/avatars/05.png";
+import axios from "axios";
+import { apiUrl } from "../../../Constants";
 
-import icon1 from "../../../assets/images/icons/01.png";
-import icon2 from "../../../assets/images/icons/02.png";
 
-import icon4 from "../../../assets/images/icons/04.png";
-import icon8 from "../../../assets/images/icons/08.png";
-
-import icon5 from "../../../assets/images/icons/05.png";
-import shap2 from "../../../assets/images/shapes/02.png";
-import shap4 from "../../../assets/images/shapes/04.png";
-import shap6 from "../../../assets/images/shapes/06.png";
-import pages2 from "../../../assets/images/pages/02-page.png";
-
-import ShareOffcanvas from "../../../components/partials/components/shareoffcanvas";
 
 const UserProfileAgent = () => {
-  const [data, setData] = useState("majed");
+  
   const [editData, setEditData] = useState(false);
-  const [toggler, setToggler] = useState(false);
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    whatsApp: "",
+    adresse: "",
+    vehicule:"",
+    idCard:"",
+    // joindate: new Date().toISOString()
+    dateOfBirth:"",
+  });
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const user = localStorage.getItem("user");
+        const response = await axios.get(`${apiUrl}/users/getAgent/${user}`);
+        setUserData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+  }, []);
+
+  const updateData = async () => {
+    setEditData(false);
+
+    try {
+      const user = localStorage.getItem("user");
+      await axios.put(`${apiUrl}/users/updateAgent/${user}`, userData);
+      const response = await axios.get(`${apiUrl}/users/user/${user}`);
+      setUserData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <FsLightbox
-        toggler={toggler}
-        sources={[
-          icon4,
-          shap2,
-          icon8,
-          shap4,
-          icon2,
-          shap6,
-          icon5,
-          shap4,
-          icon1,
-        ]}
-      />
       <Tab.Container defaultActiveKey="first">
         <Row>
           <Col lg="12">
@@ -60,7 +65,7 @@ const UserProfileAgent = () => {
                 <div className="d-flex flex-wrap align-items-center justify-content-between ">
                   <Nav
                     as="ul"
-                    className="d-flex nav-pills mb-0 text-center profile-tab"
+                    className="d-flex nav-pills mb-0 p-center profile-tab"
                     data-toggle="slider-tab"
                     id="profile-pills-tab"
                     role="tablist"
@@ -89,7 +94,7 @@ const UserProfileAgent = () => {
                     <div className="iq-timeline0 m-0 d-flex align-items-center justify-content-between position-relative">
                       <ul className="list-inline p-0 m-0">
                         <li>
-                          <div className="timeline-dots timeline-dot1 border-primary text-primary"></div>
+                          <div className="timeline-dots timeline-dot1 border-primary p-primary"></div>
                           <h6 className="float-left mb-1">Client Login</h6>
                           <small className="float-right mt-1">
                             24 November 2019
@@ -102,7 +107,7 @@ const UserProfileAgent = () => {
                           </div>
                         </li>
                         <li>
-                          <div className="timeline-dots timeline-dot1 border-success text-success"></div>
+                          <div className="timeline-dots timeline-dot1 border-success p-success"></div>
                           <h6 className="float-left mb-1">
                             Scheduled Maintenance
                           </h6>
@@ -117,7 +122,7 @@ const UserProfileAgent = () => {
                           </div>
                         </li>
                         <li>
-                          <div className="timeline-dots timeline-dot1 border-danger text-danger"></div>
+                          <div className="timeline-dots timeline-dot1 border-danger p-danger"></div>
                           <h6 className="float-left mb-1">Dev Meetup</h6>
                           <small className="float-right mt-1">
                             20 November 2019
@@ -148,7 +153,7 @@ const UserProfileAgent = () => {
                           </div>
                         </li>
                         <li>
-                          <div className="timeline-dots timeline-dot1 border-primary text-primary"></div>
+                          <div className="timeline-dots timeline-dot1 border-primary p-primary"></div>
                           <h6 className="float-left mb-1">Client Call</h6>
                           <small className="float-right mt-1">
                             19 November 2019
@@ -161,7 +166,7 @@ const UserProfileAgent = () => {
                           </div>
                         </li>
                         <li>
-                          <div className="timeline-dots timeline-dot1 border-warning text-warning"></div>
+                          <div className="timeline-dots timeline-dot1 border-warning p-warning"></div>
                           <h6 className="float-left mb-1">Mega event</h6>
                           <small className="float-right mt-1">
                             15 November 2019
@@ -186,46 +191,26 @@ const UserProfileAgent = () => {
                     </div>
                   </Card.Header>
                   <Card.Body>
-                    <div className="text-center">
+                    <div className="p-center">
                       <div className="user-profile">
                         <Image
                           className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
                           src={avatars11}
                           alt="profile-pic"
                         />
-                        <Image
-                          className="theme-color-purple-img rounded-pill avatar-130 img-fluid"
-                          src={avatars22}
-                          alt="profile-pic"
-                        />
-                        <Image
-                          className="theme-color-blue-img rounded-pill avatar-130 img-fluid"
-                          src={avatars33}
-                          alt="profile-pic"
-                        />
-                        <Image
-                          className="theme-color-green-img rounded-pill avatar-130 img-fluid"
-                          src={avatars55}
-                          alt="profile-pic"
-                        />
-                        <Image
-                          className="theme-color-yellow-img rounded-pill avatar-130 img-fluid"
-                          src={avatars66}
-                          alt="profile-pic"
-                        />
-                        <Image
-                          className="theme-color-pink-img rounded-pill avatar-130 img-fluid"
-                          src={avatars44}
-                          alt="profile-pic"
-                        />
                       </div>
                       <div className="mt-3">
-                        <h3 className="d-inline-block">Austin Robertson</h3>
-                        <p className="d-inline-block pl-3"> - Web developer</p>
+                        <h3 className="d-inline-block">
+                          {userData.firstName} {userData.lastName}{" "}
+                        </h3>
+                        <p className="d-inline-block pl-3">
+                          {" "}
+                          - Delivery Agent 
+                        </p>
                         <p className="mb-0">
-                          Lorem Ipsum is simply dummy text of the printing and
+                          Lorem Ipsum is simply dummy p of the printing and
                           typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy text ever since the 1500s
+                          industry's standard dummy p ever since the 1500s
                         </p>
                       </div>
                     </div>
@@ -239,65 +224,194 @@ const UserProfileAgent = () => {
                   </Card.Header>
                   <Card.Body>
                     <div>
+                      <h5 className="label label-default">First Name:</h5>
                       {!editData ? (
-                        <>
-                          <text>{data}</text>
-                          <Link
-                            className="btn btn-sm btn-icon btn-warning"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title=""
-                            data-original-title="Edit"
-                            to="#"
+                        <div className="mb-3">
+                          <p>{userData.firstName}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              Last Name:
+                            </span>
+                          </h5>
+                          <p>{userData.lastName}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">Email:</span>
+                          </h5>
+                          <p>{userData.email}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">Phone:</span>
+                          </h5>
+                          <p>{userData.phone}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              WhatsAppPhone:
+                            </span>
+                          </h5>
+                          <p>{userData.whatsApp}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              Adresse:
+                            </span>
+                          </h5>
+                          <p>{userData.adresse}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                            Date of birth:
+                            </span>
+                          </h5>
+                          <p>{userData.dateOfBirth}</p>
+                          <Button
+                            className="btn-inner "
                             onClick={() => setEditData(true)}
                           >
-                            <span className="btn-inner">
-                              <svg
-                                width="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341"
-                                  stroke="currentColor"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                ></path>
-                                <path
-                                  fillRule="evenodd"
-                                  clipRule="evenodd"
-                                  d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z"
-                                  stroke="currentColor"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                ></path>
-                                <path
-                                  d="M15.1655 4.60254L19.7315 9.16854"
-                                  stroke="currentColor"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                ></path>
-                              </svg>
-                            </span>
-                          </Link>{" "}
-                          {/* <button onClick={() => setEditData(true)}>
-                            edit
-                          </button> */}
-                        </>
+                            Edit
+                            <AiOutlineEdit />
+                          </Button>
+                        </div>
                       ) : (
-                        <>
+                        <div className="input mb-3">
                           <input
-                            value={data}
-                            onChange={(e) => setData(e.target.value)}
+                            className="form-control"
+                            value={userData.firstName}
+                            required
+                            onChange={(e) =>
+                              setUserData({
+                                ...userData,
+                                firstName: e.target.value,
+                              })
+                            }
                           />
-                          <button onClick={() => setEditData(false)}>
-                            save
-                          </button>
-                        </>
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              Last Name:
+                            </span>
+                          </h5>
+                          <input
+                            className="form-control"
+                            value={userData.lastName}
+                            onChange={(e) =>
+                              setUserData({
+                                ...userData,
+                                lastName: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <h5>
+                            <span className="label label-default">Email:</span>
+                          </h5>
+                          <input
+                            className="form-control"
+                            value={userData.email}
+                            onChange={(e) =>
+                              setUserData({
+                                ...userData,
+                                email: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <h5>
+                            <span className="label label-default">Phone:</span>
+                          </h5>
+                          <input
+                            className="form-control"
+                            value={userData.phone}
+                            onChange={(e) =>
+                              setUserData({
+                                ...userData,
+                                phone: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              WhatsAppPhone:
+                            </span>
+                          </h5>
+                          <input
+                            className="form-control"
+                            value={userData.whatsApp || ""}
+                            onChange={(e) =>
+                              setUserData({
+                                ...userData,
+                                whatsApp: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              Vehicule:
+                            </span>
+                          </h5>
+                          <input
+                            className="form-control"
+                            value={userData.vehicule}
+                            onChange={(e) =>
+                              setUserData({
+                                ...userData,
+                                vehicule: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              Adresse:
+                            </span>
+                          </h5>
+                          <input
+                            className="form-control"
+                            value={userData.adresse}
+                            onChange={(e) =>
+                              setUserData({
+                                ...userData,
+                                adresse: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          
+                          <h5>
+                            <span className="label label-default">
+                              Date of birth :
+                            </span>
+                          </h5>
+                            <input
+                              type="date"
+                              min="1960-01-01"
+                              max="2010-12-31"
+                              className="form-control"
+                              value={userData.dateOfBirth}
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  dateOfBirth: e.target.value,
+                                })
+                              }
+                            />
+                          <br />
+                          <br />
+                          <Button onClick={updateData} className=" btn-inner">
+                            Save
+                            <FiSave />
+                          </Button>
+                        </div>
                       )}
                     </div>
                   </Card.Body>

@@ -1,45 +1,10 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import { Row,Col,Container} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import {bindActionCreators} from "redux"
-//img
-import topHeader from '../../../assets/images/dashboard/top-header.png'
 
-// store
-import {NavbarstyleAction, getDirMode, SchemeDirAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode, getSidebarTypeMode} from '../../../store/setting/setting'
-import {connect} from "react-redux"
-
-const mapStateToProps = (state) => {
-    return {
-        darkMode: getDarkMode(state),
-        schemeDirMode: getDirMode(state),
-        sidebarcolorMode: getSidebarColorMode(state),
-        sidebarTypeMode: getSidebarTypeMode(state),
-        sidebaractivestyleMode: getSidebarActiveMode(state),
-        navbarstylemode: getNavbarStyleMode(state),
-    };
-}
-const mapDispatchToProps = dispatch => ({
-    ...bindActionCreators(
-        {
-            ModeAction,
-            SchemeDirAction,
-            SidebarColorAction,
-            SidebarActiveStyleAction,
-            NavbarstyleAction,
-        },
-        dispatch
-    )
-})
 
 
 const SubHeaderAgent = (props) => {
 
-    useEffect(() => {
-        // navbarstylemode
-       const navbarstyleMode = sessionStorage.getItem('Navbarstyle-mode');
-       props.NavbarstyleAction(navbarstyleMode);
- })
     return (
         <>
             <div className="iq-navbar-header" style={{height: "215px",color:"blue"}}>
@@ -58,4 +23,4 @@ const SubHeaderAgent = (props) => {
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubHeaderAgent)
+export default SubHeaderAgent

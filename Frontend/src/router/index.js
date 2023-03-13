@@ -19,8 +19,9 @@ import ConfirmMail from "../landingpage/Auth/confirm-mail";
 //users
 
 import UserProfileClient from "../views/dashboardClient/app/user-profileClient";
-
+import UserProfileAgent from "../views/dashboradAgent/app/user-profileAgent";
 import UserAdd from "../views/dashboard/app/user-add";
+import AddAgent from "../views/dashboard/app/user-addAgent";
 import UserList from "../views/dashboard/app/user-list";
 //special pages
 import CalenderClient from "../views/dashboardClient/special-pages/calenderClient";
@@ -29,6 +30,8 @@ import Pricing from "../views/dashboard/special-pages/pricing";
 
 // map
 import Google from "../views/dashboard/maps/google";
+import UserListAgent from "../views/dashboard/app/user-listAgent";
+
 const IndexRouters = () => {
   // const user = localStorage.getItem('user');
 
@@ -49,6 +52,8 @@ const IndexRouters = () => {
           {/* user */}
           <Route path="user-add" element={<UserAdd />} />
           <Route path="user-list" element={<UserList />} />
+          <Route path="user-listAgent" element={<UserListAgent />} />
+          <Route path="addAgent" element={<AddAgent/>} /> 
          
 
           {/*special pages */}
@@ -57,7 +62,9 @@ const IndexRouters = () => {
           {/* map */}
           <Route path="google" exact element={<Google />} />
         </Route>
-        <Route path="dashboardAgent" element={<DefaultAgent />} />
+        <Route path="dashboardAgent" element={<DefaultAgent />}>
+        <Route path="user-profileAgent" element={<UserProfileAgent />} />
+        </Route>
         <Route path="dashboardCustomer" element={<DefaultCustomer />}>
           <Route path="user-profileClient" element={<UserProfileClient />} />
           <Route path="calendarClient" element={<CalenderClient />} />

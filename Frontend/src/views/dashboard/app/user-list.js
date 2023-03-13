@@ -13,9 +13,11 @@ const UserList = () => {
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(false);
   const [userData, setUserData] = useState([]);
+  
   useEffect(() => {
     getAllCustomersUser();
   }, []);
+
 
   const getAllCustomersUser = async () => {
     try {
@@ -106,7 +108,7 @@ const UserList = () => {
                                 <td className="text-center">
                                   <Image
                                     className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                    src={item.img}
+                                    src={item.photoUrl}
                                     alt="profile"
                                   />
                                 </td>
@@ -194,7 +196,7 @@ const UserList = () => {
                               <td className="text-center">
                                 <Image
                                   className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                  src={item.img}
+                                  src={item.photoUrl}
                                   alt="profile"
                                 />
                               </td>

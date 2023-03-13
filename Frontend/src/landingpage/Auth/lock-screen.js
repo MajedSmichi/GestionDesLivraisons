@@ -18,7 +18,7 @@ const LockScreen = () => {
    const server='http://localhost:5000/users/Admin';
    const onAdmin=async(e)=>{
        e.preventDefault()
-       if(data.password==''){
+       if(data.password===''){
          setError("Please enter your password")
          return
        }

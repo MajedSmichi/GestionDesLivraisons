@@ -28,7 +28,7 @@ const Recoverpw = () => {
            return
       }
       try{
-        const res=await axios.post(server,{...data, role:id})
+        await axios.post(server,{...data, role:id})
         
        
         setSuccessMessage('Check your mailbox');

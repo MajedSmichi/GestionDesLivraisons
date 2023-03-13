@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
@@ -27,6 +27,8 @@ import {
   getSidebarTypeMode,
 } from "../../../store/setting/setting";
 import { connect } from "react-redux";
+import axios from "axios";
+import { apiUrl } from "../../../Constants";
 
 const mapStateToProps = (state) => {
   return {
@@ -64,6 +66,22 @@ const HeaderAgent = (props) => {
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+  });
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const user = localStorage.getItem("user");
+        const response = await axios.get(`${apiUrl}/users/getAgent/${user}`);
+        setUserData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+  }, []);
 
   return (
     <>
@@ -214,7 +232,7 @@ const HeaderAgent = (props) => {
                   />
 
                   <div className="caption ms-3 d-none d-md-block ">
-                    <h6 className="mb-0 caption-title">Majed Smichi</h6>
+                    <h6 className="mb-0 caption-title">{userData.firstName} {userData.lastName}</h6>
                     <p className="mb-0 caption-sub-title">
                       Delivery Agent
                     </p>
