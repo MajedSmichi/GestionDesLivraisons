@@ -41,8 +41,8 @@ router.get("/AllCustomersUsers", getAllCustomersUsers);
 //addCustomer
 router.post("/addCustomer", upload.single("photo") ,addCustomer);
 
-//update Customerr oute
-router.put("/update/:id", update);
+//update Customer route
+router.put("/update/:id",  upload.single("photo"),update);
 
 /********************************************Agent route ****************************************************/
 //delete agent route

@@ -3,39 +3,6 @@ const multer = require("multer");
 const client = require("../models/clientModel");
 const bcrypt = require("bcryptjs");
 
-//update user
-const update = async (req, res) => {
-  const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
-  const { id } = req.params;
-  try {
-    
-    const user = await client.findById(id);
-    if (email !== user.email) {
-      const exist = await client.findOne({ email });
-      if (exist) return res.status(400).json({ error: "User already exist" });
-    }
-
-    await client.findByIdAndUpdate(
-      { _id: id },
-      {
-        $set: {
-          firstName,
-          lastName,
-          email,
-          phone,
-          whatsApp,
-          adresse,
-          dateOfBirth,
-        },
-      }
-    );
-    return res.status(200).json({ message: "User data updated" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
-
 //upload photo
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -66,6 +33,43 @@ const uploadPhoto=async (req, res) => {
   await user.save();
   res.send("File uploaded successfully!");
 };
+//update user
+const update = async (req, res) => {
+  const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
+  const { id } = req.params;
+  try {
+    
+    const user = await client.findById(id);
+    if (email !== user.email) {
+      const exist = await client.findOne({ email });
+      if (exist) return res.status(400).json({ error: "User already exist" });
+    }
+
+    const newUser = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      whatsApp,
+      adresse,
+      dateOfBirth,
+    }
+    
+    if(req.locals?.filePath) newUser.photoUrl = req.locals.filePath
+
+    await client.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: newUser,
+      }
+    );
+    return res.status(200).json({ message: "User data updated" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 
 //add customer in admin dashboard

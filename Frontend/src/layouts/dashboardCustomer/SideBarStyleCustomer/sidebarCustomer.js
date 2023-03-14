@@ -1,71 +1,15 @@
-import React,{useEffect} from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import VerticalNavCustomer from './vertical-navCustomer'
-import Scrollbar from 'smooth-scrollbar'
-import {bindActionCreators} from "redux"
-// import SidebarDark from '../../components/settingoffcanvas'
 
-// export const SidebarDark =() =>{
 
-// }
-
-// store
-import {NavbarstyleAction, getDirMode, SchemeDirAction,  getNavbarStyleMode, getSidebarActiveMode, SidebarActiveStyleAction, getDarkMode, ModeAction,  SidebarColorAction, getSidebarColorMode, getSidebarTypeMode} from '../../../store/setting/setting'
-import {connect} from "react-redux"
-
-const mapStateToProps = (state) => {
-    return {
-        darkMode: getDarkMode(state),
-        schemeDirMode: getDirMode(state),
-        sidebarcolorMode: getSidebarColorMode(state),
-        sidebarTypeMode: getSidebarTypeMode(state),
-        sidebaractivestyleMode: getSidebarActiveMode(state),
-        navbarstylemode: getNavbarStyleMode(state),
-    };
-}
-const mapDispatchToProps = dispatch => ({
-    ...bindActionCreators(
-        {
-            ModeAction,
-            SchemeDirAction,
-            SidebarColorAction,
-            SidebarActiveStyleAction,
-            NavbarstyleAction,
-        },
-        dispatch
-    )
-})
 
 
 const SidebarCustomer = (props) => {
     
     
     
-    useEffect(
-        () =>{
-            // sidebarcolormode
-            const sidebarcolorMode1 = sessionStorage.getItem('sidebarcolor-mode');
-            if(sidebarcolorMode1===null){
-                props.SidebarColorAction(props.sidebarcolorMode);
-            }
-            else{
-                props.SidebarColorAction(sidebarcolorMode1);
-            }
-
-            // sidebarstylemode
-            const sidebarstyleMode = sessionStorage.getItem('sidebarstyle-mode');
-            if(sidebarstyleMode===null){
-                props.SidebarActiveStyleAction(props.sidebaractivestyleMode);
-            }
-            else{
-                props.SidebarActiveStyleAction(sidebarstyleMode);
-            }
-            Scrollbar.init(document.querySelector('#my-scrollbar'))
-        }
-        
-         
     
-    )
     const minisidebar =() =>{
         document.getElementsByTagName('ASIDE')[0].classList.toggle('sidebar-mini')
     }
@@ -101,5 +45,5 @@ const SidebarCustomer = (props) => {
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SidebarCustomer)
+export default SidebarCustomer
 

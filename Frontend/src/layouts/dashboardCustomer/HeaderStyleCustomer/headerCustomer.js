@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link} from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
@@ -13,6 +13,7 @@ import avatars1 from "../../../assets/images/avatars/01.png";
 
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
+import { UserContext } from "../../../App";
 
 
 const HeaderCustomer = (props) => {
@@ -20,15 +21,12 @@ const HeaderCustomer = (props) => {
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-  });
+  const {userData, setUserData} = useContext(UserContext);
   useEffect(() => {
     const getUserData = async () => {
       try {
         const user = localStorage.getItem("user");
-        const response = await axios.get(`${apiUrl}/users/user/${user}`);
+        const response = await axios.get(`${apiUrl}/users/getCustomer/${user}`);
         setUserData(response.data);
       } catch (error) {
         console.log(error);
@@ -179,11 +177,15 @@ const HeaderCustomer = (props) => {
                   role="button"
                   aria-expanded="false"
                 >
-                  <img
+                  {!userData.photoUrl ?(<img
                     src={avatars1}
                     alt="User-Profile"
                     className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
-                  />
+                  />):(<img
+                    src={"http://localhost:5000/"+userData.photoUrl}
+                    alt="User-Profile"
+                    className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
+                  />)}
 
                   <div className="caption ms-3 d-none d-md-block ">
                     <h6 className="mb-0 caption-title">{userData.firstName} {userData.lastName}</h6>

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
-import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
+import { Row, Col, Image, Nav, Tab, Button, Form } from "react-bootstrap";
 import Card from "../../../components/Card";
 
 import { Link } from "react-router-dom";
@@ -10,33 +10,26 @@ import { FiSave } from "react-icons/fi";
 import avatars11 from "../../../assets/images/avatars/01.png";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
+import { UserContext } from "../../../App";
 
 
-
+const avatar="../../../assets/images/avatars/01.png";
 const UserProfileClient = () => {
   
   const [editData, setEditData] = useState(false);
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    whatsApp: "",
-    adresse: "",
-    // joindate: new Date().toISOString()
-    dateOfBirth:"",
-  });
+  const {userData, setUserData} = useContext(UserContext)
 
+  const getUserData = async () => {
+    try {
+      const user = localStorage.getItem("user");
+      const response = await axios.get(`${apiUrl}/users/getCustomer/${user}`);
+      setUserData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+ 
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const user = localStorage.getItem("user");
-        const response = await axios.get(`${apiUrl}/users/user/${user}`);
-        setUserData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getUserData();
   }, []);
 
@@ -45,14 +38,25 @@ const UserProfileClient = () => {
 
     try {
       const user = localStorage.getItem("user");
-      await axios.put(`${apiUrl}/users/update/${user}`, userData);
-      const response = await axios.get(`${apiUrl}/users/user/${user}`);
-      setUserData(response.data);
+      const body = new FormData();
+      body.append("firstName",userData.firstName);
+      body.append("lastName",userData.lastName);
+      body.append("email", userData.email);
+      body.append("phone",userData.phone);
+      body.append("whatsApp",userData.whatsApp)
+      if(userData.photo?.name) {
+        body.append("photo", userData.photo, userData.photo.name);
+      }
+      body.append("adresse",userData.adresse);
+      body.append("date of birth",userData.dateOfBirth);
+      
+      await axios.put(`${apiUrl}/users/update/${user}`, body);
+      getUserData()
     } catch (error) {
       console.log(error);
     }
   };
-
+  const photo="http://localhost:5000/"+userData.photoUrl;
   return (
     <>
       <Tab.Container defaultActiveKey="first">
@@ -191,11 +195,18 @@ const UserProfileClient = () => {
                   <Card.Body>
                     <div className="p-center">
                       <div className="user-profile">
-                        <Image
+                      { !userData.photoUrl ? (<Image
                           className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
                           src={avatars11}
+                          
                           alt="profile-pic"
-                        />
+                        />)
+                        :(<Image
+                          className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
+                          src={photo}
+                          
+                          alt="profile-pic"/>)
+                          }
                       </div>
                       <div className="mt-3">
                         <h3 className="d-inline-block">
@@ -222,9 +233,10 @@ const UserProfileClient = () => {
                   </Card.Header>
                   <Card.Body>
                     <div>
-                      <h5 className="label label-default">First Name:</h5>
+                      
                       {!editData ? (
                         <div className="mb-3">
+                          <h5 className="label label-default">First Name:</h5>
                           <p>{userData.firstName}</p>
                           <br />
                           <br />
@@ -279,7 +291,24 @@ const UserProfileClient = () => {
                           </Button>
                         </div>
                       ) : (
+                        <form action="/uploads" method="POST" encType="multipart/form-data">
                         <div className="input mb-3">
+                           <h5 className="label label-default">Profile Photo:</h5>
+                          <input
+                             className="file-upload" 
+                             type="file"
+                             accept="image/*"
+                             id="photo"
+                             name="photo"
+                             onChange={(e) =>
+                              
+                              setUserData({ ...userData, photo: e.target.files[0]} )
+                              
+                            }
+                          />
+                          <br />
+                          <br />
+                          <h5 className="label label-default">First Name:</h5>
                           <input
                             className="form-control"
                             value={userData.firstName}
@@ -394,6 +423,7 @@ const UserProfileClient = () => {
                             <FiSave />
                           </Button>
                         </div>
+                        </form>
                       )}
                     </div>
                   </Card.Body>

@@ -70,7 +70,7 @@ const UserAdd = () => {
       body.append("password",data.password);
       body.append("confirmPassword",confirmPassword);
       body.append("role",role);
-      console.log(body)
+      
       await axios.post(server, body);
       setSuccessMessage("User created");
       setTimeout(() => {
