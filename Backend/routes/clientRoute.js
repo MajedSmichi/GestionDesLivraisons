@@ -17,6 +17,7 @@ const {
   addCustomer,
   upload,
   uploadPhoto,
+  updateClientLocation
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -25,6 +26,7 @@ const {
   getAllAgent,
   deleteAgent,
   addAgent,
+  
 } = require("../controllers/userDataAgent");
 const router = Router();
 
@@ -44,8 +46,11 @@ router.post("/addCustomer", upload.single("photo") ,addCustomer);
 //update Customer route
 router.put("/update/:id",  upload.single("photo"),update);
 
+router.put("/update-location/:id",updateClientLocation );
+
 /********************************************Agent route ****************************************************/
 //delete agent route
+
 router.delete("/deleteAgent/:id", deleteAgent);
 
 //add agent route

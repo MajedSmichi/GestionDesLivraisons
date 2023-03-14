@@ -31,6 +31,8 @@ import Pricing from "../views/dashboard/special-pages/pricing";
 // map
 import Google from "../views/dashboard/maps/google";
 import UserListAgent from "../views/dashboard/app/user-listAgent";
+import GoogleAgent from "../views/dashboradAgent/maps/google";
+import GoogleClient from "../views/dashboardClient/maps/google";
 
 const IndexRouters = () => {
   // const user = localStorage.getItem('user');
@@ -64,10 +66,12 @@ const IndexRouters = () => {
         </Route>
         <Route path="dashboardAgent" element={<DefaultAgent />}>
         <Route path="user-profileAgent" element={<UserProfileAgent />} />
+        <Route path="mapAgent" element={<GoogleAgent/>}/>
         </Route>
         <Route path="dashboardCustomer" element={<DefaultCustomer />}>
           <Route path="user-profileClient" element={<UserProfileClient />} />
           <Route path="calendarClient" element={<CalenderClient />} />
+          <Route path="mapClient" element={<GoogleClient />}/>
         </Route>
       </Routes>
     </>

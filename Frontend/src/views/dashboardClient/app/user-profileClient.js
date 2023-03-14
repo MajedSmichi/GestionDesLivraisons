@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { Row, Col, Image, Nav, Tab, Button, Form } from "react-bootstrap";
+import { Row, Col, Image, Nav, Tab, Button} from "react-bootstrap";
 import Card from "../../../components/Card";
 
 import { Link } from "react-router-dom";
@@ -13,7 +13,6 @@ import { apiUrl } from "../../../Constants";
 import { UserContext } from "../../../App";
 
 
-const avatar="../../../assets/images/avatars/01.png";
 const UserProfileClient = () => {
   
   const [editData, setEditData] = useState(false);

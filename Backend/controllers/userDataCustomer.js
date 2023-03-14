@@ -33,6 +33,28 @@ const uploadPhoto=async (req, res) => {
   await user.save();
   res.send("File uploaded successfully!");
 };
+
+const updateClientLocation = async (req, res) => {
+  const { longitude, latitude } = req.body;
+  const { id } = req.params;
+  try {
+   
+    await client.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          longitude,
+          latitude
+        },
+      }
+    );
+    return res.status(200).json({ message: "User data updated" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 //update user
 const update = async (req, res) => {
   const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
@@ -54,7 +76,7 @@ const update = async (req, res) => {
       adresse,
       dateOfBirth,
     }
-    
+
     if(req.locals?.filePath) newUser.photoUrl = req.locals.filePath
 
     await client.findByIdAndUpdate(
@@ -168,3 +190,4 @@ exports.update = update;
 exports.getuser = getuser;
 exports.getAllCustomersUsers = getAllCustomersUsers;
 exports.addCustomer = addCustomer;
+exports.updateClientLocation = updateClientLocation;

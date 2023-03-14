@@ -10,6 +10,8 @@ const clientSchema = mongoose.Schema({
   vehicule:{type:String,required:false},
   idCard:{type:Number,required:false},
   dateOfBirth: { type: Date, required: false },
+  latitude:{type:String},
+  longitude:{type:String},
   role:{type:String, required: true}
 });
 module.exports = mongoose.model("agent", clientSchema);

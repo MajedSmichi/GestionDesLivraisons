@@ -9,6 +9,8 @@ const clientSchema = mongoose.Schema({
   adresse: { type: String, required: false },
   role: { type: String, required: false },
   dateOfBirth: { type: Date, required: false },
+  latitude:{type:String},
+  longitude:{type:String},
   photoUrl: String
 
 });

@@ -161,7 +161,7 @@ const VerticalNavCustomer = () => {
                     <Accordion.Collapse eventKey="sidebar-maps">
                         <ul className="sub-nav">
                             <li className="nav-item">
-                                <Link className={`${location.pathname === 'google' ? 'active' : ''} nav-link`} to="google">
+                                <Link className={`${location.pathname === 'mapClient' ? 'active' : ''} nav-link`} to="mapClient">
                                     <i className="icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                             <g>

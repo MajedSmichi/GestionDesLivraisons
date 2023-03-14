@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from "react";
 //router
 import IndexRouters from "./router/index";
 
@@ -8,6 +8,8 @@ import "./assets/scss/dark.scss";
 import "./assets/scss/rtl.scss";
 import "./assets/scss/custom.scss";
 import "./assets/scss/customizer.scss";
+import axios from "axios";
+import { apiUrl } from "./Constants";
 
 export const UserContext = React.createContext({});
 
@@ -19,10 +21,28 @@ function App() {
     phone: "",
     whatsApp: "",
     adresse: "",
-    photo:"",
+    photo: "",
     // joindate: new Date().toISOString()
-    dateOfBirth:"",
+    dateOfBirth: "",
   });
+
+  useEffect(() => {
+    let id = setInterval(() => {
+      const user = localStorage.getItem("user");
+      if (navigator.geolocation && user) {
+        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+          await axios.put(`${apiUrl}/users/update-location/${user}`, {
+            latitude: coords.latitude + "",
+            longitude: coords.longitude + ""
+          });
+        });
+      }
+    }, 2000);
+    return () => {
+      clearInterval(id);
+    };
+  }, []);
+
   return (
     <div className="App">
       <UserContext.Provider value={{ userData, setUserData }}>

@@ -105,13 +105,13 @@ const UserList = () => {
                           if (editData === idx) {
                             return (
                               <tr key={idx}>
-                                <td className="text-center">
-                                  <Image
-                                    className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                    src={item.photoUrl}
-                                    alt="profile"
-                                  />
-                                </td>
+                                <td className="text-center grow">
+                                <Image
+                                  className="bg-soft-primary rounded img-fluid avatar-40 me-3"
+                                  src={"http://localhost:5000/"+item.photoUrl}
+                                  alt="profile"
+                                />
+                              </td>
                                 <td>
                                   <input
                                     value={item.firstName}

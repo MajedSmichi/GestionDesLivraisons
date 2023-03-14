@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link} from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
