@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState } from "react";
 
 import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
@@ -10,35 +10,22 @@ import { FiSave } from "react-icons/fi";
 import avatars11 from "../../../assets/images/avatars/01.png";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
-
-
+import { agentContext } from "../../../App";
 
 const UserProfileAgent = () => {
-  
   const [editData, setEditData] = useState(false);
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    whatsApp: "",
-    adresse: "",
-    vehicule:"",
-    idCard:"",
-    // joindate: new Date().toISOString()
-    dateOfBirth:"",
-  });
-
+  const {agentData, setAgentData} = useContext(agentContext)
+ 
+  const getUserData = async () => {
+    try {
+      const user = localStorage.getItem("user");
+      const response = await axios.get(`${apiUrl}/users/getAgent/${user}`);
+      setAgentData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const user = localStorage.getItem("user");
-        const response = await axios.get(`${apiUrl}/users/getAgent/${user}`);
-        setUserData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getUserData();
   }, []);
 
@@ -47,25 +34,46 @@ const UserProfileAgent = () => {
 
     try {
       const user = localStorage.getItem("user");
-      await axios.put(`${apiUrl}/users/updateAgent/${user}`, userData);
-      const response = await axios.get(`${apiUrl}/users/user/${user}`);
-      setUserData(response.data);
+      const body = new FormData();
+      body.append("firstName", agentData.firstName);
+      body.append("lastName", agentData.lastName);
+      body.append("email", agentData.email);
+      body.append("phone", agentData.phone);
+      body.append("whatsApp", agentData.whatsApp);
+      if (agentData.photo?.name) {
+        body.append("photo", agentData.photo, agentData.photo.name);
+      }
+      if (agentData.cardPhoto1?.name) {
+        body.append("cardPhoto1", agentData.cardPhoto1, agentData.cardPhoto1.name);
+      }
+      if (agentData.cardPhoto2?.name) {
+        body.append("cardPhoto2", agentData.cardPhoto2, agentData.cardPhoto2.name);
+      }
+      body.append("adresse", agentData.adresse);
+      body.append("dateOfBirth", agentData.dateOfBirth);
+      body.append("idCard", agentData.idCard);
+      body.append("vehicule", agentData.vehicule);
+      await axios.put(`${apiUrl}/users/updateAgent/${user}`, body);
+      getUserData();
     } catch (error) {
       console.log(error);
     }
   };
+  const photo="http://localhost:5000/"+agentData.photoUrl;
+  const cardPhoto1="http://localhost:5000/"+agentData.cardPhoto1;
+  const cardPhoto2="http://localhost:5000/"+agentData.cardPhoto2;
 
   return (
     <>
       <Tab.Container defaultActiveKey="first">
-        <Row>
+        <Row > 
           <Col lg="12">
             <Card>
               <Card.Body>
                 <div className="d-flex flex-wrap align-items-center justify-content-between ">
                   <Nav
                     as="ul"
-                    className="d-flex nav-pills mb-0 p-center profile-tab"
+                    className="d-flex nav-pills mb-0 p-center profile-tab mb-3"
                     data-toggle="slider-tab"
                     id="profile-pills-tab"
                     role="tablist"
@@ -81,7 +89,7 @@ const UserProfileAgent = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col lg="6">
+          <Col md={{ span: 8, offset: 2 }}>
             <Tab.Content className="profile-content">
               <Tab.Pane eventKey="first" id="profile-activity">
                 <Card>
@@ -193,20 +201,25 @@ const UserProfileAgent = () => {
                   <Card.Body>
                     <div className="p-center">
                       <div className="user-profile">
-                        <Image
-                          className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
-                          src={avatars11}
-                          alt="profile-pic"
-                        />
+                        {!agentData.photoUrl ? (
+                          <Image
+                            className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
+                            src={avatars11}
+                            alt="profile-pic"
+                          />
+                        ) : (
+                          <Image
+                            className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
+                            src={photo}
+                            alt="profile-pic"
+                          />
+                        )}
                       </div>
                       <div className="mt-3">
                         <h3 className="d-inline-block">
-                          {userData.firstName} {userData.lastName}{" "}
+                          {agentData.firstName} {agentData.lastName}{" "}
                         </h3>
-                        <p className="d-inline-block pl-3">
-                          {" "}
-                          - Delivery Agent 
-                        </p>
+                        <p className="d-inline-block pl-3"> - Delivery Agent</p>
                         <p className="mb-0">
                           Lorem Ipsum is simply dummy p of the printing and
                           typesetting industry. Lorem Ipsum has been the
@@ -227,7 +240,7 @@ const UserProfileAgent = () => {
                       <h5 className="label label-default">First Name:</h5>
                       {!editData ? (
                         <div className="mb-3">
-                          <p>{userData.firstName}</p>
+                          <p>{agentData.firstName}</p>
                           <br />
                           <br />
                           <h5>
@@ -235,19 +248,67 @@ const UserProfileAgent = () => {
                               Last Name:
                             </span>
                           </h5>
-                          <p>{userData.lastName}</p>
+                          <p>{agentData.lastName}</p>
                           <br />
                           <br />
                           <h5>
                             <span className="label label-default">Email:</span>
                           </h5>
-                          <p>{userData.email}</p>
+                          <p>{agentData.email}</p>
                           <br />
                           <br />
                           <h5>
                             <span className="label label-default">Phone:</span>
                           </h5>
-                          <p>{userData.phone}</p>
+                          <p>{agentData.phone}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              Id Card:
+                            </span>
+                          </h5>
+                          <p>{agentData.idCard}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                            CardPhoto1:
+                            </span>
+                          </h5>
+                          <p>{!agentData.cardPhoto1 ? (
+                          <Image
+                            className="img-fluid w-25 p-3"
+                            src={avatars11}
+                            alt="profile-pic"
+                          />
+                        ) : (
+                          <Image
+                            className="img-fluid w-25 p-3"
+                            src={cardPhoto1}
+                            alt="profile-pic"
+                          />
+                        )}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                            CardPhoto2 :
+                            </span>
+                          </h5>
+                          <p>{!agentData.cardPhoto2 ? (
+                          <Image
+                            className=" img-fluid w-25 p-3"
+                            src={avatars11}
+                            alt="profile-pic"
+                          />
+                        ) : (
+                          <Image
+                            className="img-fluid w-25 p-3"
+                            src={cardPhoto2}
+                            alt="profile-pic"
+                          />
+                        )}</p>
                           <br />
                           <br />
                           <h5>
@@ -255,7 +316,15 @@ const UserProfileAgent = () => {
                               WhatsAppPhone:
                             </span>
                           </h5>
-                          <p>{userData.whatsApp}</p>
+                          <p>{agentData.whatsApp}</p>
+                          <br />
+                          <br />
+                          <h5>
+                            <span className="label label-default">
+                              Vehicule:
+                            </span>
+                          </h5>
+                          <p>{agentData.vehicule}</p>
                           <br />
                           <br />
                           <h5>
@@ -263,15 +332,15 @@ const UserProfileAgent = () => {
                               Adresse:
                             </span>
                           </h5>
-                          <p>{userData.adresse}</p>
+                          <p>{agentData.adresse}</p>
                           <br />
                           <br />
                           <h5>
                             <span className="label label-default">
-                            Date of birth:
+                              Date of birth:
                             </span>
                           </h5>
-                          <p>{userData.dateOfBirth}</p>
+                          <p>{agentData.dateOfBirth}</p>
                           <Button
                             className="btn-inner "
                             onClick={() => setEditData(true)}
@@ -281,137 +350,222 @@ const UserProfileAgent = () => {
                           </Button>
                         </div>
                       ) : (
-                        <div className="input mb-3">
-                          <input
-                            className="form-control"
-                            value={userData.firstName}
-                            required
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                firstName: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">
-                              Last Name:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.lastName}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                lastName: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">Email:</span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.email}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                email: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">Phone:</span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.phone}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                phone: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">
-                              WhatsAppPhone:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.whatsApp || ""}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                whatsApp: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">
-                              Vehicule:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.vehicule}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                vehicule: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">
-                              Adresse:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.adresse}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                adresse: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          
-                          <h5>
-                            <span className="label label-default">
-                              Date of birth :
-                            </span>
-                          </h5>
+                        <form
+                          action="/uploads"
+                          method="POST"
+                          encType="multipart/form-data"
+                        >
+                          <div className="input mb-3">
+                            <h5 className="label label-default">
+                              Profile Photo:
+                            </h5>
+                            <input
+                              className="file-upload"
+                              type="file"
+                              accept="image/*"
+                              id="photo"
+                              name="photo"
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  photo: e.target.files[0],
+                                })
+                              }
+                            />
+                            <br />
+                            <br />
+                            <h5 className="label label-default">First Name:</h5>
+                            <input
+                              className="form-control"
+                              value={agentData.firstName}
+                              required
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  firstName: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Last Name:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={agentData.lastName}
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  lastName: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Email:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={agentData.email}
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  email: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Phone:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={agentData.phone}
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  phone: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Id Card:
+                              </span>
+                            </h5>
+                              <input
+                              className="form-control"
+                              value={agentData.idCard}
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  idCard: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Id Card1:
+                              </span>
+                            </h5>
+                            <input
+                              className="file-upload"
+                              type="file"
+                              accept="image/*"
+                              id="cardPhoto1"
+                              name="cardPhoto1"
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  cardPhoto1: e.target.files[0],
+                                })
+                              }
+                            />
+                            <br />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Id Card2:
+                              </span>
+                            </h5>
+                            <input
+                              className="file-upload"
+                              type="file"
+                              accept="image/*"
+                              id="cardPhoto2"
+                              name="cardPhoto2"
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  cardPhoto2: e.target.files[0],
+                                })
+                              }
+                            />
+                            <br />
+                            <br />  
+                            <h5>
+                              <span className="label label-default">
+                                WhatsAppPhone:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={agentData.whatsApp}
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  whatsApp: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Vehicule:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={agentData.vehicule}
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  vehicule: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Adresse:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={agentData.adresse}
+                              onChange={(e) =>
+                                setAgentData({
+                                  ...agentData,
+                                  adresse: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+
+                            <h5>
+                              <span className="label label-default">
+                                Date of birth :
+                              </span>
+                            </h5>
                             <input
                               type="date"
                               min="1960-01-01"
                               max="2010-12-31"
                               className="form-control"
-                              value={userData.dateOfBirth}
+                              value={agentData.dateOfBirth||""}
                               onChange={(e) =>
-                                setUserData({
-                                  ...userData,
+                                setAgentData({
+                                  ...agentData,
                                   dateOfBirth: e.target.value,
                                 })
                               }
                             />
-                          <br />
-                          <br />
-                          <Button onClick={updateData} className=" btn-inner">
-                            Save
-                            <FiSave />
-                          </Button>
-                        </div>
+                            <br />
+                            <br />
+                            <Button onClick={updateData} className=" btn-inner">
+                              Save
+                              <FiSave />
+                            </Button>
+                          </div>
+                        </form>
                       )}
                     </div>
                   </Card.Body>

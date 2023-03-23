@@ -20,8 +20,7 @@ const GoogleAgent = () => {
                         </div>
                     </Card>
                 </Col>
-            </Row>
-      
+            </Row>      
         </div>
     )
 }

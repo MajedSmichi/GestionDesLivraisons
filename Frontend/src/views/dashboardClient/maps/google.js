@@ -58,7 +58,7 @@ const GoogleClient = () => {
                   style={{ height: 20, width: 20 }}
                 >
                   <a href={"tel:" + phone}>
-                    <HiLocationMarker size={25} color='red' />
+                    <HiLocationMarker size={40} color='red' />
                   </a>
                 </div>
               );

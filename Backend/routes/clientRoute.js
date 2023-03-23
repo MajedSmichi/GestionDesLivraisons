@@ -16,8 +16,7 @@ const {
   deleteuser,
   addCustomer,
   upload,
-  uploadPhoto,
-  updateClientLocation
+  updateClientLocation,
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -26,7 +25,7 @@ const {
   getAllAgent,
   deleteAgent,
   addAgent,
-  
+  uploadd,
 } = require("../controllers/userDataAgent");
 const router = Router();
 
@@ -39,14 +38,13 @@ router.get("/getCustomer/:id", getuser);
 
 router.get("/AllCustomersUsers", getAllCustomersUsers);
 
-
 //addCustomer
-router.post("/addCustomer", upload.single("photo") ,addCustomer);
+router.post("/addCustomer", upload.single("photo"), addCustomer);
 
 //update Customer route
-router.put("/update/:id",  upload.single("photo"),update);
+router.put("/update/:id", upload.single("photo"), update);
 
-router.put("/update-location/:id",updateClientLocation );
+router.put("/update-location/:id", updateClientLocation);
 
 /********************************************Agent route ****************************************************/
 //delete agent route
@@ -54,7 +52,7 @@ router.put("/update-location/:id",updateClientLocation );
 router.delete("/deleteAgent/:id", deleteAgent);
 
 //add agent route
-router.post("/addAgent", addAgent);
+router.post("/addAgent", uploadd.single("photo"), addAgent);
 
 //get agent
 router.get("/getAgent/:id", getAgent);
@@ -63,7 +61,15 @@ router.get("/getAgent/:id", getAgent);
 router.get("/getAllAgent", getAllAgent);
 
 //update agent
-router.put("/updateAgent/:id", updateAgent);
+router.put(
+  "/updateAgent/:id",
+  uploadd.fields([
+    { name: "photo", maxCount: 1 },
+    { name: "cardPhoto1", maxCount: 1 },
+    { name: "cardPhoto2", maxCount: 1 },
+  ]),
+  updateAgent
+);
 
 //post photo
 

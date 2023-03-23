@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 //router
 import IndexRouters from "./router/index";
 
@@ -11,10 +11,11 @@ import "./assets/scss/customizer.scss";
 import axios from "axios";
 import { apiUrl } from "./Constants";
 
-export const UserContext = React.createContext({});
+export const agentContext = createContext({});
+export const customerContext = createContext({});
 
 function App() {
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -25,6 +26,18 @@ function App() {
     // joindate: new Date().toISOString()
     dateOfBirth: "",
   });
+  const [agentData, setAgentData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    whatsApp: "",
+    adresse: "",
+    vehicule: "",
+    idCard: "",
+    dateOfBirth: "",
+    photo: "",
+  });
 
   useEffect(() => {
     let id = setInterval(() => {
@@ -33,7 +46,7 @@ function App() {
         navigator.geolocation.getCurrentPosition(async ({ coords }) => {
           await axios.put(`${apiUrl}/users/update-location/${user}`, {
             latitude: coords.latitude + "",
-            longitude: coords.longitude + ""
+            longitude: coords.longitude + "",
           });
         });
       }
@@ -45,9 +58,11 @@ function App() {
 
   return (
     <div className="App">
-      <UserContext.Provider value={{ userData, setUserData }}>
-        <IndexRouters />
-      </UserContext.Provider>
+      <customerContext.Provider value={{ userData, setUserData }}>
+        <agentContext.Provider value={{ agentData, setAgentData }}>
+          <IndexRouters />
+        </agentContext.Provider>
+      </customerContext.Provider>
     </div>
   );
 }

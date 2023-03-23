@@ -10,13 +10,13 @@ import { FiSave } from "react-icons/fi";
 import avatars11 from "../../../assets/images/avatars/01.png";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
-import { UserContext } from "../../../App";
+import { customerContext } from "../../../App";
 
 
 const UserProfileClient = () => {
   
   const [editData, setEditData] = useState(false);
-  const {userData, setUserData} = useContext(UserContext)
+  const {userData, setUserData} = useContext(customerContext)
 
   const getUserData = async () => {
     try {
@@ -42,12 +42,12 @@ const UserProfileClient = () => {
       body.append("lastName",userData.lastName);
       body.append("email", userData.email);
       body.append("phone",userData.phone);
-      body.append("whatsApp",userData.whatsApp)
+      body.append("whatsApp",userData.whatsApp);
       if(userData.photo?.name) {
         body.append("photo", userData.photo, userData.photo.name);
       }
       body.append("adresse",userData.adresse);
-      body.append("date of birth",userData.dateOfBirth);
+      body.append("dateOfBirth",userData.dateOfBirth);
       
       await axios.put(`${apiUrl}/users/update/${user}`, body);
       getUserData()
@@ -371,7 +371,7 @@ const UserProfileClient = () => {
                           </h5>
                           <input
                             className="form-control"
-                            value={userData.whatsApp || ""}
+                            value={userData.whatsApp}
                             onChange={(e) =>
                               setUserData({
                                 ...userData,

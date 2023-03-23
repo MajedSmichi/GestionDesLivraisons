@@ -9,10 +9,11 @@ import { apiUrl } from "../../../Constants";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit, FiSave } from "react-icons/fi";
 
+
 const UserListAgent = () => {
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(false);
-  const [userData, setUserData] = useState([]);
+  const [ agentData, setAgentData ] = useState([]);
   useEffect(() => {
     getAllAgent();
   }, []);
@@ -20,7 +21,7 @@ const UserListAgent = () => {
   const getAllAgent = async () => {
     try {
       const response = await axios.get(`${apiUrl}/users/getAllagent`);
-      setUserData(response.data);
+      setAgentData(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +44,7 @@ const UserListAgent = () => {
         `${apiUrl}/users/updateAgent/${item._id}`,
         item
       );
-      setUserData((prevState) => {
+      setAgentData((prevState) => {
         const newData = [...prevState];
         newData[idx] = response.data;
         return newData;
@@ -99,27 +100,27 @@ const UserListAgent = () => {
                           ariaLabel="rings-loading"
                         />
                       ) : (
-                        userData.map((item, idx) => {
+                        agentData.map((item, idx) => {
                           if (editData === idx) {
                             return (
                               <tr key={idx}>
-                                <td className="text-center">
-                                  <Image
-                                    className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                    src={item.photo}
-                                    alt="profile"
-                                  />
+                                <td className="text-center grow">
+                                     {  <Image
+                                  className="bg-soft-primary rounded img-fluid avatar-40 me-3"
+                                  src={"http://localhost:5000/" + item.photoUrl}
+                                  alt="profile"
+                                />}
                                 </td>
                                 <td>
                                   <input
                                     value={item.firstName}
                                     onChange={(e) => {
                                       const user = {
-                                        ...userData[idx],
+                                        ...agentData[idx],
                                         firstName: e.target.value,
                                       };
-                                      userData[idx] = user;
-                                      setUserData([...userData]);
+                                      agentData[idx] = user;
+                                      setAgentData([...agentData]);
                                     }}
                                   />
                                 </td>
@@ -128,11 +129,11 @@ const UserListAgent = () => {
                                     value={item.lastName}
                                     onChange={(e) => {
                                       const user = {
-                                        ...userData[idx],
+                                        ...agentData[idx],
                                         lastName: e.target.value,
                                       };
-                                      userData[idx] = user;
-                                      setUserData([...userData]);
+                                      agentData[idx] = user;
+                                      setAgentData([...agentData]);
                                     }}
                                   />
                                 </td>
@@ -141,11 +142,11 @@ const UserListAgent = () => {
                                     value={item.phone}
                                     onChange={(e) => {
                                       const user = {
-                                        ...userData[idx],
+                                        ...agentData[idx],
                                         phone: e.target.value,
                                       };
-                                      userData[idx] = user;
-                                      setUserData([...userData]);
+                                      agentData[idx] = user;
+                                      setAgentData([...agentData]);
                                     }}
                                   />
                                 </td>
@@ -154,11 +155,11 @@ const UserListAgent = () => {
                                     value={item.email}
                                     onChange={(e) => {
                                       const user = {
-                                        ...userData[idx],
+                                        ...agentData[idx],
                                         email: e.target.value,
                                       };
-                                      userData[idx] = user;
-                                      setUserData([...userData]);
+                                      agentData[idx] = user;
+                                      setAgentData([...agentData]);
                                     }}
                                   />
                                 </td>
@@ -167,11 +168,11 @@ const UserListAgent = () => {
                                     value={item.adresse}
                                     onChange={(e) => {
                                       const user = {
-                                        ...userData[idx],
+                                        ...agentData[idx],
                                         adresse: e.target.value,
                                       };
-                                      userData[idx] = user;
-                                      setUserData([...userData]);
+                                      agentData[idx] = user;
+                                      setAgentData([...agentData]);
                                     }}
                                   />
                                 </td>
@@ -191,12 +192,13 @@ const UserListAgent = () => {
 
                           return (
                             <tr key={idx}>
-                              <td className="text-center">
-                                <Image
+                              <td className="text-center grow">
+                          
+                              {  <Image
                                   className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                  src={item.photo}
+                                  src={"http://localhost:5000/" + item.photoUrl}
                                   alt="profile"
-                                />
+                                />}
                               </td>
                               <td>{item.firstName}</td>
                               <td>{item.lastName}</td>

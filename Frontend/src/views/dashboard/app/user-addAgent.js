@@ -21,6 +21,7 @@ const AddAgent = () => {
     dateOfBirth: "",
     vehicule:"",
     idCard:"",
+    photo:""
     
     
   });
@@ -47,6 +48,7 @@ const AddAgent = () => {
       data.idCard===""||
       data.vehicule===""
       
+      
     ) {
       setError("Please enter your data!");
       return;
@@ -63,7 +65,22 @@ const AddAgent = () => {
     }
 
     try {
-      await axios.post(server, { ...data, role });
+      const body = new FormData();
+      body.append("firstName", data.firstName);
+      body.append("lastName", data.lastName);
+      body.append("email", data.email);
+      body.append("phone", data.phone);
+      body.append("whatsApp", data.whatsApp);
+      if (data.photo?.name) {
+        body.append("photo", data.photo, data.photo.name);
+      }
+      body.append("adresse", data.adresse);
+      body.append("password",data.password);
+      body.append("dateOfBirth", data.dateOfBirth);
+      body.append("idCard", data.idCard);
+      body.append("vehicule", data.vehicule);
+      body.append("role",role);
+      await axios.post(server,body );
 
       setSuccessMessage("User created");
       setTimeout(() => {
@@ -99,7 +116,10 @@ const AddAgent = () => {
                             id="photo"
                             name="photo"
                             onChange={(e) =>
-                              setData({ ...data, photo: e.target.files[0] })
+                              setData({
+                                ...data,
+                                photo: e.target.files[0],
+                              })
                             }
                             onFocus={() => setError("")}
                           />

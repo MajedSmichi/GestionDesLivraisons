@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
-import { bindActionCreators } from "redux";
 
 //img
 
@@ -10,72 +9,21 @@ import shapes1 from "../../../assets/images/shapes/01.png";
 
 import avatars1 from "../../../assets/images/avatars/01.png";
 
-
-
-// store
-import {
-  NavbarstyleAction,
-  getDirMode,
-  SchemeDirAction,
-  getNavbarStyleMode,
-  getSidebarActiveMode,
-  SidebarActiveStyleAction,
-  getDarkMode,
-  ModeAction,
-  SidebarColorAction,
-  getSidebarColorMode,
-  getSidebarTypeMode,
-} from "../../../store/setting/setting";
-import { connect } from "react-redux";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
+import { agentContext } from "../../../App";
 
-const mapStateToProps = (state) => {
-  return {
-    darkMode: getDarkMode(state),
-    schemeDirMode: getDirMode(state),
-    sidebarcolorMode: getSidebarColorMode(state),
-    sidebarTypeMode: getSidebarTypeMode(state),
-    sidebaractivestyleMode: getSidebarActiveMode(state),
-    navbarstylemode: getNavbarStyleMode(state),
-  };
-};
-const mapDispatchToProps = (dispatch) => ({
-  ...bindActionCreators(
-    {
-      ModeAction,
-      SchemeDirAction,
-      SidebarColorAction,
-      SidebarActiveStyleAction,
-      NavbarstyleAction,
-    },
-    dispatch
-  ),
-});
-
-const HeaderAgent = (props) => {
-  useEffect(() => {
-    // navbarstylemode
-    const navbarstyleMode1 = sessionStorage.getItem("Navbarstyle-mode");
-    if (navbarstyleMode1 === null) {
-      props.NavbarstyleAction(props.navbarstylemode);
-    } else {
-      props.NavbarstyleAction(navbarstyleMode1);
-    }
-  });
+const HeaderAgent = () => {
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-  });
+  const { agentData, setAgentData } = useContext(agentContext);
   useEffect(() => {
     const getUserData = async () => {
       try {
         const user = localStorage.getItem("user");
         const response = await axios.get(`${apiUrl}/users/getAgent/${user}`);
-        setUserData(response.data);
+        setAgentData(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -85,11 +33,19 @@ const HeaderAgent = (props) => {
 
   return (
     <>
-      <Navbar expand="lg" variant="light" className="nav iq-navbar" >
+      <Navbar expand="lg" variant="light" className="nav iq-navbar">
         <Container fluid className="navbar-inner">
           <Navbar.Collapse style={{ display: "flex" }}>
-            <Nav as="ul" className="mb-2 ms-auto navbar-list mb-lg-0" style={{marginTop:"-20px"}}>
-              <Dropdown as="li" className="sidebar-toggle" onClick={minisidebar}>
+            <Nav
+              as="ul"
+              className="mb-2 ms-auto navbar-list mb-lg-0"
+              style={{ marginTop: "-20px" }}
+            >
+              <Dropdown
+                as="li"
+                className="sidebar-toggle"
+                onClick={minisidebar}
+              >
                 <i className="icon">
                   <svg width="20px" height="20px" viewBox="0 5 18 24">
                     <path
@@ -139,7 +95,7 @@ const HeaderAgent = (props) => {
                         <div className="d-flex align-items-center">
                           <img
                             className="p-1 avatar-40 rounded-pill bg-soft-primary"
-                            src={shapes1}
+                            src={"http://localhost:5000/"+agentData.photoUrl}
                             alt=""
                           />
                           <div className="ms-3 w-100">
@@ -225,17 +181,25 @@ const HeaderAgent = (props) => {
                   role="button"
                   aria-expanded="false"
                 >
-                  <img
-                    src={avatars1}
-                    alt="User-Profile"
-                    className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
-                  />
+                  {!agentData.photoUrl ? (
+                    <img
+                      src={avatars1}
+                      alt="User-Profile"
+                      className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
+                    />
+                  ) : (
+                    <img
+                      src={"http://localhost:5000/" + agentData.photoUrl}
+                      alt="User-Profile"
+                      className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
+                    />
+                  )}
 
                   <div className="caption ms-3 d-none d-md-block ">
-                    <h6 className="mb-0 caption-title">{userData.firstName} {userData.lastName}</h6>
-                    <p className="mb-0 caption-sub-title">
-                      Delivery Agent
-                    </p>
+                    <h6 className="mb-0 caption-title">
+                      {agentData.firstName} {agentData.lastName}
+                    </h6>
+                    <p className="mb-0 caption-sub-title">Delivery Agent</p>
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
@@ -256,4 +220,4 @@ const HeaderAgent = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderAgent);
+export default HeaderAgent;

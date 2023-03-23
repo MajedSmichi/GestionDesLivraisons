@@ -11,7 +11,7 @@ const clientSchema = mongoose.Schema({
   dateOfBirth: { type: Date, required: false },
   latitude:{type:String},
   longitude:{type:String},
-  photoUrl: String
+  photoUrl: {type:String,required:false}
 
 });
 module.exports = mongoose.model("client", clientSchema);

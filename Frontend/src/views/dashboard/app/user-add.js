@@ -68,7 +68,6 @@ const UserAdd = () => {
       body.append("adresse",data.adresse);
       body.append("date of birth",data.dateOfBirth);
       body.append("password",data.password);
-      body.append("confirmPassword",confirmPassword);
       body.append("role",role);
       
       await axios.post(server, body);

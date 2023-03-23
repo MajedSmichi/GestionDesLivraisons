@@ -1,9 +1,42 @@
 const agent = require("../models/agentModel");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const multer = require("multer");
 
+//upload photo
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const fieldName = file.fieldname;
+    const fileName = Date.now() + "-" + fieldName + "-" + file.originalname;
+    
+    req["locals"] = {[fieldName]: "uploads/" + fileName }
 
+    cb(null, fileName);
+  }
+});
 
+const uploadd = multer({ storage: storage });
+
+const uploadPhotoAgent=async (req, res) => {
+  const userId = req.params.userId;
+  
+
+  const user = await client.findById(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+  user.photoUrl = req.locals.filePath;
+  user.cardPhoto1=req.locals.filePath;
+  user.cardPhoto2=req.locals.filePath;
+ 
+
+  await user.save();
+  res.send("File uploaded successfully!");
+};
 
 //get user
 const getAgent = async (req, res) => {
@@ -40,9 +73,10 @@ const getAllAgent= async (req, res) => {
   //add Agent in admin dashboard
 
   const addAgent = async (req, res) => {
-    const { firstName, lastName, email, phone, password, whatsApp, adresse } =
+    const { firstName, lastName, email, phone, password, whatsApp, adresse,vehicule,idCard,dateOfBirth } =
       req.body;
     role = "2";
+    
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -63,7 +97,14 @@ const getAllAgent= async (req, res) => {
         whatsApp,
         adresse,
         role,
+        vehicule,
+        idCard,
+        dateOfBirth,
       };
+      if(req.locals?.filePath) user.photoUrl = req.locals.filePath;
+      if(req.locals?.filePath) user.cardPhoto1 = req.locals.filePath;
+      if(req.locals?.filePath) user.cardPhoto2 = req.locals.filePath;
+       console.log(user)
       await agent.create(user);
       return res.status(201).json({ message: "user create" });
     } catch (e) {
@@ -78,19 +119,15 @@ const getAllAgent= async (req, res) => {
     const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth,vehicule,idCard } =
       req.body;
     const { id } = req.params;
+    
     try {
-      console.log(req.body);
       const user = await agent.findById(id);
       if (email !== user.email) {
         const exist = await agent.findOne({ email });
         if (exist) return res.status(400).json({ error: "User already exist" });
       }
-  
-      await agent.findByIdAndUpdate(
-        { _id: id },
-        {
-          $set: {
-            firstName,
+      const newUser={
+           firstName,
             lastName,
             email,
             phone,
@@ -98,11 +135,30 @@ const getAllAgent= async (req, res) => {
             adresse,
             vehicule,
             idCard,
-            dateOfBirth,
-          },
+            dateOfBirth
+      }
+
+      if (req.files) {
+        if (req.files["photo"]) {
+          const photoPath = req.files["photo"][0].path;
+          newUser.photoUrl= photoPath;
+        }
+        if (req.files["cardPhoto1"]) {
+          const cardPhoto1Path = req.files["cardPhoto1"][0].path;
+          newUser.cardPhoto1 = cardPhoto1Path;
+        }
+        if (req.files["cardPhoto2"]) {
+          const cardPhoto2Path = req.files["cardPhoto2"][0].path;
+          newUser.cardPhoto2 = cardPhoto2Path;
+        }}
+      await agent.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set:newUser
+          
         }
       );
-      return res.status(200).json({ message: "User data updated" });
+      return res.status(200).json({ message: "Agent data updated" });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal server error" });
@@ -122,8 +178,8 @@ const deleteAgent = async (req, res) => {
     }
   };
 
-
-
+exports.uploadd=uploadd;
+exports.uploadPhotoAgent=uploadPhotoAgent;
 exports.deleteAgent = deleteAgent;
 exports.updateAgent = updateAgent;
 exports.getAgent = getAgent;

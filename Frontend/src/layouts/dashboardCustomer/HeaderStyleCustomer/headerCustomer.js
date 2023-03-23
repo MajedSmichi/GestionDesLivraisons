@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
-
 
 //img
 
@@ -10,38 +9,43 @@ import shapes1 from "../../../assets/images/shapes/01.png";
 
 import avatars1 from "../../../assets/images/avatars/01.png";
 
-
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
-import { UserContext } from "../../../App";
+import { customerContext } from "../../../App";
 
-
-const HeaderCustomer = (props) => {
- 
+const HeaderCustomer = () => {
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
-  const {userData, setUserData} = useContext(UserContext);
+  const { userData, setUserData } = useContext(customerContext);
+  const getUserData = async () => {
+    try {
+      const user = localStorage.getItem("user");
+      const response = await axios.get(`${apiUrl}/users/getCustomer/${user}`);
+      setUserData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const user = localStorage.getItem("user");
-        const response = await axios.get(`${apiUrl}/users/getCustomer/${user}`);
-        setUserData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getUserData();
   }, []);
-
+ 
   return (
     <>
-      <Navbar expand="lg" variant="light" className="nav iq-navbar" >
+      <Navbar expand="lg" variant="light" className="nav iq-navbar">
         <Container fluid className="navbar-inner">
           <Navbar.Collapse style={{ display: "flex" }}>
-            <Nav as="ul" className="mb-2 ms-auto navbar-list mb-lg-0" style={{marginTop:"-20px"}}>
-              <Dropdown as="li" className="sidebar-toggle" onClick={minisidebar}>
+            <Nav
+              as="ul"
+              className="mb-2 ms-auto navbar-list mb-lg-0"
+              style={{ marginTop: "-20px" }}
+            >
+              <Dropdown
+                as="li"
+                className="sidebar-toggle"
+                onClick={minisidebar}
+              >
                 <i className="icon">
                   <svg width="20px" height="20px" viewBox="0 5 18 24">
                     <path
@@ -89,9 +93,9 @@ const HeaderCustomer = (props) => {
                     <div className="p-0 card-body">
                       <Link to="#" className="iq-sub-card">
                         <div className="d-flex align-items-center">
-                          <img
+                        <img
                             className="p-1 avatar-40 rounded-pill bg-soft-primary"
-                            src={shapes1}
+                            src={"http://localhost:5000/"+userData.photoUrl}
                             alt=""
                           />
                           <div className="ms-3 w-100">
@@ -177,31 +181,37 @@ const HeaderCustomer = (props) => {
                   role="button"
                   aria-expanded="false"
                 >
-                  {!userData.photoUrl ?(<img
-                    src={avatars1}
-                    alt="User-Profile"
-                    className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
-                  />):(<img
-                    src={"http://localhost:5000/"+userData.photoUrl}
-                    alt="User-Profile"
-                    className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
-                  />)}
+                  {!userData.photoUrl ? (
+                    <img
+                      src={avatars1}
+                      alt="User-Profile"
+                      className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
+                    />
+                  ) : (
+                    <img
+                      src={"http://localhost:5000/" + userData.photoUrl}
+                      alt="User-Profile"
+                      className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
+                    />
+                  )}
 
                   <div className="caption ms-3 d-none d-md-block ">
-                    <h6 className="mb-0 caption-title">{userData.firstName} {userData.lastName}</h6>
-                    <p className="mb-0 caption-sub-title">
-                      Delivery Client
-                    </p>
+                    <h6 className="mb-0 caption-title">
+                      {userData.firstName} {userData.lastName}
+                    </h6>
+                    <p className="mb-0 caption-sub-title">Delivery Client</p>
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
                   className="dropdown-menu-end"
                   aria-labelledby="navbarDropdown"
                 >
-                  <Dropdown.Item href="/dashboardCustomer/user-profileClient">Profile</Dropdown.Item>
+                  <Dropdown.Item href="/dashboardCustomer/user-profileClient">
+                    Profile
+                  </Dropdown.Item>
                   <Dropdown.Item href="">Privacy Setting</Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href='/'>Logout</Dropdown.Item>
+                  <Dropdown.Item href="/">Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Nav>
