@@ -13,8 +13,19 @@ import { apiUrl } from "./Constants";
 
 export const agentContext = createContext({});
 export const customerContext = createContext({});
-
+export const adminContext = createContext({});
 function App() {
+  const [adminData, setAdminData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    whatsApp: "",
+    adresse: "",
+    photo: "",
+    dateOfBirth: "",
+  });
+
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -39,28 +50,30 @@ function App() {
     photo: "",
   });
 
-  useEffect(() => {
-    let id = setInterval(() => {
-      const user = localStorage.getItem("user");
-      if (navigator.geolocation && user) {
-        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-          await axios.put(`${apiUrl}/users/update-location/${user}`, {
-            latitude: coords.latitude + "",
-            longitude: coords.longitude + "",
-          });
-        });
-      }
-    }, 2000);
-    return () => {
-      clearInterval(id);
-    };
-  }, []);
+  // useEffect(() => {
+  //   let id = setInterval(() => {
+  //     const user = localStorage.getItem("user");
+  //     if (navigator.geolocation && user) {
+  //       navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+  //         await axios.put(`${apiUrl}/users/update-location/${user}`, {
+  //           latitude: coords.latitude + "",
+  //           longitude: coords.longitude + "",
+  //         });
+  //       });
+  //     }
+  //   }, 2000);
+  //   return () => {
+  //     clearInterval(id);
+  //   };
+  // }, []);
 
   return (
     <div className="App">
       <customerContext.Provider value={{ userData, setUserData }}>
         <agentContext.Provider value={{ agentData, setAgentData }}>
-          <IndexRouters />
+          <adminContext.Provider value={{ adminData, setAdminData }}>
+            <IndexRouters />
+          </adminContext.Provider>
         </agentContext.Provider>
       </customerContext.Provider>
     </div>

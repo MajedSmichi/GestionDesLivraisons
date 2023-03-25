@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
@@ -9,17 +9,36 @@ import CustomToggle from "../../../components/dropdowns";
 import shapes1 from "../../../assets/images/shapes/01.png";
 
 import avatars1 from "../../../assets/images/avatars/01.png";
+import { adminContext } from "../../../App";
+import { apiUrl } from "../../../Constants";
+import axios from "axios";
 
 
 
 
 
 
-const Header = (props) => {
+const Header = () => {
 
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
+  const { adminData, setAdminData } = useContext(adminContext);
+  const getUserData = async () => {
+  
+    try {
+      const user = localStorage.getItem("user");
+      const response = await axios.get(`${apiUrl}/users/getAdmin/${user}`);
+      
+      setAdminData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getUserData();
+  }, []);
+ 
 
   return (
     <>
@@ -164,13 +183,13 @@ const Header = (props) => {
                   aria-expanded="false"
                 >
                   <img
-                    src={avatars1}
+                    src={"http://localhost:5000/" + adminData.photoUrl}
                     alt="User-Profile"
                     className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
                   />
 
                   <div className="caption ms-3 d-none d-md-block ">
-                    <h6 className="mb-0 caption-title">Majed Smichi</h6>
+                    <h6 className="mb-0 caption-title">{adminData.firstName} {adminData.lastName}</h6>
                     <p className="mb-0 caption-sub-title">
                       Delivery Administrator
                     </p>

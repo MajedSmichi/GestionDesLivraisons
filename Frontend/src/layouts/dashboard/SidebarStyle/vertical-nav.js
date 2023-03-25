@@ -123,7 +123,7 @@ const VerticalNav = () => {
                     <Accordion.Collapse eventKey="sidebar-user">    
                         <ul className="sub-nav" style={{marginRight:"0px"}}>
                             <li className="nav-item">
-                                <Link className={`${location.pathname === 'user-profile' ? 'active' : ''} nav-link`} to="user-profile">
+                                <Link className={`${location.pathname === 'user-profileAdmin' ? 'active' : ''} nav-link`} to="user-profileAdmin">
                                     <i className="icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                             <g>
@@ -169,7 +169,7 @@ const VerticalNav = () => {
                                             </g>
                                         </svg>
                                     </i>
-                                    <i className="sidenav-mini-icon"> E </i>
+                                    <i className="sidenav-mini-icon"> A </i>
                                     <span className="item-name">Add User</span>
                                 </Link>
                             </li>

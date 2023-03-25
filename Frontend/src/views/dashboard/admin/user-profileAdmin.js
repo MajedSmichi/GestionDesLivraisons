@@ -1,28 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState } from "react";
 
 import { Row, Col, Image, Nav, Tab, Button} from "react-bootstrap";
 import Card from "../../../components/Card";
 
-import { Link } from "react-router-dom";
+
 // img
 import { AiOutlineEdit } from "react-icons/ai";
 import { FiSave } from "react-icons/fi";
 import avatars11 from "../../../assets/images/avatars/01.png";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
-import { customerContext } from "../../../App";
+import { adminContext } from "../../../App";
 
 
-const UserProfileClient = () => {
+
+const UserProfileAdmin = () => {
   
   const [editData, setEditData] = useState(false);
-  const {userData, setUserData} = useContext(customerContext)
-
+  const { adminData, setAdminData } = useContext(adminContext);
+  
   const getUserData = async () => {
     try {
       const user = localStorage.getItem("user");
-      const response = await axios.get(`${apiUrl}/users/getCustomer/${user}`);
-      setUserData(response.data);
+      
+      const response = await axios.get(`${apiUrl}/users/getAdmin/${user}`);
+      setAdminData(response.data);
+      
     } catch (error) {
       console.log(error);
     }
@@ -38,24 +41,24 @@ const UserProfileClient = () => {
     try {
       const user = localStorage.getItem("user");
       const body = new FormData();
-      body.append("firstName",userData.firstName);
-      body.append("lastName",userData.lastName);
-      body.append("email", userData.email);
-      body.append("phone",userData.phone);
-      body.append("whatsApp",userData.whatsApp);
-      if(userData.photo?.name) {
-        body.append("photo", userData.photo, userData.photo.name);
+      body.append("firstName",adminData.firstName);
+      body.append("lastName",adminData.lastName);
+      body.append("email", adminData.email);
+      body.append("phone",adminData.phone);
+      body.append("whatsApp",adminData.whatsApp);
+      if(adminData.photo?.name) {
+        body.append("photo", adminData.photo, adminData.photo.name);
       }
-      body.append("adresse",userData.adresse);
-      body.append("dateOfBirth",userData.dateOfBirth);
+   
+      body.append("dateOfBirth",adminData.dateOfBirth);
       
-      await axios.put(`${apiUrl}/users/update/${user}`, body);
+      await axios.put(`${apiUrl}/users/updateAdmin/${user}`, body);
       getUserData()
     } catch (error) {
       console.log(error);
     }
   };
-  const photo="http://localhost:5000/"+userData.photoUrl;
+  const photo="http://localhost:5000/"+adminData.photoUrl;
   return (
     <>
       <Tab.Container defaultActiveKey="first">
@@ -66,16 +69,14 @@ const UserProfileClient = () => {
                 <div className="d-flex flex-wrap align-items-center justify-content-between ">
                   <Nav
                     as="ul"
-                    className="d-flex nav-pills mb-0 p-center profile-tab"
+                    className="d-flex nav-pills mb-0 p-center profile-tab mb-3"
                     data-toggle="slider-tab"
                     id="profile-pills-tab"
                     role="tablist"
                   >
+                    
                     <Nav.Item as="li">
-                      <Nav.Link eventKey="first">Activity</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item as="li">
-                      <Nav.Link eventKey="second">Profile</Nav.Link>
+                      <Nav.Link eventKey="first">Profile</Nav.Link>
                     </Nav.Item>
                   </Nav>
                 </div>
@@ -84,107 +85,7 @@ const UserProfileClient = () => {
           </Col>
           <Col md={{ span: 8, offset: 2 }}>
             <Tab.Content className="profile-content">
-              <Tab.Pane eventKey="first" id="profile-activity">
-                <Card>
-                  <Card.Header className="d-flex justify-content-between">
-                    <div className="header-title">
-                      <h4 className="card-title">Activity</h4>
-                    </div>
-                  </Card.Header>
-                  <Card.Body>
-                    <div className="iq-timeline0 m-0 d-flex align-items-center justify-content-between position-relative">
-                      <ul className="list-inline p-0 m-0">
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-primary p-primary"></div>
-                          <h6 className="float-left mb-1">Client Login</h6>
-                          <small className="float-right mt-1">
-                            24 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-success p-success"></div>
-                          <h6 className="float-left mb-1">
-                            Scheduled Maintenance
-                          </h6>
-                          <small className="float-right mt-1">
-                            23 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-danger p-danger"></div>
-                          <h6 className="float-left mb-1">Dev Meetup</h6>
-                          <small className="float-right mt-1">
-                            20 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans{" "}
-                              <Link to="#">gummi bears</Link>gummi bears jelly
-                              lollipop apple
-                            </p>
-                            <div className="iq-media-group iq-media-group-1">
-                              <Link to="#" className="iq-media-1">
-                                <div className="icon iq-icon-box-3 rounded-pill">
-                                  SP
-                                </div>
-                              </Link>
-                              <Link to="#" className="iq-media-1">
-                                <div className="icon iq-icon-box-3 rounded-pill">
-                                  PP
-                                </div>
-                              </Link>
-                              <Link to="#" className="iq-media-1">
-                                <div className="icon iq-icon-box-3 rounded-pill">
-                                  MM
-                                </div>
-                              </Link>
-                            </div>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-primary p-primary"></div>
-                          <h6 className="float-left mb-1">Client Call</h6>
-                          <small className="float-right mt-1">
-                            19 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-warning p-warning"></div>
-                          <h6 className="float-left mb-1">Mega event</h6>
-                          <small className="float-right mt-1">
-                            15 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Tab.Pane>
-              <Tab.Pane eventKey="second" id="profile-profile">
+              <Tab.Pane eventKey="first" id="profile-profile">
                 <Card>
                   <Card.Header>
                     <div className="header-title">
@@ -194,7 +95,7 @@ const UserProfileClient = () => {
                   <Card.Body>
                     <div className="p-center">
                       <div className="user-profile">
-                      { !userData.photoUrl ? (<Image
+                      { !adminData.photoUrl ? (<Image
                           className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
                           src={avatars11}
                           
@@ -209,17 +110,13 @@ const UserProfileClient = () => {
                       </div>
                       <div className="mt-3">
                         <h3 className="d-inline-block">
-                          {userData.firstName} {userData.lastName}{" "}
+                          {adminData.firstName} {adminData.lastName}{" "}
                         </h3>
                         <p className="d-inline-block pl-3">
                           {" "}
-                          - Delivery Client
+                          - Delivery Administrator
                         </p>
-                        <p className="mb-0">
-                          Lorem Ipsum is simply dummy p of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy p ever since the 1500s
-                        </p>
+                   
                       </div>
                     </div>
                   </Card.Body>
@@ -236,7 +133,7 @@ const UserProfileClient = () => {
                       {!editData ? (
                         <div className="mb-3">
                           <h5 className="label label-default">First Name:</h5>
-                          <p>{userData.firstName}</p>
+                          <p>{adminData.firstName}</p>
                           <br />
                           <br />
                           <h5>
@@ -244,19 +141,19 @@ const UserProfileClient = () => {
                               Last Name:
                             </span>
                           </h5>
-                          <p>{userData.lastName}</p>
+                          <p>{adminData.lastName}</p>
                           <br />
                           <br />
                           <h5>
                             <span className="label label-default">Email:</span>
                           </h5>
-                          <p>{userData.email}</p>
+                          <p>{adminData.email}</p>
                           <br />
                           <br />
                           <h5>
                             <span className="label label-default">Phone:</span>
                           </h5>
-                          <p>{userData.phone}</p>
+                          <p>{adminData.phone}</p>
                           <br />
                           <br />
                           <h5>
@@ -264,23 +161,16 @@ const UserProfileClient = () => {
                               WhatsAppPhone:
                             </span>
                           </h5>
-                          <p>{userData.whatsApp}</p>
+                          <p>{adminData.whatsApp}</p>
                           <br />
                           <br />
-                          <h5>
-                            <span className="label label-default">
-                              Adresse:
-                            </span>
-                          </h5>
-                          <p>{userData.adresse}</p>
-                          <br />
-                          <br />
+                      
                           <h5>
                             <span className="label label-default">
                             Date of birth:
                             </span>
                           </h5>
-                          <p>{userData.dateOfBirth}</p>
+                          <p>{adminData.dateOfBirth}</p>
                           <Button
                             className="btn-inner "
                             onClick={() => setEditData(true)}
@@ -301,7 +191,7 @@ const UserProfileClient = () => {
                              name="photo"
                              onChange={(e) =>
                               
-                              setUserData({ ...userData, photo: e.target.files[0]} )
+                              setAdminData({ ...adminData, photo: e.target.files[0]} )
                               
                             }
                           />
@@ -310,11 +200,11 @@ const UserProfileClient = () => {
                           <h5 className="label label-default">First Name:</h5>
                           <input
                             className="form-control"
-                            value={userData.firstName}
+                            value={adminData.firstName}
                             required
                             onChange={(e) =>
-                              setUserData({
-                                ...userData,
+                              setAdminData({
+                                ...adminData,
                                 firstName: e.target.value,
                               })
                             }
@@ -327,10 +217,10 @@ const UserProfileClient = () => {
                           </h5>
                           <input
                             className="form-control"
-                            value={userData.lastName}
+                            value={adminData.lastName}
                             onChange={(e) =>
-                              setUserData({
-                                ...userData,
+                              setAdminData({
+                                ...adminData,
                                 lastName: e.target.value,
                               })
                             }
@@ -341,10 +231,10 @@ const UserProfileClient = () => {
                           </h5>
                           <input
                             className="form-control"
-                            value={userData.email}
+                            value={adminData.email}
                             onChange={(e) =>
-                              setUserData({
-                                ...userData,
+                              setAdminData({
+                                ...adminData,
                                 email: e.target.value,
                               })
                             }
@@ -355,10 +245,10 @@ const UserProfileClient = () => {
                           </h5>
                           <input
                             className="form-control"
-                            value={userData.phone}
+                            value={adminData.phone}
                             onChange={(e) =>
-                              setUserData({
-                                ...userData,
+                              setAdminData({
+                                ...adminData,
                                 phone: e.target.value,
                               })
                             }
@@ -371,31 +261,16 @@ const UserProfileClient = () => {
                           </h5>
                           <input
                             className="form-control"
-                            value={userData.whatsApp}
+                            value={adminData.whatsApp}
                             onChange={(e) =>
-                              setUserData({
-                                ...userData,
+                              setAdminData({
+                                ...adminData,
                                 whatsApp: e.target.value,
                               })
                             }
                           />
                           <br />
-                          <h5>
-                            <span className="label label-default">
-                              Adresse:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.adresse}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                adresse: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
+        
                           
                           <h5>
                             <span className="label label-default">
@@ -407,10 +282,10 @@ const UserProfileClient = () => {
                               min="1960-01-01"
                               max="2010-12-31"
                               className="form-control"
-                              value={userData.dateOfBirth}
+                              value={adminData.dateOfBirth}
                               onChange={(e) =>
-                                setUserData({
-                                  ...userData,
+                                setAdminData({
+                                  ...adminData,
                                   dateOfBirth: e.target.value,
                                 })
                               }
@@ -436,4 +311,4 @@ const UserProfileClient = () => {
   );
 };
 
-export default UserProfileClient;
+export default UserProfileAdmin;

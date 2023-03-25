@@ -27,7 +27,15 @@ const {
   addAgent,
   uploadd,
 } = require("../controllers/userDataAgent");
+const { getAdmin, updateAdmin, uploadAdmin } = require("../controllers/userDataAdmin");
 const router = Router();
+/********************************************Admin route ****************************************************/
+//get admin route
+router.get("/getAdmin/:id",getAdmin);
+
+//update admin route
+router.put("/updateAdmin/:id", uploadAdmin.single("photo"), updateAdmin);
+
 
 /********************************************Customer route ****************************************************/
 //delete customer route
@@ -71,7 +79,7 @@ router.put(
   updateAgent
 );
 
-//post photo
+
 
 /****************************************Authentification route ****************************************/
 // Login route

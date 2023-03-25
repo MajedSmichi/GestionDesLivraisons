@@ -25,6 +25,7 @@ const LockScreen = () => {
        try {
          const res=await axios.post(server,{...data});
          localStorage.setItem('admin', res.data.token);
+         localStorage.setItem('user',res.data.user)
          navigate('/dashboard');
          
        } catch (e) {
