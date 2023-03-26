@@ -7,6 +7,7 @@ const {
   login,
   recoverPassword,
   AdminLog,
+  auth,
 } = require("../controllers/authentification");
 
 const {
@@ -42,7 +43,7 @@ router.put("/updateAdmin/:id", uploadAdmin.single("photo"), updateAdmin);
 router.delete("/delete/:id", deleteuser);
 
 //get customer route
-router.get("/getCustomer/:id", getuser);
+router.get("/getCustomer/:id",auth,getuser);
 
 router.get("/AllCustomersUsers", getAllCustomersUsers);
 

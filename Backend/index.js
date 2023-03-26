@@ -3,6 +3,7 @@ const mongoose=require('mongoose')
 const router = require('./routes/clientRoute')
 var cors = require('cors')
 const multer = require('multer')
+const { auth } = require('./controllers/authentification')
 require('dotenv').config()
 const app = express()
 app.use(express.json());
@@ -11,6 +12,7 @@ app.use(cors())
 
 app.use("/uploads", express.static("uploads"));
 app.use("/users", router)
+app.use("/users/auth", auth);
 
 
 

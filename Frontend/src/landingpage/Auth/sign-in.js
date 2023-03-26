@@ -30,6 +30,7 @@ const SignIn = () => {
          const res=await axios.post(`${apiUrl}/users/login`,{...data, role})
          localStorage.setItem('token', res.data.token);
          localStorage.setItem('user',res.data.user)
+         localStorage.setItem('role',res.data.role)
          if(role==="1")
          {navigate("/dashboardCustomer"); }
          else

@@ -50,22 +50,22 @@ function App() {
     photo: "",
   });
 
-  // useEffect(() => {
-  //   let id = setInterval(() => {
-  //     const user = localStorage.getItem("user");
-  //     if (navigator.geolocation && user) {
-  //       navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-  //         await axios.put(`${apiUrl}/users/update-location/${user}`, {
-  //           latitude: coords.latitude + "",
-  //           longitude: coords.longitude + "",
-  //         });
-  //       });
-  //     }
-  //   }, 2000);
-  //   return () => {
-  //     clearInterval(id);
-  //   };
-  // }, []);
+  useEffect(() => {
+    let id = setInterval(() => {
+      const user = localStorage.getItem("user");
+      if (navigator.geolocation && user) {
+        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+          await axios.put(`${apiUrl}/users/update-location/${user}`, {
+            latitude: coords.latitude + "",
+            longitude: coords.longitude + "",
+          });
+        });
+      }
+    }, 2000);
+    return () => {
+      clearInterval(id);
+    };
+  }, []);
 
   return (
     <div className="App">

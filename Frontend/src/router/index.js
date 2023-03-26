@@ -1,6 +1,6 @@
 import React from "react";
 //router
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router-dom";
 //layoutpages
 import HAbout from "../landingpage/home/HAbout";
 import Home from "../landingpage/home/Home";
@@ -34,12 +34,29 @@ import UserListAgent from "../views/dashboard/app/user-listAgent";
 import GoogleAgent from "../views/dashboradAgent/maps/google";
 import GoogleClient from "../views/dashboardClient/maps/google";
 
-const IndexRouters = () => {
-  // const user = localStorage.getItem('user');
+import ProtectedRoutes from "./privateRouter";
+import PublicRoutes from "./publicRouter";
 
+// const isAuthenticated = () => {
+//   const user = localStorage.getItem("user");
+//   return user ? true : false;
+// };
+
+// const PrivateRoute = ({ element: Component, ...rest }) => (
+//   <React.Fragment>
+//     {isAuthenticated() ? (
+//       <Component {...rest} />
+//     ) : (
+//       <Navigate to="/signin" replace state={{ from: rest.location }} />
+//     )}
+//   </React.Fragment>
+// );
+
+const IndexRouters = () => {
   return (
     <>
       <Routes>
+      <Route path="/" element={<PublicRoutes/>}>
         <Route path="/" element={<Home />} />
         <Route path="Habout" element={<HAbout />} />
         <Route path="team" element={<Team />} />
@@ -50,28 +67,32 @@ const IndexRouters = () => {
         <Route path="LockScreen" element={<LockScreen />} />
         <Route path="confirmmail" element={<ConfirmMail />} />
         <Route path="ClientAgent" element={<ClientAgent />} />
-        <Route path="dashboard" element={<Default />}>
-          {/* user */}
-          <Route path="user-add" element={<UserAdd />} />
-          <Route path="user-list" element={<UserList />} />
-          <Route path="user-listAgent" element={<UserListAgent />} />
-          <Route path="addAgent" element={<AddAgent/>} /> 
-           <Route path="user-profileAdmin" element={<UserProfileAdmin/>}/>
+        </Route>
+        <Route path="/" element={<ProtectedRoutes />}>
+          <Route path="dashboard" element={<Default />}>
+            {/* user */}
+            <Route path="user-add" element={<UserAdd />} />
+            <Route path="user-list" element={<UserList />} />
+            <Route path="user-listAgent" element={<UserListAgent />} />
+            <Route path="addAgent" element={<AddAgent />} />
+            <Route path="user-profileAdmin" element={<UserProfileAdmin />} />
 
-          {/*special pages */}
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="calendar" element={<Calender />} />
-          {/* map */}
-          <Route path="google" exact element={<Google />} />
-        </Route>
-        <Route path="dashboardAgent" element={<DefaultAgent />}>
-        <Route path="user-profileAgent" element={<UserProfileAgent />} />
-        <Route path="mapAgent" element={<GoogleAgent/>}/>
-        </Route>
-        <Route path="dashboardCustomer" element={<DefaultCustomer />}>
-          <Route path="user-profileClient" element={<UserProfileClient />} />
-          <Route path="calendarClient" element={<CalenderClient />} />
-          <Route path="mapClient" element={<GoogleClient />}/>
+            {/*special pages */}
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="calendar" element={<Calender />} />
+            {/* map */}
+            <Route path="google" exact element={<Google />} />
+          </Route>
+          <Route path="dashboardAgent" element={<DefaultAgent />}>
+            <Route path="user-profileAgent" element={<UserProfileAgent />} />
+            <Route path="mapAgent" element={<GoogleAgent />} />
+          </Route>
+
+          <Route path="dashboardCustomer" element={<DefaultCustomer />}>
+            <Route path="user-profileClient" element={<UserProfileClient />} />
+            <Route path="calendarClient" element={<CalenderClient />} />
+            <Route path="mapClient" element={<GoogleClient />} />
+          </Route>
         </Route>
       </Routes>
     </>

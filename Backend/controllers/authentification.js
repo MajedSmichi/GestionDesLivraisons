@@ -6,6 +6,19 @@ const agent = require("../models/agentModel");
 const sendEmail = require("../utils/sendEmail");
 const admin = require("../models/adminModel");
 
+///middleware/auth
+const auth=async(req, res, next) => {
+  try {
+      const token = req.header("x-auth-token");
+      if (!token) return res.status(403).send("Access denied.");
+
+      const decoded = jwt.verify(token, process.env.JWTPRIVATEKEY);
+      req.user = decoded;
+      next();
+  } catch (error) {
+      res.status(400).send("Invalid token");
+  }
+};
 
 //register route
 const signup = async (req, res) => {
@@ -56,8 +69,9 @@ const login = async (req, res) => {
     const result = await bcrypt.compare(req.body.password, user.password);
     if (result) {
       // sign token and send it in response
+      const role=req.body.role;
       const token = await jwt.sign({ username: user.email }, process.env.SECRET);
-      res.json({ token, user:user._id});
+      res.json({ token,role});
 
     } else {
       res.status(400).json({ error: "Email or Password are false" });
@@ -111,6 +125,8 @@ const AdminLog = async (req, res) => {
     res.status(400).json({ error: e });
   }
 };
+
+exports.auth=auth;
 exports.recoverPassword=recoverPassword;
 exports.login = login;
 exports.signup = signup;
