@@ -71,8 +71,8 @@ const login = async (req, res) => {
       // sign token and send it in response
       const role=req.body.role;
       const token = await jwt.sign({ username: user.email }, process.env.SECRET);
-      res.json({ token,role});
-
+      res.json({ token,role, user:user._id});
+      console.log(role);
     } else {
       res.status(400).json({ error: "Email or Password are false" });
     }

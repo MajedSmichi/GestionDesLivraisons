@@ -164,7 +164,7 @@ const getAllCustomersUsers = async (req, res) => {
 const deleteuser = async (req, res) => {
   const { id } = req.params;
   try {
-    await client.findByIdAndDelete({ _id: id });
+    const user=await client.findByIdAndDelete({ _id: id });
 
     return res.status(200).json({ message: "delete succesfuly" });
   } catch (error) {
@@ -173,8 +173,34 @@ const deleteuser = async (req, res) => {
 };
 
 
+//change password
 
+const changePassword = async (req, res) => {
+  
+  const  {newPassword,confirmPassword}  = req.body;
 
+  const { id } = req.params;
+  try {
+    const user = await client.findById(id );
+    if(newPassword===""||confirmPassword===""){
+      return res.status(400).json({error:"enter your password"})
+    }
+    if(newPassword!==confirmPassword){
+      return res.status(400).json({error:"Passwords do not match"})
+    }
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashPassword;
+    await client.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: { password: user.password } // Pass an object with the updated password
+      }
+    );
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 
 
@@ -191,3 +217,4 @@ exports.getuser = getuser;
 exports.getAllCustomersUsers = getAllCustomersUsers;
 exports.addCustomer = addCustomer;
 exports.updateClientLocation = updateClientLocation;
+exports.changePassword=changePassword;

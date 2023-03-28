@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { Row, Col, Image, Nav, Tab, Button} from "react-bootstrap";
+import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 
 import { Link } from "react-router-dom";
@@ -12,12 +12,15 @@ import axios from "axios";
 import { apiUrl } from "../../../Constants";
 import { customerContext } from "../../../App";
 
-
 const UserProfileClient = () => {
-  
   const [editData, setEditData] = useState(false);
-  const {userData, setUserData} = useContext(customerContext)
-
+  const { userData, setUserData } = useContext(customerContext);
+  const [userPassword, setUserPassword] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState("");
   const getUserData = async () => {
     try {
       const user = localStorage.getItem("user");
@@ -27,7 +30,7 @@ const UserProfileClient = () => {
       console.log(error);
     }
   };
- 
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -38,24 +41,48 @@ const UserProfileClient = () => {
     try {
       const user = localStorage.getItem("user");
       const body = new FormData();
-      body.append("firstName",userData.firstName);
-      body.append("lastName",userData.lastName);
+      body.append("firstName", userData.firstName);
+      body.append("lastName", userData.lastName);
       body.append("email", userData.email);
-      body.append("phone",userData.phone);
-      body.append("whatsApp",userData.whatsApp);
-      if(userData.photo?.name) {
+      body.append("phone", userData.phone);
+      body.append("whatsApp", userData.whatsApp);
+      if (userData.photo?.name) {
         body.append("photo", userData.photo, userData.photo.name);
       }
-      body.append("adresse",userData.adresse);
-      body.append("dateOfBirth",userData.dateOfBirth);
-      
+      body.append("adresse", userData.adresse);
+      body.append("dateOfBirth", userData.dateOfBirth);
+
       await axios.put(`${apiUrl}/users/update/${user}`, body);
-      getUserData()
+      getUserData();
     } catch (error) {
       console.log(error);
     }
   };
-  const photo="http://localhost:5000/"+userData.photoUrl;
+  const changePassword = async (e) => {
+    e.preventDefault();
+    const user = localStorage.getItem("user");
+
+    try {
+      if (userPassword.newPassword !== userPassword.confirmPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+
+      await axios.put(`${apiUrl}/users/updatePassword/${user}`, {
+        newPassword: userPassword.newPassword,
+        confirmPassword: userPassword.confirmPassword,
+      });
+
+      setSuccessMessage("Password updated successfully");
+      setTimeout(() => {
+        setUserPassword({ newPassword: "", confirmPassword: "" });
+      }, 2000);
+    } catch (error) {
+      setError(error.response.data.error);
+    }
+  };
+
+  const photo = "http://localhost:5000/" + userData.photoUrl;
   return (
     <>
       <Tab.Container defaultActiveKey="first">
@@ -194,18 +221,19 @@ const UserProfileClient = () => {
                   <Card.Body>
                     <div className="p-center">
                       <div className="user-profile">
-                      { !userData.photoUrl ? (<Image
-                          className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
-                          src={avatars11}
-                          
-                          alt="profile-pic"
-                        />)
-                        :(<Image
-                          className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
-                          src={photo}
-                          
-                          alt="profile-pic"/>)
-                          }
+                        {!userData.photoUrl ? (
+                          <Image
+                            className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
+                            src={avatars11}
+                            alt="profile-pic"
+                          />
+                        ) : (
+                          <Image
+                            className="theme-color-default-img  rounded-pill avatar-130 img-fluid"
+                            src={photo}
+                            alt="profile-pic"
+                          />
+                        )}
                       </div>
                       <div className="mt-3">
                         <h3 className="d-inline-block">
@@ -232,7 +260,6 @@ const UserProfileClient = () => {
                   </Card.Header>
                   <Card.Body>
                     <div>
-                      
                       {!editData ? (
                         <div className="mb-3">
                           <h5 className="label label-default">First Name:</h5>
@@ -277,7 +304,7 @@ const UserProfileClient = () => {
                           <br />
                           <h5>
                             <span className="label label-default">
-                            Date of birth:
+                              Date of birth:
                             </span>
                           </h5>
                           <p>{userData.dateOfBirth}</p>
@@ -290,118 +317,129 @@ const UserProfileClient = () => {
                           </Button>
                         </div>
                       ) : (
-                        <form action="/uploads" method="POST" encType="multipart/form-data">
-                        <div className="input mb-3">
-                           <h5 className="label label-default">Profile Photo:</h5>
-                          <input
-                             className="file-upload" 
-                             type="file"
-                             accept="image/*"
-                             id="photo"
-                             name="photo"
-                             onChange={(e) =>
-                              
-                              setUserData({ ...userData, photo: e.target.files[0]} )
-                              
-                            }
-                          />
-                          <br />
-                          <br />
-                          <h5 className="label label-default">First Name:</h5>
-                          <input
-                            className="form-control"
-                            value={userData.firstName}
-                            required
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                firstName: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">
-                              Last Name:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.lastName}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                lastName: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">Email:</span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.email}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                email: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">Phone:</span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.phone}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                phone: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">
-                              WhatsAppPhone:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.whatsApp}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                whatsApp: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          <h5>
-                            <span className="label label-default">
-                              Adresse:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            value={userData.adresse}
-                            onChange={(e) =>
-                              setUserData({
-                                ...userData,
-                                adresse: e.target.value,
-                              })
-                            }
-                          />
-                          <br />
-                          
-                          <h5>
-                            <span className="label label-default">
-                              Date of birth :
-                            </span>
-                          </h5>
+                        <form
+                          action="/uploads"
+                          method="POST"
+                          encType="multipart/form-data"
+                        >
+                          <div className="input mb-3">
+                            <h5 className="label label-default">
+                              Profile Photo:
+                            </h5>
+                            <input
+                              className="file-upload"
+                              type="file"
+                              accept="image/*"
+                              id="photo"
+                              name="photo"
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  photo: e.target.files[0],
+                                })
+                              }
+                            />
+                            <br />
+                            <br />
+                            <h5 className="label label-default">First Name:</h5>
+                            <input
+                              className="form-control"
+                              value={userData.firstName}
+                              required
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  firstName: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Last Name:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={userData.lastName}
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  lastName: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Email:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={userData.email}
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  email: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Phone:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={userData.phone}
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  phone: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                WhatsAppPhone:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={userData.whatsApp}
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  whatsApp: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+                            <h5>
+                              <span className="label label-default">
+                                Adresse:
+                              </span>
+                            </h5>
+                            <input
+                              className="form-control"
+                              value={userData.adresse}
+                              onChange={(e) =>
+                                setUserData({
+                                  ...userData,
+                                  adresse: e.target.value,
+                                })
+                              }
+                            />
+                            <br />
+
+                            <h5>
+                              <span className="label label-default">
+                                Date of birth :
+                              </span>
+                            </h5>
                             <input
                               type="date"
                               min="1960-01-01"
@@ -415,16 +453,78 @@ const UserProfileClient = () => {
                                 })
                               }
                             />
-                          <br />
-                          <br />
-                          <Button onClick={updateData} className=" btn-inner">
-                            Save
-                            <FiSave />
-                          </Button>
-                        </div>
+                            <br />
+                            <br />
+                            <Button onClick={updateData} className=" btn-inner">
+                              Save
+                              <FiSave />
+                            </Button>
+                          </div>
                         </form>
                       )}
                     </div>
+                  </Card.Body>
+                </Card>
+                <Card>
+                  <Card.Header>
+                    <div className="header-title">
+                      <h4 className="card-title">Security</h4>
+                    </div>
+                  </Card.Header>
+                  <Card.Body>
+                    <h5>
+                      <span className="label label-default">New password:</span>
+                    </h5>
+                    <input
+                      className="form-control"
+                      type="password"
+                      value={userPassword.newPassword}
+                      onChange={(e) =>
+                        setUserPassword({
+                          ...userPassword,
+                          newPassword: e.target.value,
+                        })
+                      }
+                      onFocus={() => setError("")}
+                    />
+                    <br />
+                    <br />
+                    <h5>
+                      <span className="label label-default">
+                        Confirm new password:
+                      </span>
+                    </h5>
+                    <input
+                      className="form-control"
+                      type="password"
+                      value={userPassword.confirmPassword}
+                      onChange={(e) =>
+                        setUserPassword({
+                          ...userPassword,
+                          confirmPassword: e.target.value,
+                        })
+                      }
+                      onFocus={() => setError("")}
+                    />
+                    <br />
+                    <br />
+                    {successMessage && (
+                      <div
+                        className="alert alert-success text-center"
+                        role="alert"
+                      >
+                        {successMessage}
+                      </div>
+                    )}
+                    {error && (
+                      <p style={{ color: "red", textAlign: "center" }}>
+                        {error}
+                      </p>
+                    )}
+                    <Button onClick={changePassword} className=" btn-inner">
+                      Save
+                      <FiSave />
+                    </Button>
                   </Card.Body>
                 </Card>
               </Tab.Pane>

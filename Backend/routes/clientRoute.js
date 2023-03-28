@@ -18,6 +18,7 @@ const {
   addCustomer,
   upload,
   updateClientLocation,
+  changePassword,
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -43,7 +44,7 @@ router.put("/updateAdmin/:id", uploadAdmin.single("photo"), updateAdmin);
 router.delete("/delete/:id", deleteuser);
 
 //get customer route
-router.get("/getCustomer/:id",auth,getuser);
+router.get("/getCustomer/:id",getuser);
 
 router.get("/AllCustomersUsers", getAllCustomersUsers);
 
@@ -53,8 +54,11 @@ router.post("/addCustomer", upload.single("photo"), addCustomer);
 //update Customer route
 router.put("/update/:id", upload.single("photo"), update);
 
+//location
 router.put("/update-location/:id", updateClientLocation);
 
+//update password
+router.put("/updatePassword/:id",changePassword);
 /********************************************Agent route ****************************************************/
 //delete agent route
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
 
 //img
@@ -30,6 +30,14 @@ const HeaderCustomer = () => {
   useEffect(() => {
     getUserData();
   }, []);
+  const navigate = useNavigate();
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    navigate("/ClientAgent");
+  };
  
   return (
     <>
@@ -211,7 +219,7 @@ const HeaderCustomer = () => {
                   </Dropdown.Item>
                   <Dropdown.Item href="">Privacy Setting</Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href="/">Logout</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Nav>
