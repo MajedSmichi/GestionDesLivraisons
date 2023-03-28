@@ -13,9 +13,14 @@ import { apiUrl } from "../../../Constants";
 import { agentContext } from "../../../App";
 
 const UserProfileAgent = () => {
+  const [userPassword, setUserPassword] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [editData, setEditData] = useState(false);
   const {agentData, setAgentData} = useContext(agentContext)
- 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState("");
   const getUserData = async () => {
     try {
       const user = localStorage.getItem("user");
@@ -59,6 +64,30 @@ const UserProfileAgent = () => {
       console.log(error);
     }
   };
+  const changePassword = async (e) => {
+    e.preventDefault();
+    const user = localStorage.getItem("user");
+
+    try {
+      if (userPassword.newPassword !== userPassword.confirmPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+
+      await axios.put(`${apiUrl}/users/updatePasswordAgent/${user}`, {
+        newPassword: userPassword.newPassword,
+        confirmPassword: userPassword.confirmPassword,
+      });
+
+      setSuccessMessage("Password updated successfully");
+      setTimeout(() => {
+        setUserPassword({ newPassword: "", confirmPassword: "" });
+      }, 2000);
+    } catch (error) {
+      setError(error.response.data.error);
+    }
+  };
+
   const photo="http://localhost:5000/"+agentData.photoUrl;
   const cardPhoto1="http://localhost:5000/"+agentData.cardPhoto1;
   const cardPhoto2="http://localhost:5000/"+agentData.cardPhoto2;
@@ -568,6 +597,68 @@ const UserProfileAgent = () => {
                         </form>
                       )}
                     </div>
+                  </Card.Body>
+                </Card>
+                <Card>
+                  <Card.Header>
+                    <div className="header-title">
+                      <h4 className="card-title">Security</h4>
+                    </div>
+                  </Card.Header>
+                  <Card.Body>
+                    <h5>
+                      <span className="label label-default">New password:</span>
+                    </h5>
+                    <input
+                      className="form-control"
+                      type="password"
+                      value={userPassword.newPassword}
+                      onChange={(e) =>
+                        setUserPassword({
+                          ...userPassword,
+                          newPassword: e.target.value,
+                        })
+                      }
+                      onFocus={() => setError("")}
+                    />
+                    <br />
+                    <br />
+                    <h5>
+                      <span className="label label-default">
+                        Confirm new password:
+                      </span>
+                    </h5>
+                    <input
+                      className="form-control"
+                      type="password"
+                      value={userPassword.confirmPassword}
+                      onChange={(e) =>
+                        setUserPassword({
+                          ...userPassword,
+                          confirmPassword: e.target.value,
+                        })
+                      }
+                      onFocus={() => setError("")}
+                    />
+                    <br />
+                    <br />
+                    {successMessage && (
+                      <div
+                        className="alert alert-success text-center"
+                        role="alert"
+                      >
+                        {successMessage}
+                      </div>
+                    )}
+                    {error && (
+                      <p style={{ color: "red", textAlign: "center" }}>
+                        {error}
+                      </p>
+                    )}
+                    <Button onClick={changePassword} className=" btn-inner">
+                      Save
+                      <FiSave />
+                    </Button>
                   </Card.Body>
                 </Card>
               </Tab.Pane>

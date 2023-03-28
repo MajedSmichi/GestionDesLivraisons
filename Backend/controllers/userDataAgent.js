@@ -2,6 +2,7 @@ const agent = require("../models/agentModel");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
+const updatePwdEmail = require("../utils/updatePwdEmail");
 
 //upload photo
 const storage = multer.diskStorage({
@@ -178,6 +179,41 @@ const deleteAgent = async (req, res) => {
     }
   };
 
+
+  //change password
+
+const changePasswordAgent = async (req, res) => {
+  
+  const  {newPassword,confirmPassword}  = req.body;
+
+  const { id } = req.params;
+  try {
+    const user = await agent.findById(id );
+    if(newPassword===""||confirmPassword===""){
+      return res.status(400).json({error:"enter your password"})
+    }
+    if(newPassword!==confirmPassword){
+      return res.status(400).json({error:"Passwords do not match"})
+    }
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashPassword;
+    await agent.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: { password: user.password } // Pass an object with the updated password
+      }
+    );
+    const subject = "update password"
+    const email=user.email;
+    const bodyEmail="ur password is update successfully";
+    await updatePwdEmail(email,subject,bodyEmail);
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 exports.uploadd=uploadd;
 exports.uploadPhotoAgent=uploadPhotoAgent;
 exports.deleteAgent = deleteAgent;
@@ -185,3 +221,4 @@ exports.updateAgent = updateAgent;
 exports.getAgent = getAgent;
 exports.getAllAgent = getAllAgent;
 exports.addAgent= addAgent;
+exports.changePasswordAgent=changePasswordAgent;

@@ -28,6 +28,7 @@ const {
   deleteAgent,
   addAgent,
   uploadd,
+  changePasswordAgent,
 } = require("../controllers/userDataAgent");
 const { getAdmin, updateAdmin, uploadAdmin } = require("../controllers/userDataAdmin");
 const router = Router();
@@ -85,7 +86,8 @@ router.put(
 );
 
 
-
+//update password
+router.put("/updatePasswordAgent/:id",changePasswordAgent);
 /****************************************Authentification route ****************************************/
 // Login route
 router.post("/login", login);
