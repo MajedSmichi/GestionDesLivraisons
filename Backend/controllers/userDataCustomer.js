@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator");
 const multer = require("multer");
 const client = require("../models/clientModel");
 const bcrypt = require("bcryptjs");
+const sendEmail = require("../utils/sendEmail");
+const updatePwdEmail = require("../utils/updatePwdEmail");
 
 //upload photo
 const storage = multer.diskStorage({
@@ -196,6 +198,10 @@ const changePassword = async (req, res) => {
         $set: { password: user.password } // Pass an object with the updated password
       }
     );
+    const subject = "update password"
+    const email=user.email;
+    const bodyEmail="ur password is update successfully";
+    await updatePwdEmail(email,subject,bodyEmail);
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
