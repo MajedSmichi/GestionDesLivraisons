@@ -30,7 +30,7 @@ const {
   uploadd,
   changePasswordAgent,
 } = require("../controllers/userDataAgent");
-const { getAdmin, updateAdmin, uploadAdmin } = require("../controllers/userDataAdmin");
+const { getAdmin, updateAdmin, uploadAdmin, changePasswordAdmin } = require("../controllers/userDataAdmin");
 const router = Router();
 /********************************************Admin route ****************************************************/
 //get admin route
@@ -38,6 +38,9 @@ router.get("/getAdmin/:id",getAdmin);
 
 //update admin route
 router.put("/updateAdmin/:id", uploadAdmin.single("photo"), updateAdmin);
+
+//update password
+router.put("/updatePasswordAdmin/:id",changePasswordAdmin);
 
 
 /********************************************Customer route ****************************************************/

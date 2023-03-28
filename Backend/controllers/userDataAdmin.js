@@ -1,5 +1,6 @@
 const multer = require("multer");
 const admin = require("../models/adminModel");
+const bcrypt = require("bcryptjs");
 
 
 //upload photo
@@ -91,6 +92,40 @@ const updateAdmin=async (req, res) => {
     }
   };
 
+//update password
+const changePasswordAdmin = async (req, res) => {
+  const { newPassword, confirmPassword } = req.body;
+  const { id } = req.params;
+
+  try {
+    const user = await admin.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
+
+    if (newPassword === "" || confirmPassword === "") {
+      return res.status(400).json({ error: "Please enter your password" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: "Passwords do not match" });
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashPassword;
+
+    await admin.findByIdAndUpdate(id, { password: user.password });
+
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error: " + error.message });
+  }
+};
+
+  
+
 
 
 
@@ -107,3 +142,4 @@ const updateAdmin=async (req, res) => {
   exports.uploadPhoto=uploadPhoto;
   exports.getAdmin=getAdmin;
   exports.updateAdmin=updateAdmin;
+  exports.changePasswordAdmin=changePasswordAdmin;
