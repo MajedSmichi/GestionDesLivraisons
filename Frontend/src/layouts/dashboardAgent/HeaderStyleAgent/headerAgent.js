@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
 
 //img
@@ -17,6 +17,7 @@ const HeaderAgent = () => {
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
+  const navigate = useNavigate();
   const { agentData, setAgentData } = useContext(agentContext);
   useEffect(() => {
     const getUserData = async () => {
@@ -30,6 +31,12 @@ const HeaderAgent = () => {
     };
     getUserData();
   }, []);
+  const handleLogoutClick = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    navigate("/ClientAgent");
+  };
 
   return (
     <>
@@ -206,10 +213,10 @@ const HeaderAgent = () => {
                   className="dropdown-menu-end"
                   aria-labelledby="navbarDropdown"
                 >
-                  <Dropdown.Item href="">Profile</Dropdown.Item>
-                  <Dropdown.Item href="">Privacy Setting</Dropdown.Item>
+                  <Dropdown.Item href="/dashboardAgent/user-profileAgent">Profile</Dropdown.Item>
+                  
                   <Dropdown.Divider />
-                  <Dropdown.Item href="">Logout</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Nav>

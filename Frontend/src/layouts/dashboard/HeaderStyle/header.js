@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
 
 
@@ -23,6 +23,7 @@ const Header = () => {
   const minisidebar = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
+  const navigate = useNavigate();
   const { adminData, setAdminData } = useContext(adminContext);
   const getUserData = async () => {
   
@@ -38,6 +39,12 @@ const Header = () => {
   useEffect(() => {
     getUserData();
   }, []);
+  const handleLogoutClick = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    navigate("/ClientAgent");
+  };
  
 
   return (
@@ -199,10 +206,10 @@ const Header = () => {
                   className="dropdown-menu-end"
                   aria-labelledby="navbarDropdown"
                 >
-                  <Dropdown.Item href="">Profile</Dropdown.Item>
-                  <Dropdown.Item href="">Privacy Setting</Dropdown.Item>
+                  <Dropdown.Item href="/dashboard/user-profileAdmin">Profile</Dropdown.Item>
+                  
                   <Dropdown.Divider />
-                  <Dropdown.Item href="">Logout</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Nav>

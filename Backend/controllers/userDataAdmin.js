@@ -100,9 +100,9 @@ const changePasswordAdmin = async (req, res) => {
   try {
     const user = await admin.findById(id);
 
-    if (!user) {
-      return res.status(404).json({ error: "Admin not found" });
-    }
+    // if (!user) {
+    //   return res.status(404).json({ error: "Admin not found" });
+    // }
 
     if (newPassword === "" || confirmPassword === "") {
       return res.status(400).json({ error: "Please enter your password" });
