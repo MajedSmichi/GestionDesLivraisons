@@ -15,7 +15,7 @@ const LockScreen = () => {
       password:''
    })
    const [error,setError] = useState('')
-   const server='http://localhost:5000/users/Admin';
+   const server='http://localhost:5000/users/adminLog';
    const onAdmin=async(e)=>{
        e.preventDefault()
        if(data.password===''){
@@ -24,8 +24,9 @@ const LockScreen = () => {
        }
        try {
          const res=await axios.post(server,{...data});
-         localStorage.setItem('admin', res.data.token);
-         localStorage.setItem('user',res.data.user)
+         localStorage.setItem('token', res.data.token);
+         localStorage.setItem('user',res.data.user);
+         localStorage.setItem('role',res.data.role);
          navigate('/dashboard');
          
        } catch (e) {

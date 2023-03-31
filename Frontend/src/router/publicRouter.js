@@ -16,14 +16,20 @@ const  PublicRoutes=() =>{
 const role=localStorage.getItem('role');
   const auth=useAuth()
   if(auth){
-    if(role===1)
-     return <Navigate to="/dashboardCustomer"/>
-    else 
-    return <Navigate to="/dashboardAgent"/>
-  }
+   
+    if(role==="1"){
 
-  else
-  return  <Outlet/>
+      return <Navigate to="/dashboardCustomer"/>
+    }else if(role==="admin")
+    return <Navigate to="/dashboard"/>
+    else {
+
+      return <Navigate to="/dashboardAgent"/>
+    }
+  }else{
+
+    return  <Outlet/>
+  }
 }
 
 export default PublicRoutes;

@@ -30,7 +30,7 @@ const {
   uploadd,
   changePasswordAgent,
 } = require("../controllers/userDataAgent");
-const { getAdmin, updateAdmin, uploadAdmin, changePasswordAdmin } = require("../controllers/userDataAdmin");
+const { getAdmin, updateAdmin, uploadAdmin, changePasswordAdmin, authAdmin } = require("../controllers/userDataAdmin");
 const router = Router();
 /********************************************Admin route ****************************************************/
 //get admin route
@@ -44,11 +44,10 @@ router.put("/updatePasswordAdmin/:id",changePasswordAdmin);
 
 
 /********************************************Customer route ****************************************************/
-//delete customer route
-router.delete("/delete/:id", deleteuser);
+
 
 //get customer route
-router.get("/getCustomer/:id",getuser);
+router.get("/getCustomer",auth,getuser);
 
 router.get("/AllCustomersUsers", getAllCustomersUsers);
 
@@ -62,7 +61,7 @@ router.put("/update/:id", upload.single("photo"), update);
 router.put("/update-location/:id", updateClientLocation);
 
 //update password
-router.put("/updatePassword/:id",changePassword);
+router.put("/updatePassword",auth,changePassword);
 /********************************************Agent route ****************************************************/
 //delete agent route
 
@@ -103,11 +102,14 @@ router.post(
   body("phone").isLength(8),
   signup
 );
-
+/****************************************Admin route ****************************************/
 //adminlogin route
-router.post("/admin", AdminLog);
+router.post("/adminLog", AdminLog);
 
 //recover password
 router.post("/recover", recoverPassword);
+
+//delete customer route
+router.delete("/delete/:id",authAdmin, deleteuser);
 
 module.exports = router;

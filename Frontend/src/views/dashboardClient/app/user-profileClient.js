@@ -23,8 +23,14 @@ const UserProfileClient = () => {
   const [error, setError] = useState("");
   const getUserData = async () => {
     try {
-      const user = localStorage.getItem("user");
-      const response = await axios.get(`${apiUrl}/users/getCustomer/${user}`);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}/users/getCustomer`,{
+        headers:{
+          Authorization: token
+        }
+      });
+    
+      console.log({response})
       setUserData(response.data);
     } catch (error) {
       console.log(error);
@@ -60,7 +66,7 @@ const UserProfileClient = () => {
   };
   const changePassword = async (e) => {
     e.preventDefault();
-    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
     try {
       if (userPassword.newPassword !== userPassword.confirmPassword) {
@@ -68,14 +74,18 @@ const UserProfileClient = () => {
         return;
       }
 
-      await axios.put(`${apiUrl}/users/updatePassword/${user}`, {
+      await axios.put(`${apiUrl}/users/updatePassword`, {
         newPassword: userPassword.newPassword,
         confirmPassword: userPassword.confirmPassword,
+      },{
+        headers:{
+          Authorization: token
+        }
       });
-
-      setSuccessMessage("Password updated successfully");
+      setSuccessMessage("Password updated successfully")
+      setUserPassword({ newPassword: "", confirmPassword: "" });
       setTimeout(() => {
-        setUserPassword({ newPassword: "", confirmPassword: "" });
+        setSuccessMessage("")
       }, 2000);
     } catch (error) {
       setError(error.response.data.error);

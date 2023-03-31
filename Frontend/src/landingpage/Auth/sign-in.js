@@ -28,7 +28,6 @@ const SignIn = () => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", res.data.user);
       localStorage.setItem("role", res.data.role);
-      console.log(res.data.role);
       if (role === "1") {
         navigate("/dashboardCustomer");
       } else {

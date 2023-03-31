@@ -1,7 +1,27 @@
 const multer = require("multer");
 const admin = require("../models/adminModel");
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
 
+///middleware/auth
+const authAdmin=async(req, res, next) => {
+  try {
+    
+    const token = req.header("Authorization");
+    if (!token) return res.status(403).send("Access denied.");
+
+    const decoded = jwt.verify(token, process.env.SECRET);
+    req.user = decoded;
+    const isAdmin = await  admin.findOne({email:req.user.username})
+    if(!isAdmin) {
+      res.status(401).send('unauthorized')
+    }
+    next();
+  } catch (error) {
+    console.log({error})
+    res.status(400).send("Invalid token");
+  }
+};
 
 //upload photo
 const storage = multer.diskStorage({
@@ -137,7 +157,7 @@ const changePasswordAdmin = async (req, res) => {
 
 
 
-
+   exports.authAdmin=authAdmin;
   exports.uploadAdmin=uploadAdmin;
   exports.uploadPhoto=uploadPhoto;
   exports.getAdmin=getAdmin;

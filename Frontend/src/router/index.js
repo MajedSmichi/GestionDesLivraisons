@@ -33,7 +33,8 @@ import Google from "../views/dashboard/maps/google";
 import UserListAgent from "../views/dashboard/app/user-listAgent";
 import GoogleAgent from "../views/dashboradAgent/maps/google";
 import GoogleClient from "../views/dashboardClient/maps/google";
-
+import ProtectedRoutes from "./privateRouter";
+import PublicRoutes from "./publicRouter";
 
 
 const IndexRouters = () => {
@@ -41,6 +42,7 @@ const IndexRouters = () => {
     <>
       <Routes>
         {/* public routers*/}
+        <Route path="/" element={<PublicRoutes/>}>
         <Route path="/" element={<Home />} />
         <Route path="Habout" element={<HAbout />} />
         <Route path="team" element={<Team />} />
@@ -51,7 +53,9 @@ const IndexRouters = () => {
         <Route path="LockScreen" element={<LockScreen />} />
         <Route path="confirmmail" element={<ConfirmMail />} />
         <Route path="ClientAgent" element={<ClientAgent />} />
+        </Route>
         {/* private routers*/}
+        <Route path="/" element={<ProtectedRoutes/>}>
         <Route path="dashboard" element={<Default />}>
           {/* user */}
           <Route path="user-add" element={<UserAdd />} />
@@ -76,6 +80,7 @@ const IndexRouters = () => {
             <Route path="user-profileClient" element={<UserProfileClient />} />
             <Route path="calendarClient" element={<CalenderClient />} />
             <Route path="mapClient" element={<GoogleClient />} />
+          </Route>
           </Route>
         </Routes>
       

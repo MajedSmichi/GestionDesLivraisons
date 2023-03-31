@@ -20,8 +20,12 @@ const HeaderCustomer = () => {
   const { userData, setUserData } = useContext(customerContext);
   const getUserData = async () => {
     try {
-      const user = localStorage.getItem("user");
-      const response = await axios.get(`${apiUrl}/users/getCustomer/${user}`);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}/users/getCustomer`,{
+        headers:{
+          Authorization: token
+        }
+      });
       setUserData(response.data);
     } catch (error) {
       console.log(error);

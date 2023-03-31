@@ -9,10 +9,12 @@ const admin = require("../models/adminModel");
 ///middleware/auth
 const auth=async(req, res, next) => {
   try {
-      const token = req.header("x-auth-token");
+    
+      const token = req.header("Authorization");
+      
       if (!token) return res.status(403).send("Access denied.");
 
-      const decoded = jwt.verify(token, process.env.JWTPRIVATEKEY);
+      const decoded = jwt.verify(token, process.env.SECRET);
       req.user = decoded;
       next();
   } catch (error) {
@@ -72,7 +74,6 @@ const login = async (req, res) => {
       const role=req.body.role;
       const token = await jwt.sign({ username: user.email }, process.env.SECRET);
       res.json({ token,role, user:user._id});
-      console.log(role);
     } else {
       res.status(400).json({ error: "Email or Password are false" });
     }
@@ -84,7 +85,7 @@ const login = async (req, res) => {
 
 
 const recoverPassword = async(req,res) => {
-  console.log(req.body)
+ 
   const {email,role} = req.body
   try {
     const user =role ==="1" ? await client.findOne({email }):await agent.findOne({email});
@@ -104,17 +105,18 @@ const recoverPassword = async(req,res) => {
 }
 
 const AdminLog = async (req, res) => {
- 
+   const role="admin"
   try {
-
+    
     const user = await admin.findOne()
+    const result = await bcrypt.compare(req.body.password, user.password);
+
     
-    
-    if (req.body.password===user.password) {
+    if (result) {
       // sign token and send it in response
       
       const token = await jwt.sign({ username: user.email }, process.env.SECRET);
-      res.json({ token, user:user._id});
+      res.json({ token, user:user._id,role});
       
     } else {
       res.status(400).json({ error: "Password is false" });

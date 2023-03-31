@@ -8,6 +8,7 @@ const adminSchema = mongoose.Schema({
   whatsApp: { type: Number, required: false },
   phone: { type: Number, required: false },
   photoUrl: String,
+  role:{type:String,required:false}
  
 });
 module.exports = mongoose.model("admin", adminSchema);

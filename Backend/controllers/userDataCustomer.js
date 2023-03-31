@@ -36,6 +36,8 @@ const uploadPhoto=async (req, res) => {
   res.send("File uploaded successfully!");
 };
 
+
+//updateClientLocation
 const updateClientLocation = async (req, res) => {
   const { longitude, latitude } = req.body;
   const { id } = req.params;
@@ -135,9 +137,11 @@ const addCustomer = async (req, res) => {
 
 //get user
 const getuser = async (req, res) => {
-  const { id } = req.params;
+  const {username} =req.user
+
   try {
-    const user = await client.findById(id).select("-password");
+    const user = await client.findOne({email:username}).select("-password");
+    console.log({user})
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -167,7 +171,7 @@ const deleteuser = async (req, res) => {
   const { id } = req.params;
   try {
     const user=await client.findByIdAndDelete({ _id: id });
-
+    
     return res.status(200).json({ message: "delete succesfuly" });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
@@ -181,9 +185,9 @@ const changePassword = async (req, res) => {
   
   const  {newPassword,confirmPassword}  = req.body;
 
-  const { id } = req.params;
+  const {username} =req.user
   try {
-    const user = await client.findById(id );
+    const user = await client.findOne({email:username} );
     if(newPassword===""||confirmPassword===""){
       return res.status(400).json({error:"enter your password"})
     }
@@ -192,8 +196,8 @@ const changePassword = async (req, res) => {
     }
     const hashPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashPassword;
-    await client.findByIdAndUpdate(
-      { _id: id },
+    await client.updateOne(
+      { email:username},
       {
         $set: { password: user.password } // Pass an object with the updated password
       }
