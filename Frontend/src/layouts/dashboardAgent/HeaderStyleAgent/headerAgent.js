@@ -22,8 +22,12 @@ const HeaderAgent = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const user = localStorage.getItem("user");
-        const response = await axios.get(`${apiUrl}/users/getAgent/${user}`);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${apiUrl}/users/getAgent`,{
+          headers:{
+            Authorization: token
+          }}
+        );
         setAgentData(response.data);
       } catch (error) {
         console.log(error);

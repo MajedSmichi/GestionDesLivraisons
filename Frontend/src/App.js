@@ -52,12 +52,16 @@ function App() {
 
   useEffect(() => {
     let id = setInterval(() => {
-      const user = localStorage.getItem("user");
-      if (navigator.geolocation && user) {
+      const token = localStorage.getItem("token");
+      if (navigator.geolocation && token) {
         navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-          await axios.put(`${apiUrl}/users/update-location/${user}`, {
+          await axios.put(`${apiUrl}/users/update-location`, {
             latitude: coords.latitude + "",
             longitude: coords.longitude + "",
+          },{
+            headers:{
+              Authorization: token
+            }
           });
         });
       }

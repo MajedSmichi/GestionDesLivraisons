@@ -45,7 +45,7 @@ const UserProfileClient = () => {
     setEditData(false);
 
     try {
-      const user = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
       const body = new FormData();
       body.append("firstName", userData.firstName);
       body.append("lastName", userData.lastName);
@@ -58,7 +58,11 @@ const UserProfileClient = () => {
       body.append("adresse", userData.adresse);
       body.append("dateOfBirth", userData.dateOfBirth);
 
-      await axios.put(`${apiUrl}/users/update/${user}`, body);
+      await axios.put(`${apiUrl}/users/update`, body,{
+        headers:{
+          Authorization: token
+        }
+      });
       getUserData();
     } catch (error) {
       console.log(error);

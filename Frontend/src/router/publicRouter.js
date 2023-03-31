@@ -15,6 +15,7 @@ const useAuth=()=>{
 const  PublicRoutes=() =>{
 const role=localStorage.getItem('role');
   const auth=useAuth()
+  console.log(auth)
   if(auth){
    
     if(role==="1"){
@@ -22,7 +23,7 @@ const role=localStorage.getItem('role');
       return <Navigate to="/dashboardCustomer"/>
     }else if(role==="admin")
     return <Navigate to="/dashboard"/>
-    else {
+    else if (role==="2") {
 
       return <Navigate to="/dashboardAgent"/>
     }

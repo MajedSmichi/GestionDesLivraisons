@@ -18,8 +18,7 @@ const updatePwdEmail = async (email, subject, text) => {
       text:text,
       html: HTML_TEMPLATEPWD(text),
     });
-    
-    console.log("email sent sucessfully");
+
   } catch (e) {
     res.status(400).json({ error: e });
   }

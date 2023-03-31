@@ -28,8 +28,13 @@ const UserList = () => {
   };
 
   const deleteuser = async (item) => {
+    const token =localStorage.getItem("token");
     try {
-      await axios.delete(`${apiUrl}/users/delete/${item._id}`);
+      await axios.delete(`${apiUrl}/users/delete/${item._id}`,{
+        headers:{
+          Authorization: token
+        }
+      });
       getAllCustomersUser();
     } catch (error) {
       console.log(error);
@@ -37,12 +42,16 @@ const UserList = () => {
   };
   const updateuser = async (item, idx) => {
     setEditData(null);
-
+  const token =localStorage.getItem("token");
     try {
       setLoading(true);
       const response = await axios.put(
-        `${apiUrl}/users/update/${item._id}`,
-        item
+        `${apiUrl}/users/updateClient/${item._id}`,
+        item,{
+          headers:{
+            Authorization: token
+          }
+        }
       );
       setUserData((prevState) => {
         const newData = [...prevState];

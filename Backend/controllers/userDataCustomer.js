@@ -40,11 +40,11 @@ const uploadPhoto=async (req, res) => {
 //updateClientLocation
 const updateClientLocation = async (req, res) => {
   const { longitude, latitude } = req.body;
-  const { id } = req.params;
+  const {username} =req.user
   try {
-   
-    await client.findByIdAndUpdate(
-      { _id: id },
+    
+    await client.findOneAndUpdate(
+      { email:username},
       {
         $set: {
           longitude,
@@ -61,6 +61,43 @@ const updateClientLocation = async (req, res) => {
 
 //update user
 const update = async (req, res) => {
+  const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
+  const {username} =req.user
+  try {
+    
+    const user = await client.findOne({email:username});
+    if (email !== user.email) {
+      const exist = await client.findOne({email:username});
+      if (exist) return res.status(400).json({ error: "User already exist" });
+    }
+
+    const newUser = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      whatsApp,
+      adresse,
+      dateOfBirth,
+    }
+
+    if(req.locals?.filePath) newUser.photoUrl = req.locals.filePath
+
+    await client.findOneAndUpdate(
+      { email:username},
+      {
+        $set: newUser,
+      }
+    );
+    return res.status(200).json({ message: "User data updated" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//update user from dashbord admin
+const updateClient = async (req, res) => {
   const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
   const { id } = req.params;
   try {
@@ -95,9 +132,6 @@ const update = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
 //add customer in admin dashboard
 const addCustomer = async (req, res) => {
   const { firstName, lastName, email, phone, password, whatsApp, adresse,photoUrl} =
@@ -141,7 +175,6 @@ const getuser = async (req, res) => {
 
   try {
     const user = await client.findOne({email:username}).select("-password");
-    console.log({user})
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -228,3 +261,4 @@ exports.getAllCustomersUsers = getAllCustomersUsers;
 exports.addCustomer = addCustomer;
 exports.updateClientLocation = updateClientLocation;
 exports.changePassword=changePassword;
+exports.updateClient=updateClient;

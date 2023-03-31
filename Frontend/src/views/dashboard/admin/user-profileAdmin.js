@@ -26,9 +26,12 @@ const UserProfileAdmin = () => {
   const [error, setError] = useState("");
   const getUserData = async () => {
     try {
-      const user = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
       
-      const response = await axios.get(`${apiUrl}/users/getAdmin/${user}`);
+      const response = await axios.get(`${apiUrl}/users/getAdmin`,
+       { headers:{
+          Authorization: token
+        }});
       setAdminData(response.data);
       
     } catch (error) {
@@ -44,7 +47,7 @@ const UserProfileAdmin = () => {
     setEditData(false);
 
     try {
-      const user = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
       const body = new FormData();
       body.append("firstName",adminData.firstName);
       body.append("lastName",adminData.lastName);
@@ -57,7 +60,10 @@ const UserProfileAdmin = () => {
    
       body.append("dateOfBirth",adminData.dateOfBirth);
       
-      await axios.put(`${apiUrl}/users/updateAdmin/${user}`, body);
+      await axios.put(`${apiUrl}/users/updateAdmin`, body,{
+        headers:{
+          Authorization: token
+        }});
       getUserData()
     } catch (error) {
       console.log(error);
@@ -65,7 +71,7 @@ const UserProfileAdmin = () => {
   };
   const changePassword = async (e) => {
     e.preventDefault();
-    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
     try {
       if (userPassword.newPassword !== userPassword.confirmPassword) {
@@ -73,14 +79,17 @@ const UserProfileAdmin = () => {
         return;
       }
 
-      await axios.put(`${apiUrl}/users/updatePasswordAdmin/${user}`, {
+      await axios.put(`${apiUrl}/users/updatePasswordAdmin`, {
         newPassword: userPassword.newPassword,
         confirmPassword: userPassword.confirmPassword,
-      });
-
+      },{
+        headers:{
+          Authorization: token
+        }});
+      setUserPassword({ newPassword: "", confirmPassword: "" });
       setSuccessMessage("Password updated successfully");
       setTimeout(() => {
-        setUserPassword({ newPassword: "", confirmPassword: "" });
+        setSuccessMessage("");
       }, 2000);
     } catch (error) {
       setError(error.response.data.error);

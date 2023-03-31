@@ -28,8 +28,10 @@ const Header = () => {
   const getUserData = async () => {
   
     try {
-      const user = localStorage.getItem("user");
-      const response = await axios.get(`${apiUrl}/users/getAdmin/${user}`);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}/users/getAdmin`,{ headers:{
+        Authorization: token
+      }});
       
       setAdminData(response.data);
     } catch (error) {

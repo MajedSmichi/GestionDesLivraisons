@@ -19,6 +19,7 @@ const {
   upload,
   updateClientLocation,
   changePassword,
+  updateClient,
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -29,25 +30,22 @@ const {
   addAgent,
   uploadd,
   changePasswordAgent,
+  authAgent,
 } = require("../controllers/userDataAgent");
-const { getAdmin, updateAdmin, uploadAdmin, changePasswordAdmin, authAdmin } = require("../controllers/userDataAdmin");
+const {
+  getAdmin,
+  updateAdmin,
+  uploadAdmin,
+  changePasswordAdmin,
+  authAdmin,
+} = require("../controllers/userDataAdmin");
 const router = Router();
-/********************************************Admin route ****************************************************/
-//get admin route
-router.get("/getAdmin/:id",getAdmin);
-
-//update admin route
-router.put("/updateAdmin/:id", uploadAdmin.single("photo"), updateAdmin);
-
-//update password
-router.put("/updatePasswordAdmin/:id",changePasswordAdmin);
 
 
 /********************************************Customer route ****************************************************/
 
-
 //get customer route
-router.get("/getCustomer",auth,getuser);
+router.get("/getCustomer", auth, getuser);
 
 router.get("/AllCustomersUsers", getAllCustomersUsers);
 
@@ -55,30 +53,27 @@ router.get("/AllCustomersUsers", getAllCustomersUsers);
 router.post("/addCustomer", upload.single("photo"), addCustomer);
 
 //update Customer route
-router.put("/update/:id", upload.single("photo"), update);
+router.put("/update", auth, upload.single("photo"), update);
 
 //location
-router.put("/update-location/:id", updateClientLocation);
+router.put("/update-location", auth, updateClientLocation);
 
 //update password
-router.put("/updatePassword",auth,changePassword);
-/********************************************Agent route ****************************************************/
-//delete agent route
-
-router.delete("/deleteAgent/:id", deleteAgent);
+router.put("/updatePassword", auth, changePassword);
+/********************************************Agent route **************************************************************************/
 
 //add agent route
-router.post("/addAgent", uploadd.single("photo"), addAgent);
+router.post("/addAgent",authAgent, uploadd.single("photo"), addAgent);
 
 //get agent
-router.get("/getAgent/:id", getAgent);
+router.get("/getAgent",authAgent, getAgent);
 
 //get All Agent
 router.get("/getAllAgent", getAllAgent);
 
 //update agent
 router.put(
-  "/updateAgent/:id",
+  "/updateAgent",authAgent,
   uploadd.fields([
     { name: "photo", maxCount: 1 },
     { name: "cardPhoto1", maxCount: 1 },
@@ -87,9 +82,8 @@ router.put(
   updateAgent
 );
 
-
 //update password
-router.put("/updatePasswordAgent/:id",changePasswordAgent);
+router.put("/updatePasswordAgent",authAgent, changePasswordAgent);
 /****************************************Authentification route ****************************************/
 // Login route
 router.post("/login", login);
@@ -110,6 +104,21 @@ router.post("/adminLog", AdminLog);
 router.post("/recover", recoverPassword);
 
 //delete customer route
-router.delete("/delete/:id",authAdmin, deleteuser);
+router.delete("/delete/:id", authAdmin, deleteuser);
+
+//delete agent route
+router.delete("/deleteAgent/:id",authAdmin, deleteAgent);
+
+//update client data
+router.put("/updateClient/:id", authAdmin, updateClient);
+
+//get admin route
+router.get("/getAdmin", authAdmin, getAdmin);
+
+//update admin route
+router.put("/updateAdmin", authAdmin, uploadAdmin.single("photo"), updateAdmin);
+
+//update password
+router.put("/updatePasswordAdmin", authAdmin, changePasswordAdmin);
 
 module.exports = router;

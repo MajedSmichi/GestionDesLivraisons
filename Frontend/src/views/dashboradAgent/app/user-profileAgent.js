@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
@@ -18,13 +18,17 @@ const UserProfileAgent = () => {
     confirmPassword: "",
   });
   const [editData, setEditData] = useState(false);
-  const {agentData, setAgentData} = useContext(agentContext)
+  const { agentData, setAgentData } = useContext(agentContext);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const getUserData = async () => {
     try {
-      const user = localStorage.getItem("user");
-      const response = await axios.get(`${apiUrl}/users/getAgent/${user}`);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}/users/getAgent`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       setAgentData(response.data);
     } catch (error) {
       console.log(error);
@@ -38,7 +42,7 @@ const UserProfileAgent = () => {
     setEditData(false);
 
     try {
-      const user = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
       const body = new FormData();
       body.append("firstName", agentData.firstName);
       body.append("lastName", agentData.lastName);
@@ -49,16 +53,28 @@ const UserProfileAgent = () => {
         body.append("photo", agentData.photo, agentData.photo.name);
       }
       if (agentData.cardPhoto1?.name) {
-        body.append("cardPhoto1", agentData.cardPhoto1, agentData.cardPhoto1.name);
+        body.append(
+          "cardPhoto1",
+          agentData.cardPhoto1,
+          agentData.cardPhoto1.name
+        );
       }
       if (agentData.cardPhoto2?.name) {
-        body.append("cardPhoto2", agentData.cardPhoto2, agentData.cardPhoto2.name);
+        body.append(
+          "cardPhoto2",
+          agentData.cardPhoto2,
+          agentData.cardPhoto2.name
+        );
       }
       body.append("adresse", agentData.adresse);
       body.append("dateOfBirth", agentData.dateOfBirth);
       body.append("idCard", agentData.idCard);
       body.append("vehicule", agentData.vehicule);
-      await axios.put(`${apiUrl}/users/updateAgent/${user}`, body);
+      await axios.put(`${apiUrl}/users/updateAgent`, body, {
+        headers: {
+          Authorization: token,
+        },
+      });
       getUserData();
     } catch (error) {
       console.log(error);
@@ -66,7 +82,7 @@ const UserProfileAgent = () => {
   };
   const changePassword = async (e) => {
     e.preventDefault();
-    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
     try {
       if (userPassword.newPassword !== userPassword.confirmPassword) {
@@ -74,10 +90,18 @@ const UserProfileAgent = () => {
         return;
       }
 
-      await axios.put(`${apiUrl}/users/updatePasswordAgent/${user}`, {
-        newPassword: userPassword.newPassword,
-        confirmPassword: userPassword.confirmPassword,
-      });
+      await axios.put(
+        `${apiUrl}/users/updatePasswordAgent`,
+        {
+          newPassword: userPassword.newPassword,
+          confirmPassword: userPassword.confirmPassword,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       setSuccessMessage("Password updated successfully");
       setTimeout(() => {
@@ -88,14 +112,14 @@ const UserProfileAgent = () => {
     }
   };
 
-  const photo="http://localhost:5000/"+agentData.photoUrl;
-  const cardPhoto1="http://localhost:5000/"+agentData.cardPhoto1;
-  const cardPhoto2="http://localhost:5000/"+agentData.cardPhoto2;
+  const photo = "http://localhost:5000/" + agentData.photoUrl;
+  const cardPhoto1 = "http://localhost:5000/" + agentData.cardPhoto1;
+  const cardPhoto2 = "http://localhost:5000/" + agentData.cardPhoto2;
 
   return (
     <>
       <Tab.Container defaultActiveKey="first">
-        <Row > 
+        <Row>
           <Col lg="12">
             <Card>
               <Card.Body>
@@ -302,42 +326,46 @@ const UserProfileAgent = () => {
                           <br />
                           <h5>
                             <span className="label label-default">
-                            CardPhoto1:
+                              CardPhoto1:
                             </span>
                           </h5>
-                          <p>{!agentData.cardPhoto1 ? (
-                          <Image
-                            className="img-fluid w-25 p-3"
-                            src={avatars11}
-                            alt="profile-pic"
-                          />
-                        ) : (
-                          <Image
-                            className="img-fluid w-25 p-3"
-                            src={cardPhoto1}
-                            alt="profile-pic"
-                          />
-                        )}</p>
+                          <p>
+                            {!agentData.cardPhoto1 ? (
+                              <Image
+                                className="img-fluid w-25 p-3"
+                                src={avatars11}
+                                alt="profile-pic"
+                              />
+                            ) : (
+                              <Image
+                                className="img-fluid w-25 p-3"
+                                src={cardPhoto1}
+                                alt="profile-pic"
+                              />
+                            )}
+                          </p>
                           <br />
                           <br />
                           <h5>
                             <span className="label label-default">
-                            CardPhoto2 :
+                              CardPhoto2 :
                             </span>
                           </h5>
-                          <p>{!agentData.cardPhoto2 ? (
-                          <Image
-                            className=" img-fluid w-25 p-3"
-                            src={avatars11}
-                            alt="profile-pic"
-                          />
-                        ) : (
-                          <Image
-                            className="img-fluid w-25 p-3"
-                            src={cardPhoto2}
-                            alt="profile-pic"
-                          />
-                        )}</p>
+                          <p>
+                            {!agentData.cardPhoto2 ? (
+                              <Image
+                                className=" img-fluid w-25 p-3"
+                                src={avatars11}
+                                alt="profile-pic"
+                              />
+                            ) : (
+                              <Image
+                                className="img-fluid w-25 p-3"
+                                src={cardPhoto2}
+                                alt="profile-pic"
+                              />
+                            )}
+                          </p>
                           <br />
                           <br />
                           <h5>
@@ -469,7 +497,7 @@ const UserProfileAgent = () => {
                                 Id Card:
                               </span>
                             </h5>
-                              <input
+                            <input
                               className="form-control"
                               value={agentData.idCard}
                               onChange={(e) =>
@@ -519,7 +547,7 @@ const UserProfileAgent = () => {
                               }
                             />
                             <br />
-                            <br />  
+                            <br />
                             <h5>
                               <span className="label label-default">
                                 WhatsAppPhone:
@@ -579,7 +607,7 @@ const UserProfileAgent = () => {
                               min="1960-01-01"
                               max="2010-12-31"
                               className="form-control"
-                              value={agentData.dateOfBirth||""}
+                              value={agentData.dateOfBirth || ""}
                               onChange={(e) =>
                                 setAgentData({
                                   ...agentData,

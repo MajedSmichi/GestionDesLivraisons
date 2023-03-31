@@ -3,7 +3,26 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const updatePwdEmail = require("../utils/updatePwdEmail");
+const jwt = require('jsonwebtoken');
+///middleware/auth
+const authAgent=async(req, res, next) => {
+  try {
+    
+    const token = req.header("Authorization");
+    if (!token) return res.status(403).send("Access denied.");
 
+    const decoded = jwt.verify(token, process.env.SECRET);
+    req.user = decoded;
+    const isLogin = await  agent.findOne({email:req.user.username})
+    if(!isLogin) {
+      res.status(401).send('unauthorized')
+    }
+    next();
+  } catch (error) {
+    console.log({error})
+    res.status(400).send("Invalid token");
+  }
+};
 //upload photo
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -41,9 +60,9 @@ const uploadPhotoAgent=async (req, res) => {
 
 //get user
 const getAgent = async (req, res) => {
-    const { id } = req.params;
+    const { username } = req.user;
     try {
-      const user = await agent.findById(id).select("-password");
+      const user = await agent.findOne({email:username}).select("-password");
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -105,7 +124,6 @@ const getAllAgent= async (req, res) => {
       if(req.locals?.filePath) user.photoUrl = req.locals.filePath;
       if(req.locals?.filePath) user.cardPhoto1 = req.locals.filePath;
       if(req.locals?.filePath) user.cardPhoto2 = req.locals.filePath;
-       console.log(user)
       await agent.create(user);
       return res.status(201).json({ message: "user create" });
     } catch (e) {
@@ -119,12 +137,12 @@ const getAllAgent= async (req, res) => {
   const updateAgent = async (req, res) => {
     const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth,vehicule,idCard } =
       req.body;
-    const { id } = req.params;
+    const { username } = req.user;
     
     try {
-      const user = await agent.findById(id);
+      const user = await agent.findOne({email:username});
       if (email !== user.email) {
-        const exist = await agent.findOne({ email });
+        const exist = await agent.findOne({ email:username });
         if (exist) return res.status(400).json({ error: "User already exist" });
       }
       const newUser={
@@ -152,8 +170,8 @@ const getAllAgent= async (req, res) => {
           const cardPhoto2Path = req.files["cardPhoto2"][0].path;
           newUser.cardPhoto2 = cardPhoto2Path;
         }}
-      await agent.findByIdAndUpdate(
-        { _id: id },
+      await agent.findOneAndUpdate(
+        { email:username },
         {
           $set:newUser
           
@@ -186,9 +204,9 @@ const changePasswordAgent = async (req, res) => {
   
   const  {newPassword,confirmPassword}  = req.body;
 
-  const { id } = req.params;
+  const { username } = req.user;
   try {
-    const user = await agent.findById(id );
+    const user = await agent.findOne({email:username} );
     if(newPassword===""||confirmPassword===""){
       return res.status(400).json({error:"enter your password"})
     }
@@ -197,8 +215,8 @@ const changePasswordAgent = async (req, res) => {
     }
     const hashPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashPassword;
-    await agent.findByIdAndUpdate(
-      { _id: id },
+    await agent.findOneAndUpdate(
+      { email:username},
       {
         $set: { password: user.password } // Pass an object with the updated password
       }
@@ -213,7 +231,7 @@ const changePasswordAgent = async (req, res) => {
   }
 };
 
-
+exports.authAgent=authAgent;
 exports.uploadd=uploadd;
 exports.uploadPhotoAgent=uploadPhotoAgent;
 exports.deleteAgent = deleteAgent;

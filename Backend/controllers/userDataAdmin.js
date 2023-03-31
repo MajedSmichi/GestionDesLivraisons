@@ -57,9 +57,9 @@ const storage = multer.diskStorage({
 //get admin data
 
 const getAdmin = async (req, res) => {
-    const { id } = req.params;
+    const { username } = req.user;
     try {
-      const user = await admin.findById(id).select("-password");
+      const user = await admin.findOne({email:username}).select("-password");
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -76,13 +76,13 @@ const getAdmin = async (req, res) => {
 
 const updateAdmin=async (req, res) => {
     const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
-    const { id } = req.params;
+    const { username } = req.user;
    
     try {
       
-      const user = await admin.findById(id);
+      const user = await admin.findOne({email:username});
       if (email !== user.email) {
-        const exist = await admin.findOne({ email });
+        const exist = await admin.findOne({ email:username });
         if (exist) return res.status(400).json({ error: "User already exist" });
       }
   
@@ -98,8 +98,8 @@ const updateAdmin=async (req, res) => {
       
       if(req.locals?.filePath) newUser.photoUrl = req.locals.filePath
   
-      await admin.findByIdAndUpdate(
-        { _id: id },
+      await admin.findOneAndUpdate(
+        { email:username },
         {
           $set: newUser,
         }
@@ -115,10 +115,10 @@ const updateAdmin=async (req, res) => {
 //update password
 const changePasswordAdmin = async (req, res) => {
   const { newPassword, confirmPassword } = req.body;
-  const { id } = req.params;
+  const { username } = req.user;
 
   try {
-    const user = await admin.findById(id);
+    const user = await admin.findOne({email:username});
 
     // if (!user) {
     //   return res.status(404).json({ error: "Admin not found" });
@@ -135,7 +135,7 @@ const changePasswordAdmin = async (req, res) => {
     const hashPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashPassword;
 
-    await admin.findByIdAndUpdate(id, { password: user.password });
+    await admin.findOneAndUpdate({email:username}, { password: user.password });
 
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
