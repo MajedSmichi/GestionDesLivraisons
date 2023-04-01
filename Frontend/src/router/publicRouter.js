@@ -15,7 +15,6 @@ const useAuth=()=>{
 const  PublicRoutes=() =>{
 const role=localStorage.getItem('role');
   const auth=useAuth()
-  console.log(auth)
   if(auth){
    
     if(role==="1"){

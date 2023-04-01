@@ -50,10 +50,11 @@ function App() {
     photo: "",
   });
 
-  useEffect(() => {
-    let id = setInterval(() => {
+  const updateLocation = ()=>{
+    try {
       const token = localStorage.getItem("token");
       if (navigator.geolocation && token) {
+        
         navigator.geolocation.getCurrentPosition(async ({ coords }) => {
           await axios.put(`${apiUrl}/users/update-location`, {
             latitude: coords.latitude + "",
@@ -65,6 +66,15 @@ function App() {
           });
         });
       }
+    } catch (error) {
+      console.log(error)
+    }
+   
+  }
+
+  useEffect(() => {
+    let id = setInterval(() => {
+      updateLocation();
     }, 2000);
     return () => {
       clearInterval(id);

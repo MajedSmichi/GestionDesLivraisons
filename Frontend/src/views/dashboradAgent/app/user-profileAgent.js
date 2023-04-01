@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-
+import moment from 'moment';
 import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 
@@ -115,6 +115,8 @@ const UserProfileAgent = () => {
   const photo = "http://localhost:5000/" + agentData.photoUrl;
   const cardPhoto1 = "http://localhost:5000/" + agentData.cardPhoto1;
   const cardPhoto2 = "http://localhost:5000/" + agentData.cardPhoto2;
+
+
 
   return (
     <>
@@ -397,7 +399,7 @@ const UserProfileAgent = () => {
                               Date of birth:
                             </span>
                           </h5>
-                          <p>{agentData.dateOfBirth}</p>
+                          <p>{moment(agentData.dateOfBirth).format('DD/MM/YYYY')}</p>
                           <Button
                             className="btn-inner "
                             onClick={() => setEditData(true)}
@@ -578,7 +580,7 @@ const UserProfileAgent = () => {
                                   vehicule: e.target.value,
                                 })
                               }
-                            />
+                            />setAgentData
                             <br />
                             <h5>
                               <span className="label label-default">
@@ -607,12 +609,14 @@ const UserProfileAgent = () => {
                               min="1960-01-01"
                               max="2010-12-31"
                               className="form-control"
-                              value={agentData.dateOfBirth || ""}
+                              //value={agentContext.dateOfBirth}
+                              value={agentData.dateOfBirth}
                               onChange={(e) =>
+                                {console.log({type:typeof e.target.value})
                                 setAgentData({
                                   ...agentData,
                                   dateOfBirth: e.target.value,
-                                })
+                                })}
                               }
                             />
                             <br />

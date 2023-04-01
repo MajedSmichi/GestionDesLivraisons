@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
@@ -25,6 +25,7 @@ const Header = () => {
   };
   const navigate = useNavigate();
   const { adminData, setAdminData } = useContext(adminContext);
+  const [notifications,setNotifications]=useState([])
   const getUserData = async () => {
   
     try {
@@ -38,8 +39,20 @@ const Header = () => {
       console.log(error);
     }
   };
+  const getNotifications=async()=>{
+   try {
+    const token=localStorage.getItem("token");
+    const response=await axios.get(`${apiUrl}/users/getNotificationAdmin`,{
+      headers:{Authorization:token}
+    })
+    setNotifications(response.data)
+   } catch (error) {
+    console.log(error);
+   }
+  }
   useEffect(() => {
     getUserData();
+    getNotifications();
   }, []);
   const handleLogoutClick = () => {
     localStorage.removeItem("token");
@@ -47,6 +60,7 @@ const Header = () => {
     localStorage.removeItem("role");
     navigate("/ClientAgent");
   };
+
  
 
   return (
@@ -101,6 +115,7 @@ const Header = () => {
                       </div>
                     </div>
                     <div className="p-0 card-body">
+                          {notifications.map(({_id, data})=>(
                       <Link to="#" className="iq-sub-card">
                         <div className="d-flex align-items-center">
                           <img
@@ -109,16 +124,15 @@ const Header = () => {
                             alt=""
                           />
                           <div className="ms-3 w-100">
-                            <h6 className="mb-0 ">Emma Watson Bni</h6>
+                            
                             <div className="d-flex justify-content-between align-items-center">
-                              <p className="mb-0">95 MB</p>
-                              <small className="float-right font-size-12">
-                                Just Now
-                              </small>
+                              <h6 key={_id} className="mb-0 ">{data}</h6>
+                             
                             </div>
                           </div>
                         </div>
                       </Link>
+                            ))}
                     </div>
                   </div>
                 </Dropdown.Menu>

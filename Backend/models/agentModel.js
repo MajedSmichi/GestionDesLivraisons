@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const clientSchema = mongoose.Schema({
+const agentSchema = mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
@@ -13,8 +13,9 @@ const clientSchema = mongoose.Schema({
   latitude: { type: String },
   longitude: { type: String },
   role: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
   photoUrl: String,
   cardPhoto1: String,
   cardPhoto2: String,
 });
-module.exports = mongoose.model("agent", clientSchema);
+module.exports = mongoose.model("agent", agentSchema);

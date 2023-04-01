@@ -38,6 +38,7 @@ const {
   uploadAdmin,
   changePasswordAdmin,
   authAdmin,
+  getNotificationAdmin,
 } = require("../controllers/userDataAdmin");
 const router = Router();
 
@@ -114,6 +115,9 @@ router.put("/updateClient/:id", authAdmin, updateClient);
 
 //get admin route
 router.get("/getAdmin", authAdmin, getAdmin);
+
+//get notification
+router.get("/getNotificationAdmin",authAdmin,getNotificationAdmin);
 
 //update admin route
 router.put("/updateAdmin", authAdmin, uploadAdmin.single("photo"), updateAdmin);

@@ -11,6 +11,7 @@ import avatars11 from "../../../assets/images/avatars/01.png";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
 import { customerContext } from "../../../App";
+import moment from "moment";
 
 const UserProfileClient = () => {
   const [editData, setEditData] = useState(false);
@@ -321,7 +322,7 @@ const UserProfileClient = () => {
                               Date of birth:
                             </span>
                           </h5>
-                          <p>{userData.dateOfBirth}</p>
+                          <p>{moment(userData.dateOfBirth).format('DD/MM/YYYY')}</p>
                           <Button
                             className="btn-inner "
                             onClick={() => setEditData(true)}
