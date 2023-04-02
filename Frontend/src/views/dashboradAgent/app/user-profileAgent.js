@@ -70,7 +70,7 @@ const UserProfileAgent = () => {
       body.append("dateOfBirth", agentData.dateOfBirth);
       body.append("idCard", agentData.idCard);
       body.append("vehicule", agentData.vehicule);
-      await axios.put(`${apiUrl}/users/updateAgent`, body, {
+      await axios.put(`${apiUrl}/users/updateAgentt`, body, {
         headers: {
           Authorization: token,
         },

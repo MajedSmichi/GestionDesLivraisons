@@ -9,6 +9,7 @@ const clientSchema = mongoose.Schema({
   adresse: { type: String, required: false },
   role: { type: String, required: false },
   dateOfBirth: { type: Date, required: false },
+  joinDate: { type: Date, default: Date.now },
   latitude:{type:String},
   longitude:{type:String},
   photoUrl: {type:String,required:false}

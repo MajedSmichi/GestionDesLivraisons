@@ -20,6 +20,9 @@ const {
   updateClientLocation,
   changePassword,
   updateClient,
+  getNotification,
+  getEmail,
+  updateNotification,
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -31,6 +34,8 @@ const {
   uploadd,
   changePasswordAgent,
   authAgent,
+  updateAgentt,
+  getNotificationagent,
 } = require("../controllers/userDataAgent");
 const {
   getAdmin,
@@ -61,6 +66,8 @@ router.put("/update-location", auth, updateClientLocation);
 
 //update password
 router.put("/updatePassword", auth, changePassword);
+
+
 /********************************************Agent route **************************************************************************/
 
 //add agent route
@@ -74,7 +81,7 @@ router.get("/getAllAgent", getAllAgent);
 
 //update agent
 router.put(
-  "/updateAgent",authAgent,
+  "/updateAgentt",authAgent,
   uploadd.fields([
     { name: "photo", maxCount: 1 },
     { name: "cardPhoto1", maxCount: 1 },
@@ -85,6 +92,8 @@ router.put(
 
 //update password
 router.put("/updatePasswordAgent",authAgent, changePasswordAgent);
+
+
 /****************************************Authentification route ****************************************/
 // Login route
 router.post("/login", login);
@@ -113,16 +122,30 @@ router.delete("/deleteAgent/:id",authAdmin, deleteAgent);
 //update client data
 router.put("/updateClient/:id", authAdmin, updateClient);
 
+//update agent data 
+router.put("/updateAgent/:id",authAdmin,updateAgentt);
+
 //get admin route
 router.get("/getAdmin", authAdmin, getAdmin);
 
-//get notification
-router.get("/getNotificationAdmin",authAdmin,getNotificationAdmin);
+
 
 //update admin route
 router.put("/updateAdmin", authAdmin, uploadAdmin.single("photo"), updateAdmin);
 
 //update password
 router.put("/updatePasswordAdmin", authAdmin, changePasswordAdmin);
+
+
+/*******************************************route agent +admin + client*************************************************/
+
+//get notification 
+router.get("/getNotification",auth,getNotification);
+
+//get email 
+router.get("/getEmail",auth,getEmail);
+
+//update status notification
+router.put("/updateNotification",auth,updateNotification);
 
 module.exports = router;

@@ -8,6 +8,7 @@ import axios from "axios";
 import { apiUrl } from "../../../Constants";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit, FiSave } from "react-icons/fi";
+import moment from "moment";
 
 const UserList = () => {
   const [loading, setLoading] = useState(false);
@@ -93,6 +94,7 @@ const UserList = () => {
                         <th>Contact</th>
                         <th>Email</th>
                         <th>Adresse</th>
+                        <th>Join Date</th>
                         <th min-width="100px">Action</th>
                       </tr>
                     </thead>
@@ -187,6 +189,7 @@ const UserList = () => {
                                     }}
                                   />
                                 </td>
+                                <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <button
@@ -215,6 +218,7 @@ const UserList = () => {
                               <td>{item.phone}</td>
                               <td>{item.email}</td>
                               <td>{item.adresse}</td>
+                              <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
                               <td>
                                 <div className="flex align-items-center list-user-action">
                                   <button

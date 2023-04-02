@@ -8,6 +8,7 @@ import axios from "axios";
 import { apiUrl } from "../../../Constants";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit, FiSave } from "react-icons/fi";
+import moment from "moment";
 
 
 const UserListAgent = () => {
@@ -28,8 +29,13 @@ const UserListAgent = () => {
   };
 
   const deleteuser = async (item) => {
+    const token=localStorage.getItem('token')
     try {
-      await axios.delete(`${apiUrl}/users/deleteAgent/${item._id}`);
+      await axios.delete(`${apiUrl}/users/deleteAgent/${item._id}`,{
+        headers:{
+          Authorization: token
+        }
+      });
       getAllAgent();
     } catch (error) {
       console.log(error);
@@ -37,12 +43,16 @@ const UserListAgent = () => {
   };
   const updateuser = async (item, idx) => {
     setEditData(null);
-
+    const token=localStorage.getItem('token')
     try {
       setLoading(true);
       const response = await axios.put(
         `${apiUrl}/users/updateAgent/${item._id}`,
-        item
+        item,{
+          headers:{
+            Authorization: token
+          }
+        }
       );
       setAgentData((prevState) => {
         const newData = [...prevState];
@@ -84,6 +94,7 @@ const UserListAgent = () => {
                         <th>Contact</th>
                         <th>Email</th>
                         <th>Adresse</th>
+                        <th>Join Date</th>
                         <th min-width="100px">Action</th>
                       </tr>
                     </thead>
@@ -176,6 +187,7 @@ const UserListAgent = () => {
                                     }}
                                   />
                                 </td>
+                                <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <button
@@ -205,6 +217,7 @@ const UserListAgent = () => {
                               <td>{item.phone}</td>
                               <td>{item.email}</td>
                               <td>{item.adresse}</td>
+                              <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
                               <td>
                                 <div className="flex align-items-center list-user-action">
                                   <button

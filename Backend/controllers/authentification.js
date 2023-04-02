@@ -5,7 +5,7 @@ const { body, validationResult } = require("express-validator");
 const agent = require("../models/agentModel");
 const sendEmail = require("../utils/sendEmail");
 const admin = require("../models/adminModel");
-const notificationAdmin = require("../models/notificationAdminModel");
+const notification= require("../models/notificationModel");
 
 ///middleware/auth
 const auth = async (req, res, next) => {
@@ -52,12 +52,12 @@ const signup = async (req, res) => {
     };
     if (role == "1") {
       await client.create(user);
-      await notificationAdmin.create({
+      await notification.create({
         data: `${user.firstName} ${user.lastName} create account as client`,
       });
     } else {
       await agent.create(user);
-      await notificationAdmin.create({
+      await notification.create({
         data: `${user.firstName} ${user.lastName} create account as agent`,
       });
     }
@@ -72,8 +72,7 @@ const signup = async (req, res) => {
 //login route
 const login = async (req, res) => {
   try {
-    // check if the user exists
-
+    // check if the user exists+
     const user =
       req.body.role === "1"
         ? await client.findOne({ email: req.body.email })
@@ -122,7 +121,7 @@ const recoverPassword = async (req, res) => {
 };
 
 const AdminLog = async (req, res) => {
-  const role = "admin";
+  const role = "0";
   try {
     const user = await admin.findOne();
     const result = await bcrypt.compare(req.body.password, user.password);

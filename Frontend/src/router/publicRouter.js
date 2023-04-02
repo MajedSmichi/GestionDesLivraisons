@@ -20,7 +20,7 @@ const role=localStorage.getItem('role');
     if(role==="1"){
 
       return <Navigate to="/dashboardCustomer"/>
-    }else if(role==="admin")
+    }else if(role==="0")
     return <Navigate to="/dashboard"/>
     else if (role==="2") {
 

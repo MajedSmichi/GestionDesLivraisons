@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const updatePwdEmail = require("../utils/updatePwdEmail");
 const jwt = require('jsonwebtoken');
+const notification = require("../models/notificationModel");
+
 ///middleware/auth
 const authAgent=async(req, res, next) => {
   try {
@@ -57,6 +59,21 @@ const uploadPhotoAgent=async (req, res) => {
   await user.save();
   res.send("File uploaded successfully!");
 };
+
+//get notification agent
+
+const getNotificationagent=async(req,res)=>{
+  
+  try {
+    const data = await notification.find();
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+}
 
 //get user
 const getAgent = async (req, res) => {
@@ -119,7 +136,7 @@ const getAllAgent= async (req, res) => {
         role,
         vehicule,
         idCard,
-        dateOfBirth,
+        dateOfBirth
       };
       if(req.locals?.filePath) user.photoUrl = req.locals.filePath;
       if(req.locals?.filePath) user.cardPhoto1 = req.locals.filePath;
@@ -131,12 +148,53 @@ const getAllAgent= async (req, res) => {
       res.status(500).json({ error: e });
     }
   };
+  //update user from dashbord admin
+const updateAgentt = async (req, res) => {
+  const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } = req.body;
+  const { id } = req.params;
+  try {
+    
+    const user = await agent.findById(id);
+    if (email !== user.email) {
+      const exist = await agent.findOne({ email });
+      if (exist) return res.status(400).json({ error: "User already exist" });
+    }
+
+    const newUser = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      whatsApp,
+      adresse,
+      dateOfBirth,
+    }
+
+    if(req.locals?.filePath) newUser.photoUrl = req.locals.filePath
+
+    await agent.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: newUser,
+      }
+    );
+    await notification.create({
+      data: 'Admin is update your data',
+      receiver: id
+    });
+    return res.status(200).json({ message: "User data updated" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
   //update Agent
 
   const updateAgent = async (req, res) => {
     const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth,vehicule,idCard } =
       req.body;
+      console.log({dateOfBirth})
     const { username } = req.user;
     
     try {
@@ -176,7 +234,11 @@ const getAllAgent= async (req, res) => {
           $set:newUser
           
         }
+        
       );
+      await notificationAdmin.create({
+        data: `${user.firstName} ${user.lastName} update their data`,
+      });
       return res.status(200).json({ message: "Agent data updated" });
     } catch (error) {
       console.error(error);
@@ -236,7 +298,9 @@ exports.uploadd=uploadd;
 exports.uploadPhotoAgent=uploadPhotoAgent;
 exports.deleteAgent = deleteAgent;
 exports.updateAgent = updateAgent;
+exports.updateAgentt = updateAgentt;
 exports.getAgent = getAgent;
 exports.getAllAgent = getAllAgent;
 exports.addAgent= addAgent;
 exports.changePasswordAgent=changePasswordAgent;
+exports.getNotificationagent=getNotificationagent;

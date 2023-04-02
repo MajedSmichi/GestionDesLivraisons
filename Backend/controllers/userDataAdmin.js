@@ -2,7 +2,7 @@ const multer = require("multer");
 const admin = require("../models/adminModel");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
-const notificationAdmin = require("../models/notificationAdminModel");
+const notification= require("../models/notificationModel");
 
 ///middleware/auth
 const authAdmin=async(req, res, next) => {
@@ -148,20 +148,7 @@ const changePasswordAdmin = async (req, res) => {
   
 
 
-//get notification
 
-const getNotificationAdmin=async(req,res)=>{
-  
-  try {
-    const data = await notificationAdmin.find();
-
-    return res.status(200).json(data);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-
-}
 
 
 
@@ -177,4 +164,4 @@ const getNotificationAdmin=async(req,res)=>{
   exports.getAdmin=getAdmin;
   exports.updateAdmin=updateAdmin;
   exports.changePasswordAdmin=changePasswordAdmin;
-  exports.getNotificationAdmin=getNotificationAdmin;
+  
