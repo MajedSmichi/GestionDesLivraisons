@@ -1,0 +1,20 @@
+{
+  "name": "gestion-des-livraisons",
+  "version": "1.0.0",
+  "description": "gestion des livraisons",
+  "main": "./Backend/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"cd ./Backend && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MajedSmichi/GestionDesLivraisons.git"
+  },
+  "author": "Majed Smichi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MajedSmichi/GestionDesLivraisons/issues"
+  },
+  "homepage": "https://github.com/MajedSmichi/GestionDesLivraisons#readme"
+}
