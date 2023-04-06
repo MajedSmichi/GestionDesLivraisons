@@ -4,8 +4,9 @@
   "description": "gestion des livraisons",
   "main": "./Backend/index.js",
   "scripts": {
+    "build" : "cd Backend && npm install && cd ../Frontend && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"cd ./Backend && node index.js"
+    "start":"node Backend/index.js"
   },
   "repository": {
     "type": "git",
