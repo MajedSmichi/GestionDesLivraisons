@@ -53,7 +53,7 @@ const router = Router();
 //get customer route
 router.get("/getCustomer", auth, getuser);
 
-router.get("/AllCustomersUsers", getAllCustomersUsers);
+router.get("/AllCustomersUsers",auth, getAllCustomersUsers);
 
 //addCustomer
 router.post("/addCustomer", upload.single("photo"), addCustomer);
@@ -71,13 +71,13 @@ router.put("/updatePassword", auth, changePassword);
 /********************************************Agent route **************************************************************************/
 
 //add agent route
-router.post("/addAgent",authAgent, uploadd.single("photo"), addAgent);
+router.post("/addAgent",authAdmin, uploadd.single("photo"), addAgent);
 
 //get agent
 router.get("/getAgent",authAgent, getAgent);
 
 //get All Agent
-router.get("/getAllAgent", getAllAgent);
+router.get("/getAllAgent",auth, getAllAgent);
 
 //update agent
 router.put(
@@ -142,8 +142,6 @@ router.put("/updatePasswordAdmin", authAdmin, changePasswordAdmin);
 //get notification 
 router.get("/getNotification",auth,getNotification);
 
-//get email 
-router.get("/getEmail",auth,getEmail);
 
 //update status notification
 router.put("/updateNotification",auth,updateNotification);

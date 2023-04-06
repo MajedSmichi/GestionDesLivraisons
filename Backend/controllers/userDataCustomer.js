@@ -8,6 +8,7 @@ const notification = require("../models/notificationModel");
 const agent = require("../models/agentModel");
 const admin = require("../models/adminModel");
 
+
 //upload photo
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -42,7 +43,7 @@ const updateClientLocation = async (req, res) => {
   const { longitude, latitude } = req.body;
   const { username } = req.user;
   try {
-    await client.findOneAndUpdate(
+    const response = await client.findOneAndUpdate(
       { email: username },
       {
         $set: {
@@ -50,7 +51,16 @@ const updateClientLocation = async (req, res) => {
           latitude,
         },
       }
-    );
+    )||await agent.findOneAndUpdate(
+      { email: username },
+      {
+        $set: {
+          longitude,
+          latitude,
+        },
+      }
+    )
+   
     return res.status(200).json({ message: "User data updated" });
   } catch (error) {
     console.error(error);
@@ -267,30 +277,6 @@ const updateNotification = async (req, res) => {
   }
 };
 
-//get email notification
-
-const getEmail = async (req, res) => {
-  const { username } = req.user;
-  try {
-    const user =
-      (await client.findOne({ email: username })) ||
-      (await agent.findOne({ email: username })) ||
-      (await admin.findOne({ email: username }));
-    const data = await email.find();
-    if (user.role === "0") {
-      const result = data.filter((note) => note.receiver === "0");
-      return res.status(200).json(result);
-    } else {
-      const result = data.filter(
-        (note) => note.receiver === user._id.toString()
-      );
-      return res.status(200).json(result);
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
 
 //deleteuser
 const deleteuser = async (req, res) => {
@@ -310,6 +296,7 @@ const changePassword = async (req, res) => {
   const { newPassword, confirmPassword } = req.body;
 
   const { username } = req.user;
+  const { id } = req.params;
   try {
     const user = await client.findOne({ email: username });
     if (newPassword === "" || confirmPassword === "") {
@@ -328,10 +315,11 @@ const changePassword = async (req, res) => {
     );
     const subject = "update password";
     const email = user.email;
-    const bodyEmail = "ur password is update successfully";
+    const bodyEmail = "Your password is update successfully";
     await updatePwdEmail(email, subject, bodyEmail);
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
+    console.error(error)
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -348,4 +336,4 @@ exports.changePassword = changePassword;
 exports.updateClient = updateClient;
 exports.getNotification = getNotification;
 exports.updateNotification = updateNotification;
-exports.getEmail = getEmail;
+

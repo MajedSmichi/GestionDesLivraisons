@@ -112,7 +112,7 @@ const getAllAgent= async (req, res) => {
   const addAgent = async (req, res) => {
     const { firstName, lastName, email, phone, password, whatsApp, adresse,vehicule,idCard,dateOfBirth } =
       req.body;
-    role = "2";
+      role = "2";
     
     try {
       const errors = validationResult(req);

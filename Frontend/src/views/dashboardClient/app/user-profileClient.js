@@ -100,7 +100,7 @@ const UserProfileClient = () => {
   const photo = "http://localhost:5000/" + userData.photoUrl;
   return (
     <>
-      <Tab.Container defaultActiveKey="first">
+      <Tab.Container defaultActiveKey="second">
         <Row>
           <Col lg="12">
             <Card>
@@ -113,9 +113,9 @@ const UserProfileClient = () => {
                     id="profile-pills-tab"
                     role="tablist"
                   >
-                    <Nav.Item as="li">
+                    {/* <Nav.Item as="li">
                       <Nav.Link eventKey="first">Activity</Nav.Link>
-                    </Nav.Item>
+                    </Nav.Item> */}
                     <Nav.Item as="li">
                       <Nav.Link eventKey="second">Profile</Nav.Link>
                     </Nav.Item>
@@ -126,7 +126,7 @@ const UserProfileClient = () => {
           </Col>
           <Col md={{ span: 8, offset: 2 }}>
             <Tab.Content className="profile-content">
-              <Tab.Pane eventKey="first" id="profile-activity">
+              {/* <Tab.Pane eventKey="first" id="profile-activity">
                 <Card>
                   <Card.Header className="d-flex justify-content-between">
                     <div className="header-title">
@@ -225,7 +225,7 @@ const UserProfileClient = () => {
                     </div>
                   </Card.Body>
                 </Card>
-              </Tab.Pane>
+              </Tab.Pane> */}
               <Tab.Pane eventKey="second" id="profile-profile">
                 <Card>
                   <Card.Header>

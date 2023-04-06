@@ -1,28 +1,83 @@
-import React from 'react'
-import Card from '../../../components/Card'
-import {Row,Col} from 'react-bootstrap'
+import React, { useEffect, useState } from "react";
+import Card from "../../../components/Card";
 
+import axios from "axios";
+import { apiUrl } from "../../../Constants";
+import GoogleMapReact from "google-map-react";
+import { HiLocationMarker } from "react-icons/hi";
 
 const GoogleAgent = () => {
-    return (
-        <div>
-            <Row>
-                <Col lg="12">
-                    <Card>
-                        <Card.Header className="d-flex justify-content-between">
-                            <div className="header-title">
-                                <h4 className="card-title">Basic</h4>
-                            </div>
-                        </Card.Header>
-                        <div className="card-body">
-                            <p>Creating basic google map</p>
-                            <iframe className="w-100" title="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3902543.2003194243!2d-118.04220880485131!3d36.56083290513502!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80be29b9f4abb783%3A0x4757dc6be1305318!2sInyo%20National%20Forest!5e0!3m2!1sen!2sin!4v1576668158879!5m2!1sen!2sin" height="500" allowFullScreen=""></iframe>
-                        </div>
-                    </Card>
-                </Col>
-            </Row>      
-        </div>
-    )
-}
+  const defaultProps = {
+    center: {
+      lat: 36.8065,
+      lng: 10.1815,
+    },
+    zoom: 10,
+  };
 
-export default GoogleAgent
+  const [points, setPoints] = useState(
+   { longitude:'',
+    latitude:''}
+  );
+  const getCustomer= async () => {
+    const token=localStorage.getItem('token');
+    try {
+      const response = await axios.get(`${apiUrl}/users/getAgent`,{
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(response)
+      setPoints({longitude:response.data.longitude,latitude:response.data.latitude})
+      
+    } catch (error) {
+      console.log(error);
+    }
+   
+  };
+  useEffect(() => {
+    let id = setInterval(() => {
+      getCustomer();
+    }, 2000);
+    return () => {
+      clearInterval(id);
+    };
+  }, []);
+
+  return (
+    <Card className="h-100">
+      <Card.Header className="d-flex justify-content-between">
+        <div className="header-title">
+          <h4 className="card-title">Customer map</h4>
+        </div>
+        
+      </Card.Header>
+      <br/>
+      <br/>
+      <Card.Body className="p-1">
+        <div id="map-container-google-2" className="z-depth-1-half map-container" style={{height: '500px'}}>
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: "" }}
+            defaultCenter={defaultProps.center}
+            defaultZoom={defaultProps.zoom}
+          >
+           
+                <div
+                  lat={points.latitude}
+                  lng={points.longitude}
+                  text="My Marker"
+                  style={{ height: 20, width: 20 }}
+                >
+                  <HiLocationMarker size={40} color='red' />
+                  {/* <a href={"tel:" + phone}>
+                  </a>  */}
+                </div>
+          </GoogleMapReact>
+         
+        </div>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default GoogleAgent;

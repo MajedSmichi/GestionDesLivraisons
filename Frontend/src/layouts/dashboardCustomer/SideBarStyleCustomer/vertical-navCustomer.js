@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react'
 import { Link, useLocation} from 'react-router-dom'
 import {Accordion, useAccordionButton, AccordionContext} from 'react-bootstrap'
-
+import {TbFileDescription} from 'react-icons/tb'
 
 
 function CustomToggle({ children, eventKey, onClick }) {
@@ -171,6 +171,36 @@ const VerticalNavCustomer = () => {
                                     </i>
                                     <i className="sidenav-mini-icon"> G </i>
                                     <span className="item-name">Google</span>
+                                </Link>
+                            </li>
+                        </ul>
+                    </Accordion.Collapse>
+                </Accordion.Item>
+                <Accordion.Item as="li" eventKey="sidebar-demand" bsPrefix="nav-item" style={{marginRight:"0px"}}>
+                <CustomToggle eventKey="sidebar-demand" active={activeMenu === 'sidebar-demand' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)}>
+                        <i className="icon">
+                           <TbFileDescription size={20}/>
+                        </i>
+                        <span className="item-name">Demand</span>
+                        <i className="right-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </i>
+                    </CustomToggle>
+                    <Accordion.Collapse eventKey="sidebar-demand">
+                        <ul className="sub-nav">
+                            <li className="nav-item">
+                                <Link className={`${location.pathname === 'demandClient' ? 'active' : ''} nav-link`} to="demandClient">
+                                    <i className="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
+                                            <g>
+                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                    <i className="sidenav-mini-icon"> D </i>
+                                    <span className="item-name">Demand</span>
                                 </Link>
                             </li>
                         </ul>

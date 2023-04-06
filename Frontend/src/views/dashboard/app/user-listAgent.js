@@ -15,18 +15,24 @@ const UserListAgent = () => {
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(false);
   const [ agentData, setAgentData ] = useState([]);
-  useEffect(() => {
-    getAllAgent();
-  }, []);
+ 
 
   const getAllAgent = async () => {
+    const token =localStorage.getItem("token");
     try {
-      const response = await axios.get(`${apiUrl}/users/getAllagent`);
+      const response = await axios.get(`${apiUrl}/users/getAllagent`,{
+        headers:{
+          Authorization: token
+        }
+      });
       setAgentData(response.data);
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    getAllAgent();
+  }, []);
 
   const deleteuser = async (item) => {
     const token=localStorage.getItem('token')

@@ -20,7 +20,7 @@ const SidebarCustomer = (props) => {
         <>
             <aside className="sidebar sidebar-default navs-rounded-all {{ sidebarVariants }}">
                 <div className="sidebar-header d-flex align-items-center justify-content-start">
-                    <Link to="/dashboard" className="navbar-brand">
+                    <Link to="" className="navbar-brand">
 
                         <h4 className="logo-title">Delivery</h4>
                     </Link>

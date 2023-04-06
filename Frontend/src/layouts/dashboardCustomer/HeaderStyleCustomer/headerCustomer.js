@@ -115,7 +115,7 @@ const HeaderCustomer = () => {
                   variant=" nav-link"
                   id="notification-drop"
                   >
-                    <MdNotifications size={25} color={newNotifcation? 'red':'#ccc'} onClick={changeNotesStatus}/>
+                    <MdNotifications size={25} color={newNotifcation? 'red':'blue'} onClick={changeNotesStatus}/>
                   
                   <span className="bg-danger dots"></span>
                 </Dropdown.Toggle>
@@ -167,7 +167,7 @@ const HeaderCustomer = () => {
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                 <MdEmail size={25} />
+                 <MdEmail size={25} color="blue"/>
                   <span className="bg-primary count-mail"></span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
@@ -239,7 +239,7 @@ const HeaderCustomer = () => {
                   <Dropdown.Item href="/dashboardCustomer/user-profileClient">
                     Profile
                   </Dropdown.Item>
-                  <Dropdown.Item href="">Privacy Setting</Dropdown.Item>
+                  
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={handleLogoutClick}>
                     Logout

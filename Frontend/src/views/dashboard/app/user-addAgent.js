@@ -30,6 +30,7 @@ const AddAgent = () => {
   const [confirmPassword, setconfirmPassword] = useState("");
   const [error, setError] = useState("");
   const server = "http://localhost:5000/users/addAgent";
+  const token = localStorage.getItem('token')
   const onRegister = async (e) => {
     e.preventDefault();
     console.log(data);
@@ -80,13 +81,18 @@ const AddAgent = () => {
       body.append("idCard", data.idCard);
       body.append("vehicule", data.vehicule);
       body.append("role",role);
-      await axios.post(server,body );
+      await axios.post(server,body,{
+        headers: {
+          Authorization: token,
+        },
+      });
 
       setSuccessMessage("User created");
       setTimeout(() => {
         Navigate("/dashboard/user-listAgent");
       }, 2000);
     } catch (e) {
+      console.log({e})
       setError(e.response.data.error);
     }
   };

@@ -108,7 +108,7 @@ const HeaderAgent = () => {
                   variant=" nav-link"
                   id="notification-drop"
                 >
-                  <MdNotifications size={25} color={newNotifcation? 'red':'#ccc'} onClick={changeNotesStatus}/>
+                  <MdNotifications size={25} color={newNotifcation? 'red':'blue'} onClick={changeNotesStatus}/>
                   <span className="bg-danger dots"></span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
@@ -147,50 +147,7 @@ const HeaderAgent = () => {
                   </div>
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown as="li" className="nav-item">
-                <Dropdown.Toggle
-                  as={CustomToggle}
-                  href="#"
-                  variant="nav-link"
-                  id="mail-drop"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <MdEmail size={25} />
-                  <span className="bg-primary count-mail"></span>
-                </Dropdown.Toggle>
-                <Dropdown.Menu
-                  className="p-0 sub-drop dropdown-menu-end"
-                  aria-labelledby="mail-drop"
-                >
-                  <div className="m-0 shadow-none card">
-                    <div className="py-3 card-header d-flex justify-content-between bg-primary">
-                      <div className="header-title">
-                        <h5 className="mb-0 text-white">All Message</h5>
-                      </div>
-                    </div>
-                    <div className="p-0 card-body ">
-                      <Link to="#" className="iq-sub-card">
-                        <div className="d-flex align-items-center">
-                          <div>
-                            <img
-                              className="p-1 avatar-40 rounded-pill bg-soft-primary"
-                              src={shapes1}
-                              alt=""
-                            />
-                          </div>
-                          <div className=" w-100 ms-3">
-                            <h6 className="mb-0 ">Bni Emma Watson</h6>
-                            <small className="float-left font-size-12">
-                              13 Jun
-                            </small>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </Dropdown.Menu>
-              </Dropdown>
+              
               <Dropdown as="li" className="nav-item">
                 <Dropdown.Toggle
                   as={CustomToggle}

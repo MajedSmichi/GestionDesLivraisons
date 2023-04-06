@@ -33,8 +33,10 @@ import Google from "../views/dashboard/maps/google";
 import UserListAgent from "../views/dashboard/app/user-listAgent";
 import GoogleAgent from "../views/dashboradAgent/maps/google";
 import GoogleClient from "../views/dashboardClient/maps/google";
+
 import ProtectedRoutes from "./privateRouter";
 import PublicRoutes from "./publicRouter";
+import DemandClient from "../views/dashboardClient/demand/demand";
 
 
 const IndexRouters = () => {
@@ -42,35 +44,35 @@ const IndexRouters = () => {
     <>
       <Routes>
         {/* public routers*/}
-        <Route path="/" element={<PublicRoutes/>}>
-        <Route path="/" element={<Home />} />
-        <Route path="Habout" element={<HAbout />} />
-        <Route path="team" element={<Team />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="SignIn/:role" element={<SignIn />} />
-        <Route path="SignUp/:role" element={<SignUp />} />
-        <Route path="Recoverpw/:role" element={<Recoverpw />} />
-        <Route path="LockScreen" element={<LockScreen />} />
-        <Route path="confirmmail" element={<ConfirmMail />} />
-        <Route path="ClientAgent" element={<ClientAgent />} />
+        <Route path="/" element={<PublicRoutes />}>
+          <Route path="/" element={<Home />} />
+          <Route path="Habout" element={<HAbout />} />
+          <Route path="team" element={<Team />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="SignIn/:role" element={<SignIn />} />
+          <Route path="SignUp/:role" element={<SignUp />} />
+          <Route path="Recoverpw/:role" element={<Recoverpw />} />
+          <Route path="LockScreen" element={<LockScreen />} />
+          <Route path="confirmmail" element={<ConfirmMail />} />
+          <Route path="ClientAgent" element={<ClientAgent />} />
         </Route>
         {/* private routers*/}
-        <Route path="/" element={<ProtectedRoutes/>}>
-        <Route path="dashboard" element={<Default />}>
-          {/* user */}
-          <Route path="user-add" element={<UserAdd />} />
-          <Route path="user-list" element={<UserList />} />
-          <Route path="user-listAgent" element={<UserListAgent />} />
-          <Route path="addAgent" element={<AddAgent />} />
-          <Route path="user-profileAdmin" element={<UserProfileAdmin />} />
+        <Route path="/" element={<ProtectedRoutes />}>
+          <Route path="dashboard" element={<Default />}>
+            {/* user */}
+            <Route path="user-add" element={<UserAdd />} />
+            <Route path="user-list" element={<UserList />} />
+            <Route path="user-listAgent" element={<UserListAgent />} />
+            <Route path="addAgent" element={<AddAgent />} />
+            <Route path="user-profileAdmin" element={<UserProfileAdmin />} />
 
-          {/*special pages */}
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="calendar" element={<Calender />} />
-          {/* map */}
-          <Route path="google" exact element={<Google />} />
-        </Route>
-        
+            {/*special pages */}
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="calendar" element={<Calender />} />
+            {/* map */}
+            <Route path="google" exact element={<Google />} />
+          </Route>
+
           <Route path="dashboardAgent" element={<DefaultAgent />}>
             <Route path="user-profileAgent" element={<UserProfileAgent />} />
             <Route path="mapAgent" element={<GoogleAgent />} />
@@ -80,10 +82,10 @@ const IndexRouters = () => {
             <Route path="user-profileClient" element={<UserProfileClient />} />
             <Route path="calendarClient" element={<CalenderClient />} />
             <Route path="mapClient" element={<GoogleClient />} />
+            <Route path="demandClient" element={<DemandClient/>} />
           </Route>
-          </Route>
-        </Routes>
-      
+        </Route>
+      </Routes>
     </>
   );
 };

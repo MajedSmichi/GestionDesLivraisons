@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 //router
 import IndexRouters from "./router/index";
 
+
 //scss
 import "./assets/scss/hope-ui.scss";
 import "./assets/scss/dark.scss";
@@ -53,7 +54,8 @@ function App() {
   const updateLocation = ()=>{
     try {
       const token = localStorage.getItem("token");
-      if (navigator.geolocation && token) {
+      const role =localStorage.getItem('role');
+      if (navigator.geolocation && token && (role==="1"||role==="2")) {
         
         navigator.geolocation.getCurrentPosition(async ({ coords }) => {
           await axios.put(`${apiUrl}/users/update-location`, {

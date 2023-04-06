@@ -15,18 +15,24 @@ const UserList = () => {
   const [editData, setEditData] = useState(false);
   const [userData, setUserData] = useState([]);
 
-  useEffect(() => {
-    getAllCustomersUser();
-  }, []);
+
 
   const getAllCustomersUser = async () => {
+    const token =localStorage.getItem("token");
     try {
-      const response = await axios.get(`${apiUrl}/users/AllCustomersUsers`);
+      const response = await axios.get(`${apiUrl}/users/AllCustomersUsers`,{
+        headers:{
+          Authorization: token
+        }
+      });
       setUserData(response.data);
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    getAllCustomersUser();
+  }, []);
 
   const deleteuser = async (item) => {
     const token =localStorage.getItem("token");
