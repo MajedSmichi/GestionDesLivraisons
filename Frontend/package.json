@@ -54,8 +54,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "host": "192.168.65.139",
-    "render-postbuild" : "npm install && npm run build"
+    "host": "192.168.65.139"
   },
   "eslintConfig": {
     "extends": [
