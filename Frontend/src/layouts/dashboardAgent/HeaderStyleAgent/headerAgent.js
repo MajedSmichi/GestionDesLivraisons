@@ -165,7 +165,7 @@ const HeaderAgent = () => {
                     />
                   ) : (
                     <img
-                      src={"http://localhost:5000/" + agentData.photoUrl}
+                      src={`${apiUrl}/` + agentData.photoUrl}
                       alt="User-Profile"
                       className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
                     />

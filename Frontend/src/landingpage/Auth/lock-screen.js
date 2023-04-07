@@ -8,6 +8,7 @@ import avatars1 from '../../assets/images/avatars/01.png'
 
 import auth1 from './deliv.jpg'
 import axios from 'axios'
+import { apiUrl } from '../../Constants'
 
 const LockScreen = () => {
    let navigate =useNavigate()
@@ -15,7 +16,7 @@ const LockScreen = () => {
       password:''
    })
    const [error,setError] = useState('')
-   const server='http://localhost:5000/users/adminLog';
+   const server=`${apiUrl}/users/adminLog`;
    const onAdmin=async(e)=>{
        e.preventDefault()
        if(data.password===''){

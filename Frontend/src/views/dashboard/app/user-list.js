@@ -125,7 +125,7 @@ const UserList = () => {
                                   <Image
                                     className="bg-soft-primary rounded img-fluid avatar-40 me-3"
                                     src={
-                                      "http://localhost:5000/" + item.photoUrl
+                                      `${apiUrl}/` + item.photoUrl
                                     }
                                     alt="profile"
                                   />
@@ -215,7 +215,7 @@ const UserList = () => {
                               <td className="text-center grow">
                               {  <Image
                                   className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                  src={"http://localhost:5000/" + item.photoUrl}
+                                  src={`${apiUrl}/` + item.photoUrl}
                                   alt="profile"
                                 />}
                               </td>

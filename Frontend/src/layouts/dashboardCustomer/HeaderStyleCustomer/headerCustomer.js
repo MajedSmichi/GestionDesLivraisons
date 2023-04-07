@@ -219,7 +219,7 @@ const HeaderCustomer = () => {
                     />
                   ) : (
                     <img
-                      src={"http://localhost:5000/" + userData.photoUrl}
+                      src={`${apiUrl}/` + userData.photoUrl}
                       alt="User-Profile"
                       className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
                     />

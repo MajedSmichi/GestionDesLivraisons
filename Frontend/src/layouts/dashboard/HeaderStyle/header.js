@@ -208,7 +208,7 @@ const Header = () => {
                   aria-expanded="false"
                 >
                   <img
-                    src={"http://localhost:5000/" + adminData.photoUrl}
+                    src={`${apiUrl}/` + adminData.photoUrl}
                     alt="User-Profile"
                     className="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded"
                   />

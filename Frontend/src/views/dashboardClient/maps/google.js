@@ -159,7 +159,7 @@ const CardAgent = ({ user,mapApi, onClose }) => {
       <div>{user.phone}</div>
       <Image
         className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-        src={"http://localhost:5000/" + user.photo}
+        src={`${apiUrl}/` + user.photo}
         alt="profile"
       />
       <button onClick={onClose}>Close</button>

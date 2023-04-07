@@ -97,7 +97,7 @@ const UserProfileClient = () => {
     }
   };
 
-  const photo = "http://localhost:5000/" + userData.photoUrl;
+  const photo = `${apiUrl}/` + userData.photoUrl;
   return (
     <>
       <Tab.Container defaultActiveKey="second">

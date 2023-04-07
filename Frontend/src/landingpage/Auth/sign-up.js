@@ -7,6 +7,7 @@ import validateEmail from "../../components/helpers";
 import Header from "../header/Header";
 // img
 import auth1 from "./deliv.jpg";
+import { apiUrl } from "../../Constants";
 
 const SignUp = () => {
   const { role } = useParams();
@@ -21,7 +22,7 @@ const SignUp = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const server = "http://localhost:5000/users/signup";
+  const server = `${apiUrl}/users/signup`;
   const onRegister = async (e) => {
     e.preventDefault();
 

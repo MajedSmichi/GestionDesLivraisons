@@ -96,7 +96,7 @@ const UserProfileAdmin = () => {
       setError(error.response.data.error);
     }
   };
-  const photo="http://localhost:5000/"+adminData.photoUrl;
+  const photo=`${apiUrl}/` +adminData.photoUrl;
   return (
     <>
       <Tab.Container defaultActiveKey="first">

@@ -112,9 +112,9 @@ const UserProfileAgent = () => {
     }
   };
 
-  const photo = "http://localhost:5000/" + agentData.photoUrl;
-  const cardPhoto1 = "http://localhost:5000/" + agentData.cardPhoto1;
-  const cardPhoto2 = "http://localhost:5000/" + agentData.cardPhoto2;
+  const photo = `${apiUrl}/` + agentData.photoUrl;
+  const cardPhoto1 = `${apiUrl}/` + agentData.cardPhoto1;
+  const cardPhoto2 = `${apiUrl}/` + agentData.cardPhoto2;
 
 
 

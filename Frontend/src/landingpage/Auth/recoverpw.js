@@ -9,6 +9,7 @@ import axios from 'axios'
 
 // img
 import auth1 from './deliv.jpg'
+import { apiUrl } from '../../Constants'
 const Recoverpw = () => {
    const {id} = useParams()
    console.log({id})
@@ -18,7 +19,7 @@ const Recoverpw = () => {
    const [data,setData]=useState({
       email:''
    })
-   const server='http://localhost:5000/users/recover';
+   const server = `${apiUrl}/users/recover`
    const onRecover=async(e)=>{
       e.preventDefault()
       if(data.email==='')

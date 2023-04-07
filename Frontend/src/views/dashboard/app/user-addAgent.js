@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import validateEmail from "../../../components/helpers";
 import axios from "axios";
+import { apiUrl } from "../../../Constants";
 
 const AddAgent = () => {
   const Navigate = useNavigate();
@@ -29,7 +30,7 @@ const AddAgent = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const server = "http://localhost:5000/users/addAgent";
+  const server = `${apiUrl}/users/addAgent`
   const token = localStorage.getItem('token')
   const onRegister = async (e) => {
     e.preventDefault();

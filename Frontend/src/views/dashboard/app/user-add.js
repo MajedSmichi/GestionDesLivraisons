@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import validateEmail from "../../../components/helpers";
 import axios from "axios";
+import { apiUrl } from "../../../Constants";
 
 const UserAdd = () => {
   const Navigate = useNavigate();
@@ -25,7 +26,7 @@ const UserAdd = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const server = "http://localhost:5000/users/addCustomer";
+  const server = `${apiUrl}/users/addCustomer`
   const onRegister = async (e) => {
     e.preventDefault();
     console.log(data);
