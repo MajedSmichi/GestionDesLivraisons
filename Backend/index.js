@@ -14,15 +14,6 @@ app.use("/uploads", express.static("uploads"));
 app.use("/users", router)
 app.use("/users/auth", auth);
 
-if (process.env.NODE_ENV === 'production') {
-  //*Set static folder up in production
-  app.use(express.static('../Frontend/build'));
-
-  app.get('*', (req,res) => res.sendFile(path.resolve(__dirname, '../Frontend', 'build','index.html')));
-}
-
-
-
 
 mongoose.set("strictQuery", false);
 mongoose.connect(
