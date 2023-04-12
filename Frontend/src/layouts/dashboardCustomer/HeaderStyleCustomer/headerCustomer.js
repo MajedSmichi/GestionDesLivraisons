@@ -21,7 +21,9 @@ const HeaderCustomer = () => {
   };
   const { userData, setUserData } = useContext(customerContext);
   const [notifications, setNotifications] = useState([]);
+  const [demands,setDemands]=useState([]);
   const [newNotifcation, setnewNotifcation] = useState(false);
+  const [newDemands, setnewDemands] = useState([]);
   const navigate = useNavigate();
 
   const getUserData = async () => {
@@ -52,15 +54,33 @@ const HeaderCustomer = () => {
     }
   };
 
+  const getDemands = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}/users/getDemands`, {
+        headers: { Authorization: token },
+      });
+      setDemands(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getUserData();
     getNotifications();
+    getDemands();
   }, []);
 
   useEffect(() => {
    const isNewNot = notifications.some(({status})=>status==="new");
    setnewNotifcation(isNewNot);
   }, [notifications]);
+
+  useEffect(() => {
+    const isNewDem = demands.some(({status})=>status==="new");
+    setnewDemands(isNewDem);
+   }, [demands]);
 
  
 
@@ -75,6 +95,27 @@ const HeaderCustomer = () => {
   const changeNotesStatus = () => {
     updateNotifications();
     setnewNotifcation(false)
+  }
+
+  const updateDemands = async() => {
+    
+    try {
+      const token = localStorage.getItem("token");
+      
+      await axios.put(
+        `${apiUrl}/users/updateDemands`,
+        { status: "ancien"},
+        {
+          headers: { Authorization: token },
+        }
+      );
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const changeDemsStatus = () => {
+    updateDemands();
+    setnewDemands(false)
   }
 
   const handleLogoutClick = () => {
@@ -167,37 +208,42 @@ const HeaderCustomer = () => {
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                 <MdEmail size={25} color="blue"/>
+                 <MdEmail  size={25} color={newDemands? 'red':'blue'} onClick={changeDemsStatus}/>
                   <span className="bg-primary count-mail"></span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
                   className="p-0 sub-drop dropdown-menu-end"
-                  aria-labelledby="mail-drop"
+                  aria-labelledby="notification-drop"
                 >
                   <div className="m-0 shadow-none card">
                     <div className="py-3 card-header d-flex justify-content-between bg-primary">
                       <div className="header-title">
-                        <h5 className="mb-0 text-white">All Message</h5>
+                        <h5 className="mb-0 text-white">All Demands</h5>
                       </div>
                     </div>
-                    <div className="p-0 card-body ">
-                      <Link to="#" className="iq-sub-card">
-                        <div className="d-flex align-items-center">
-                          <div>
+                    <div className="p-0 card-body" style={{ height: '250px', overflowY: 'scroll'}}>
+                      {demands.map(demand => (
+                        <Link to="#" className="iq-sub-card">
+                          <div className="d-flex align-items-center">
                             <img
                               className="p-1 avatar-40 rounded-pill bg-soft-primary"
-                              src={shapes1}
+                              src={avatars1}
                               alt=""
                             />
+                            <div className="ms-3 w-100">
+                              <h6 key={demand.id} className="mb-0 ">
+                                {demand.data}
+                              </h6>
+                              <div className="d-flex justify-content-between align-items-center">
+                                <small className="float-right font-size-12">
+                                  {moment(demand.createdAt).format("DD/MM/YYYY")}
+                                </small>
+                              </div>
+                            </div>
                           </div>
-                          <div className=" w-100 ms-3">
-                            <h6 className="mb-0 ">Bni Emma Watson</h6>
-                            <small className="float-left font-size-12">
-                              13 Jun
-                            </small>
-                          </div>
-                        </div>
-                      </Link>
+                         
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 </Dropdown.Menu>

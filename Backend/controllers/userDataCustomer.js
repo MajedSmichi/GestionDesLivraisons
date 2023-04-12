@@ -7,7 +7,7 @@ const updatePwdEmail = require("../utils/updatePwdEmail");
 const notification = require("../models/notificationModel");
 const agent = require("../models/agentModel");
 const admin = require("../models/adminModel");
-
+const demand = require("../models/demandModel");
 
 //upload photo
 const storage = multer.diskStorage({
@@ -43,24 +43,26 @@ const updateClientLocation = async (req, res) => {
   const { longitude, latitude } = req.body;
   const { username } = req.user;
   try {
-    const response = await client.findOneAndUpdate(
-      { email: username },
-      {
-        $set: {
-          longitude,
-          latitude,
-        },
-      }
-    )||await agent.findOneAndUpdate(
-      { email: username },
-      {
-        $set: {
-          longitude,
-          latitude,
-        },
-      }
-    )
-   
+    const response =
+      (await client.findOneAndUpdate(
+        { email: username },
+        {
+          $set: {
+            longitude,
+            latitude,
+          },
+        }
+      )) ||
+      (await agent.findOneAndUpdate(
+        { email: username },
+        {
+          $set: {
+            longitude,
+            latitude,
+          },
+        }
+      ));
+
     return res.status(200).json({ message: "User data updated" });
   } catch (error) {
     console.error(error);
@@ -250,7 +252,7 @@ const getNotification = async (req, res) => {
 //update status of notification
 const updateNotification = async (req, res) => {
   const { username } = req.user;
-  
+
   try {
     const user =
       (await client.findOne({ email: username })) ||
@@ -276,7 +278,6 @@ const updateNotification = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 //deleteuser
 const deleteuser = async (req, res) => {
@@ -319,7 +320,117 @@ const changePassword = async (req, res) => {
     await updatePwdEmail(email, subject, bodyEmail);
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
-    console.error(error)
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//create demand
+const createDemand = async (req, res) => {
+  const {
+    data,
+    receiver,
+    receiverAgent,
+    clientName,
+    agentName,
+    clientAdress,
+    clientPhone,
+    agentPhone,
+    commandDescription,
+    adress,
+  } = req.body;
+
+  try {
+    const commande = {
+      data,
+      receiver,
+      receiverAgent,
+      clientName,
+      agentName,
+      clientAdress,
+      clientPhone,
+      agentPhone,
+      adress,
+      commandDescription,
+    };
+
+    await demand.create(commande);
+    return res.status(201).json({ message: "demand create" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+  }
+};
+
+//get demands
+
+const getDemands = async (req, res) => {
+  const { username } = req.user;
+  try {
+    const user =
+      (await client.findOne({ email: username })) ||
+      (await agent.findOne({ email: username })) ||
+      (await admin.findOne({ email: username }));
+    const data = await demand.find();
+
+    if (user.role === "0") {
+      const result = data.filter((note) => note.receiver === "0");
+      return res.status(200).json(result);
+    } else if (user.role === "2") {
+      const result = data.filter(
+        (note) =>
+          note.receiverAgent === user._id.toString() && note.receiver !== "0"
+      );
+      return res.status(200).json(result);
+    } else {
+      const result = data.filter(
+        (note) =>
+          note.receiver === user._id.toString() && note.receiverAgent === "0"
+      );
+      return res.status(200).json(result);
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+const updateDemand = async (req, res) => {
+  const { status } = req.body;
+  const { username } = req.user;
+
+  try {
+    const user =
+      (await client.findOne({ email: username })) ||
+      (await agent.findOne({ email: username })) ||
+      (await admin.findOne({ email: username }));
+    const dataToUpdate =
+      user.role === "0"
+        ? await demand.find({ receiver: "0" })
+        : await demand.find({
+            $or: [
+              { receiverAgent: user._id.toString() },
+              { receiver: user._id.toString() },
+            ],
+            receiver: { $ne: "0" },
+            status:"new"
+          });
+
+    dataToUpdate.map(async (demands) => {
+      await demand.findByIdAndUpdate(
+        { _id: demands._id },
+        { status: status },
+        
+      );
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Status demand changed successfully" });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -336,4 +447,6 @@ exports.changePassword = changePassword;
 exports.updateClient = updateClient;
 exports.getNotification = getNotification;
 exports.updateNotification = updateNotification;
-
+exports.createDemand = createDemand;
+exports.getDemands = getDemands;
+exports.updateDemand = updateDemand;

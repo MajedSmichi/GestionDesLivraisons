@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import QRCode from "qrcode.react";
 
 import { Row, Col, Nav, Tab, Image, Button } from "react-bootstrap";
@@ -7,21 +7,43 @@ import Card from "../../../components/Card";
 import { AiOutlineQrcode } from "react-icons/ai";
 import { apiUrl } from "../../../Constants";
 import axios from "axios";
+import { customerContext } from "../../../App";
+const token = localStorage.getItem("token");
+const user=localStorage.getItem("user");
 
 const DemandClient = () => {
   const [showQRCode, setShowQRCode] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState(null);
-
-  const [formData, setFormData] = useState({
-    clientFullName: "",
-    agentFullName: "",
-    clientPhone: "",
-    agentPhone: "",
-    address: "",
-    commandDescription: "",
-  });
+  const { userData, setUserData } = useContext(customerContext);
   const [agentData, setAgentData] = useState([]);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    clientName:`${userData.firstName} ${userData.lastName}`,
+    data:`${userData.firstName} ${userData.lastName} send you a demand`,
+    receiver:user,
+    agentName: "",
+    clientPhone: `${userData.phone}`,
+    agentPhone:"",
+    adress:`${userData.adresse}`,
+    commandDescription: "",
+    receiverAgent:""
+  });
 
+  const getUserData = async () => {
+    try {
+      
+      const response = await axios.get(`${apiUrl}/users/getCustomer`,{
+        headers:{
+          Authorization: token
+        }
+      });
+      setUserData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+ 
 
   const getAllAgent = async () => {
     const token = localStorage.getItem("token");
@@ -38,20 +60,49 @@ const DemandClient = () => {
   };
   useEffect(() => {
     getAllAgent();
+    getUserData();
   }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    console.log({name, value})
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     
   };
 
   const handleChangeDataAgent=(e)=>{
     const  {value}  = e.target;
-    const agentFullName = value.split(' ')[0]+value.split(' ')[1]
-    setFormData((prevData) => ({ ...prevData, agentFullName,agentPhone:value.split(' ')[2]}));
+    const receiverAgent=value.split(' ')[3];
+    const agentName = value.split(' ')[0]+value.split(' ')[1]
+    setFormData((prevData) => ({ ...prevData, agentName,receiverAgent,agentPhone:value.split(' ')[2]}));
     
+  }
+
+  const createDemand= async ()=> {
+    if(formData.agentPhone==="")
+    {setError('select an agent')
+    return}
+    if(formData.commandDescription===""){
+      setError('enter your command description')
+      return
+    }
+    try {
+    
+     await axios.post(`${apiUrl}/users/createDemand`,{...formData},{
+        headers: {
+          Authorization: token,
+        },
+      })
+      const Data=formData.clientName + " send a demand to " + formData.agentName
+      const reciverAdmin="0"
+      await axios.post(`${apiUrl}/users/createDemand`,{...formData,data:Data,receiver:reciverAdmin},{
+        headers: {
+          Authorization: token,
+        },
+      })
+      setShowQRCode(true);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   
@@ -100,30 +151,13 @@ const DemandClient = () => {
                           </h5>
                           <input
                             className="form-control"
-                            name="clientFullName"
+                            name="clientName"
                             onChange={handleChange}
+                            value={userData.firstName +" "+ userData.lastName}
+                            disabled
                           />
                           <br />
-                          
-                            <select
-                              className="form-control"
-                              name="agentFullName"
-                              onChange={handleChangeDataAgent}
-                            >
-                             
-                              <option value="">--Select Agent --</option>
-                              {agentData.map((agent) => (
-                                <option
-                                  key={agent.id}
-                                  value={`${agent.firstName} ${agent.lastName} ${agent.phone}`}
-                                >                                    
-                                    {`${agent.firstName} ${agent.lastName}`} 
-                                </option>
-                              ))}
-                            </select>
 
-                       
-                          <br />
                           <h5>
                             <span className="label label-default">
                               Client Phone:
@@ -133,8 +167,51 @@ const DemandClient = () => {
                             className="form-control"
                             name="clientPhone"
                             onChange={handleChange}
+                            value={userData.phone }
+                            disabled
                           />
                           <br />
+
+                          <h5>
+                            <span className="label label-default">
+                              Client Adress:
+                            </span>
+                          </h5>
+                          <input
+                            className="form-control"
+                            name="address"
+                            onChange={handleChange}
+                            value={userData.adresse }
+                            disabled
+                          />
+                          <br />
+                          
+                          <h5 className="label label-default">
+                            Agent Full Name:
+                          </h5>
+                            <select
+                              className="form-control"
+                              name="agentName"
+                              onChange={handleChangeDataAgent}
+                              onFocus={() => setError("")}
+                            >
+                             
+                              <option value="">--Select Agent --</option>
+                              {agentData.map((agent) => (
+                                <option
+                                  key={agent.id}
+                                  
+                                  value={`${agent.firstName} ${agent.lastName} ${agent.phone} ${agent._id}`}
+                                >                                    
+                                    {`${agent.firstName} ${agent.lastName}`} 
+                                    
+                                </option>
+                              ))}
+                            </select>
+                          
+                       
+                          <br />
+                          
                           <h5>
                             <span className="label label-default">
                               Agent Phone:
@@ -147,20 +224,10 @@ const DemandClient = () => {
                             value={formData.agentPhone}
                             disabled
                             placeholder="select agent please"
-                            // onChange={handleChange}
+                          
                           />
                           <br />
-                          <h5>
-                            <span className="label label-default">
-                              Adresse:
-                            </span>
-                          </h5>
-                          <input
-                            className="form-control"
-                            name="address"
-                            onChange={handleChange}
-                          />
-                          <br />
+                       
 
                           <h5>
                             <span className="label label-default">
@@ -171,12 +238,18 @@ const DemandClient = () => {
                             className="form-control"
                             name="commandDescription"
                             onChange={handleChange}
+                            onFocus={() => setError("")}
                           />
                           <br />
                           <br />
+                          {error && (
+                          <p style={{ color: "red", textAlign: "center" }}>
+                            {error}
+                          </p>
+                        )}
                           <Button
                             className=" btn-inner"
-                            onClick={() => setShowQRCode(!showQRCode)}
+                            onClick={createDemand}
                           >
                             Qr code
                             <AiOutlineQrcode />
@@ -186,7 +259,7 @@ const DemandClient = () => {
                        
                       {showQRCode && (
                         <div className="mt-3">
-                          <QRCode value={JSON.stringify(formData)} />
+                          <QRCode value={`clientName:${formData.clientName}\nclientPhone:${formData.clientPhone}\nClientAdress:${formData.adress}\nagentName:${formData.agentName}\ncommandDescription:${formData.commandDescription}`} size={100} />
                         </div>
                       )}
                     </div>

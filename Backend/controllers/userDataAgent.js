@@ -236,7 +236,7 @@ const updateAgentt = async (req, res) => {
         }
         
       );
-      await notificationAdmin.create({
+      await notification.create({
         data: `${user.firstName} ${user.lastName} update their data`,
       });
       return res.status(200).json({ message: "Agent data updated" });

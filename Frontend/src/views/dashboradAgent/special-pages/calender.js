@@ -10,7 +10,7 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-const Calender = () => {
+const CalenderAgent = () => {
     return (
         <>
             <HeaderBread/>
@@ -61,4 +61,4 @@ const Calender = () => {
     )
 }
 
-export default Calender
+export default CalenderAgent

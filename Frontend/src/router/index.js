@@ -37,6 +37,8 @@ import GoogleClient from "../views/dashboardClient/maps/google";
 import ProtectedRoutes from "./privateRouter";
 import PublicRoutes from "./publicRouter";
 import DemandClient from "../views/dashboardClient/demand/demand";
+import CalenderAgent from "../views/dashboradAgent/special-pages/calender";
+import DemandAgent from "../views/dashboradAgent/demands/demands";
 
 
 const IndexRouters = () => {
@@ -76,6 +78,8 @@ const IndexRouters = () => {
           <Route path="dashboardAgent" element={<DefaultAgent />}>
             <Route path="user-profileAgent" element={<UserProfileAgent />} />
             <Route path="mapAgent" element={<GoogleAgent />} />
+            <Route path="calendarAgent" element={<CalenderAgent/>} />
+            <Route path="demandAgent" element={<DemandAgent/>} />
           </Route>
 
           <Route path="dashboardCustomer" element={<DefaultCustomer />}>

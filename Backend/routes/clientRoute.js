@@ -23,6 +23,9 @@ const {
   getNotification,
   getEmail,
   updateNotification,
+  createDemand,
+  getDemands,
+  updateDemand,
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -67,6 +70,11 @@ router.put("/update-location", auth, updateClientLocation);
 //update password
 router.put("/updatePassword", auth, changePassword);
 
+//create demand
+router.post("/createDemand",auth,createDemand);
+
+
+
 
 /********************************************Agent route **************************************************************************/
 
@@ -94,6 +102,8 @@ router.put(
 router.put("/updatePasswordAgent",authAgent, changePasswordAgent);
 
 
+
+
 /****************************************Authentification route ****************************************/
 // Login route
 router.post("/login", login);
@@ -106,12 +116,16 @@ router.post(
   body("phone").isLength(8),
   signup
 );
+
+//recover password
+router.post("/recover", recoverPassword);
+
+
 /****************************************Admin route ****************************************/
 //adminlogin route
 router.post("/adminLog", AdminLog);
 
-//recover password
-router.post("/recover", recoverPassword);
+
 
 //delete customer route
 router.delete("/delete/:id", authAdmin, deleteuser);
@@ -145,5 +159,11 @@ router.get("/getNotification",auth,getNotification);
 
 //update status notification
 router.put("/updateNotification",auth,updateNotification);
+
+//update status notification
+router.put("/updateDemands",auth,updateDemand);
+
+//get demands
+router.get("/getDemands",auth,getDemands)
 
 module.exports = router;

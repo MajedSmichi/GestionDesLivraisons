@@ -25,7 +25,7 @@ const auth = async (req, res, next) => {
 //register route
 const signup = async (req, res) => {
   const { role, firstName, lastName, email, phone, password } = req.body;
-
+ 
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -100,7 +100,8 @@ const login = async (req, res) => {
 };
 
 const recoverPassword = async (req, res) => {
-  const { email, role } = req.body;
+  const {role ,email} = req.body;
+ 
   try {
     const user =
       role === "1"

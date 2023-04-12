@@ -11,13 +11,14 @@ import axios from 'axios'
 import auth1 from './deliv.jpg'
 import { apiUrl } from '../../Constants'
 const Recoverpw = () => {
-   const {id} = useParams()
-   console.log({id})
+   const {role} = useParams()
+   console.log({role})
    let navigate =useNavigate();
    const [successMessage, setSuccessMessage] = useState('');
    const [error, setError] = useState('')
    const [data,setData]=useState({
       email:''
+      
    })
    const server = `${apiUrl}/users/recover`
    const onRecover=async(e)=>{
@@ -29,12 +30,12 @@ const Recoverpw = () => {
            return
       }
       try{
-        await axios.post(server,{...data, role:id})
+        await axios.post(server,{...data, role})
         
        
         setSuccessMessage('Check your mailbox');
         setTimeout(()=>{
-           navigate(`/SignIn/${id}`); 
+           navigate(`/SignIn/${role}`); 
         },2000)
      
       }

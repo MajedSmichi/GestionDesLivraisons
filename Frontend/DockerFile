@@ -1,6 +1,0 @@
-FROM node:16
-WORKDIR /GestionDesLivraisons
-COPY . /GestionDesLivraisons
-RUN npm install
-EXPOSE 5000
-CMD ["npm", "start"]

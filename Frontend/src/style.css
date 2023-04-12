@@ -13,3 +13,8 @@
     width:100%;
     position:absolute;
   }
+
+  .fixed-width-td {
+    width: 150px; /* set your desired width here */
+    word-wrap: break-word; /* to handle long content and prevent overflow */
+  }
