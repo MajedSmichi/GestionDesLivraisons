@@ -26,6 +26,7 @@ const {
   createDemand,
   getDemands,
   updateDemand,
+  addFeedBack,
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -47,6 +48,9 @@ const {
   changePasswordAdmin,
   authAdmin,
   getNotificationAdmin,
+  claculateUsers,
+  calculateUsers,
+  calculateDemands,
 } = require("../controllers/userDataAdmin");
 const router = Router();
 
@@ -73,6 +77,7 @@ router.put("/updatePassword", auth, changePassword);
 //create demand
 router.post("/createDemand",auth,createDemand);
 
+router.post("/addFeedback",auth,addFeedBack);
 
 
 
@@ -149,6 +154,10 @@ router.put("/updateAdmin", authAdmin, uploadAdmin.single("photo"), updateAdmin);
 
 //update password
 router.put("/updatePasswordAdmin", authAdmin, changePasswordAdmin);
+
+//calculate users
+router.get("/calculateUsers",authAdmin,calculateUsers);
+router.get("/calculateDemands",calculateDemands);
 
 
 /*******************************************route agent +admin + client*************************************************/

@@ -8,6 +8,8 @@ const notification = require("../models/notificationModel");
 const agent = require("../models/agentModel");
 const admin = require("../models/adminModel");
 const demand = require("../models/demandModel");
+const feedBack = require("../models/feedBackModel");
+const feedBackEmail = require("../utils/feedBackemail");
 
 //upload photo
 const storage = multer.diskStorage({
@@ -435,6 +437,37 @@ const updateDemand = async (req, res) => {
   }
 };
 
+const addFeedBack= async (req, res) => {
+  try {
+    
+    const { data, clientName, agentName, rate ,receiverAgent,emailAgent} = req.body;
+
+  
+      const feed = {
+        data,
+        rate,
+        receiverAgent,
+        clientName,
+        agentName,
+      };
+  
+      await feedBack.create(feed);
+      await notification.create({
+        data: `the client ${clientName} rate the agent ${agentName}`,
+        receiver: "0",
+      });
+      const subject="feedBack"
+      const text=`the client ${clientName} rate you in Delivery `
+      await feedBackEmail(emailAgent, subject, text);
+      
+    
+    res.status(201).json({message: "Feedback created successfully!" });
+  } catch (error) {
+    
+    res.status(500).json({message: "Failed to create feedback", error: error.message });
+  }
+};
+
 exports.upload = upload;
 exports.uploadPhoto = uploadPhoto;
 exports.deleteuser = deleteuser;
@@ -450,3 +483,4 @@ exports.updateNotification = updateNotification;
 exports.createDemand = createDemand;
 exports.getDemands = getDemands;
 exports.updateDemand = updateDemand;
+exports.addFeedBack=addFeedBack;

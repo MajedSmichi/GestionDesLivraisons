@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, Container } from "react-bootstrap";
 
-const SubHeader = (props) => {
+const SubHeader = () => {
   return (
     <>
       <div
@@ -12,7 +12,7 @@ const SubHeader = (props) => {
           <Row>
             <Col md="12">
               <div className="d-flex justify-content-between flex-wrap">
-                <h1>Hello Admin!</h1>
+                <h1>Welcome to Delivery!</h1>
               </div>
             </Col>
           </Row>

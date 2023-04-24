@@ -12,13 +12,16 @@ import Sidebar from './SidebarStyle/sidebar'
 
 
 import { Outlet } from 'react-router-dom'
+import Index from "../../views/dashboard/index"
 
 
 
-
-const Default = (props) => {
+const Default = () => {
    
-   
+
+
+
+
     return (
         <>
 
@@ -27,14 +30,10 @@ const Default = (props) => {
                     <div className="position-relative">
                         <Header />
                         <SubHeader />
-                        <Outlet />
-                    </div>
                         
-                </main>
-                
-           
-            
-            
+                        <Outlet />
+                    </div>       
+                </main> 
         </> 
     )
 }

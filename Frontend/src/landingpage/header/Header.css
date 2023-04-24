@@ -66,15 +66,17 @@ ul li {
     right: 10px;
     z-index:1;
     top: 10px;
+    border:none;
     
   }
   .mobile-nav {
     position: absolute;
     top: 10vh;
     right:0;
+    padding-left: 1px;
     z-index:1;
-    width: 100px;
-    background-color: #eaecef;
+    width: 80px;
+    background-color: #ffffff;
     border-radius: 5px 0 0 5px;
     opacity: 0.8;
   }

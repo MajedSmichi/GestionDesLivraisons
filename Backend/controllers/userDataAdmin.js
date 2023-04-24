@@ -3,6 +3,9 @@ const admin = require("../models/adminModel");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const notification= require("../models/notificationModel");
+const client= require("../models/clientModel");
+const agent = require("../models/agentModel");
+const demand = require("../models/demandModel");
 
 ///middleware/auth
 const authAdmin=async(req, res, next) => {
@@ -145,6 +148,49 @@ const changePasswordAdmin = async (req, res) => {
   }
 };
 
+
+//calculate numbre of users
+
+
+const calculateUsers =async (req, res) => {
+  try {
+    // Fetch all users from the database
+    const clients = await client.find();
+    const agents = await agent.find();
+    const totalClients = clients.length;
+    const totalAgents = agents.length;
+    res.json({ totalClients,totalAgents });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to calculate total number of users' });
+  }
+};
+
+const calculateDemands=async (req, res) => {
+  try {
+   
+    const demands = await demand.find();
+
+    
+    const demandsAccepted = demands.filter(demand => demand.status === "ancienAccepted");
+    const demandsRejected = demands.filter(demand => demand.status === "ancienrejected");
+
+    
+    const totalDemandsAccepted = demandsAccepted.length;
+    const totalDemandsRejected = demandsRejected.length;
+
+    
+    res.json({ demandsAccepted: totalDemandsAccepted, demandsRejected: totalDemandsRejected });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to calculate demands' });
+  }
+};
+
+
+
+
+
   
 
 
@@ -164,4 +210,5 @@ const changePasswordAdmin = async (req, res) => {
   exports.getAdmin=getAdmin;
   exports.updateAdmin=updateAdmin;
   exports.changePasswordAdmin=changePasswordAdmin;
-  
+  exports.calculateUsers=calculateUsers;
+  exports.calculateDemands=calculateDemands;

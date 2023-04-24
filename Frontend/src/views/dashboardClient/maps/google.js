@@ -5,7 +5,10 @@ import axios from "axios";
 import { apiUrl } from "../../../Constants";
 import GoogleMapReact from "google-map-react";
 import { HiLocationMarker } from "react-icons/hi";
+import {BsWhatsapp} from "react-icons/bs"
+import {AiFillPhone} from "react-icons/ai"
 import { Image } from "react-bootstrap";
+
 
 const token = localStorage.getItem("token");
 const GoogleClient = () => {
@@ -19,7 +22,7 @@ const GoogleClient = () => {
 
   const [points, setPoints] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [mapApi, setMapApi] = useState(null)
+  const [mapApi, setMapApi] = useState(null);
 
   const getListAgent = async () => {
     const response = await axios.get(`${apiUrl}/users/getAllAgent`, {
@@ -41,6 +44,9 @@ const GoogleClient = () => {
             phone: agent.phone,
             role: "2",
             photo: agent.photoUrl,
+            firstName: agent.firstName,
+            lastName: agent.lastName,
+            whatsApp: agent.whatsApp,
           },
         ]);
       }
@@ -100,9 +106,8 @@ const GoogleClient = () => {
             defaultCenter={defaultProps.center}
             defaultZoom={defaultProps.zoom}
             onGoogleApiLoaded={({ map, maps }) => {
-              // do something with the `map` and `maps` objects
-              console.log({map})
-              setMapApi(map)
+              console.log({ map });
+              setMapApi(map);
             }}
           >
             {points.map((item, index) => (
@@ -117,33 +122,35 @@ const GoogleClient = () => {
                 <HiLocationMarker
                   size={40}
                   color={item.role ? "red" : "blue"}
+                  cursor={"pointer"}
                 />
               </div>
             ))}
           </GoogleMapReact>
-           {selectedUser && (
+          {selectedUser && (
             <CardAgent
               user={selectedUser}
               mapApi={mapApi}
               onClose={() => setSelectedUser(null)}
             />
-            )} 
-             
-        
+          )}
         </div>
       </Card.Body>
     </Card>
   );
 };
 
-const CardAgent = ({ user,mapApi, onClose }) => {
-  const worldCoordinate = mapApi.getProjection().fromLatLngToPoint(new window.google.maps.LatLng(user.latitude, user.longitude));
+const CardAgent = ({ user, mapApi, onClose }) => {
+  const worldCoordinate = mapApi
+    .getProjection()
+    .fromLatLngToPoint(
+      new window.google.maps.LatLng(user.latitude, user.longitude)
+    );
   const pixelCoordinate = new window.google.maps.Point(
-    worldCoordinate.x+100 ,
-    worldCoordinate.y+350
+    worldCoordinate.x + 100,
+    worldCoordinate.y + 350
   );
 
- 
   const cardStyle = {
     position: "absolute",
     top: `${pixelCoordinate.x}px`,
@@ -151,18 +158,33 @@ const CardAgent = ({ user,mapApi, onClose }) => {
     backgroundColor: "white",
     padding: "20px",
     boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.5)",
-    borderRadius: '10px'
+    borderRadius: "10px",
   };
 
   return (
     <div style={cardStyle}>
-      <div>{user.phone}</div>
       <Image
         className="bg-soft-primary rounded img-fluid avatar-40 me-3"
         src={`${apiUrl}/` + user.photo}
         alt="profile"
       />
-      <button onClick={onClose}>Close</button>
+      <div>
+        {user.firstName } {user.lastName}
+      </div>
+
+      <div>
+        <a href={"tel:" + user.phone}>Phone :{user.phone} <AiFillPhone size={20}/></a>
+      </div>
+
+      <div>
+        <a href={`https://wa.me/${user.whatsApp}`}  target="_blank"  rel="noopener noreferrer">WhatsApp: {user.whatsApp} <BsWhatsapp size={20}/></a> 
+      </div>
+      <button
+        onClick={onClose}
+        style={{ borderRadius: "5px", borderColor: "blue" }}
+      >
+        Close
+      </button>
     </div>
   );
 };

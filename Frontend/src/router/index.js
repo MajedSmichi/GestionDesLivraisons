@@ -39,6 +39,8 @@ import PublicRoutes from "./publicRouter";
 import DemandClient from "../views/dashboardClient/demand/demand";
 import CalenderAgent from "../views/dashboradAgent/special-pages/calender";
 import DemandAgent from "../views/dashboradAgent/demands/demands";
+import Feedback from "../views/dashboardClient/feedBack/feedBack";
+import Index from "../views/dashboard/index"
 
 
 const IndexRouters = () => {
@@ -60,8 +62,10 @@ const IndexRouters = () => {
         </Route>
         {/* private routers*/}
         <Route path="/" element={<ProtectedRoutes />}>
+          
           <Route path="dashboard" element={<Default />}>
             {/* user */}
+            <Route index={true} element={<Index/>} />
             <Route path="user-add" element={<UserAdd />} />
             <Route path="user-list" element={<UserList />} />
             <Route path="user-listAgent" element={<UserListAgent />} />
@@ -87,6 +91,7 @@ const IndexRouters = () => {
             <Route path="calendarClient" element={<CalenderClient />} />
             <Route path="mapClient" element={<GoogleClient />} />
             <Route path="demandClient" element={<DemandClient/>} />
+            <Route path="feedBack" element={<Feedback/>} />
           </Route>
         </Route>
       </Routes>

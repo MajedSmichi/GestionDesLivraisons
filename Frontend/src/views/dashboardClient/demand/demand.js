@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import QRCode from "qrcode.react";
 
-import { Row, Col, Nav, Tab, Image, Button } from "react-bootstrap";
+import { Row, Col, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 
 import { AiOutlineQrcode } from "react-icons/ai";
@@ -13,7 +13,7 @@ const user=localStorage.getItem("user");
 
 const DemandClient = () => {
   const [showQRCode, setShowQRCode] = useState(false);
-  const [selectedAgent, setSelectedAgent] = useState(null);
+  
   const { userData, setUserData } = useContext(customerContext);
   const [agentData, setAgentData] = useState([]);
   const [error, setError] = useState("");

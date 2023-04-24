@@ -48,7 +48,7 @@ const GoogleAgent = () => {
     <Card className="h-100">
       <Card.Header className="d-flex justify-content-between">
         <div className="header-title">
-          <h4 className="card-title">Customer map</h4>
+          <h4 className="card-title">Agent map</h4>
         </div>
         
       </Card.Header>
