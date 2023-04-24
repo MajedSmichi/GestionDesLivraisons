@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, {  useEffect, useState } from "react";
-import { Card, Col, TabContainer, Tab } from "react-bootstrap";
+import { Card, Col, TabContainer, Tab,Nav } from "react-bootstrap";
 import { apiUrl } from "../../../Constants";
 
 
@@ -103,14 +103,28 @@ const Feedback = () => {
   };
 
   return (
-    <TabContainer>
+    <TabContainer defaultActiveKey="first">
       <Col lg="12">
-        <Card>
-          <Card.Body>Feedback</Card.Body>
-        </Card>
-      </Col>
+            <Card>
+              <Card.Body>
+                <div className="d-flex flex-wrap align-items-center justify-content-between ">
+                  <Nav
+                    as="ul"
+                    className="d-flex nav-pills mb-0 p-center profile-tab"
+                    data-toggle="slider-tab"
+                    id="profile-pills-tab"
+                    role="tablist"
+                  >
+                    <Nav.Item as="li">
+                      <Nav.Link eventKey="first">feedBack</Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
       <Col md={{ span: 8, offset: 2 }}>
-        <Tab.Content className="profile-content">
+        <Tab.Content eventKey="first" className="profile-content">
           <Card>
             <Card.Body>
               {successMessage && (

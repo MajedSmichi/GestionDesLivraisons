@@ -9,7 +9,7 @@ const agent = require("../models/agentModel");
 const admin = require("../models/adminModel");
 const demand = require("../models/demandModel");
 const feedBack = require("../models/feedBackModel");
-const feedBackEmail = require("../utils/feedBackemail");
+const feedBackEmail = require("../utils/feedBackEmail");
 
 //upload photo
 const storage = multer.diskStorage({
