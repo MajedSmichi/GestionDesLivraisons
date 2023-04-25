@@ -6,6 +6,7 @@ const updatePwdEmail = require("../utils/updatePwdEmail");
 const jwt = require("jsonwebtoken");
 const notification = require("../models/notificationModel");
 const feedBack = require("../models/feedBackModel");
+const admin = require("../models/adminModel");
 
 ///middleware/auth
 const authAgent = async (req, res, next) => {
@@ -306,9 +307,10 @@ const getFeedBack = async (req, res) => {
   const { username } = req.user;
 
   try {
-    (await agent.findOne({ email: username })) ||
+    const user=(await agent.findOne({ email: username })) ||
       (await admin.findOne({ email: username }));
     const data = await feedBack.find();
+    console.log("test")
     if (user.role === "2") {
       const result = data.filter(
         (note) => note.receiverAgent === user._id.toString()
@@ -319,6 +321,25 @@ const getFeedBack = async (req, res) => {
     console.error(error);
   }
 };
+
+const updatePermission = async (req, res) => {
+  const { permission,email } = req.body;
+  try {
+    const user = await agent.findOne({ email: email});
+    if (user) { 
+      await agent.findByIdAndUpdate(
+        { _id: user._id },
+        { permission: permission }
+      );
+      return res.status(200).json({ message: "Permission changed successfully" });
+    } else {
+      return res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    
+  }
+}
 
 exports.authAgent = authAgent;
 exports.uploadd = uploadd;
@@ -332,3 +353,4 @@ exports.addAgent = addAgent;
 exports.changePasswordAgent = changePasswordAgent;
 exports.getNotificationagent = getNotificationagent;
 exports.getFeedBack=getFeedBack;
+exports.updatePermission=updatePermission;

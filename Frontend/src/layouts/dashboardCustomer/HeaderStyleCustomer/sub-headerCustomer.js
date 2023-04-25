@@ -12,7 +12,7 @@ const SubHeaderCustomer = (props) => {
           <Row>
             <Col md="12">
               <div className="d-flex justify-content-between flex-wrap">
-                <h1>Hello Client!</h1>
+                <h1>Welcome to delivery</h1>
               </div>
             </Col>
           </Row>

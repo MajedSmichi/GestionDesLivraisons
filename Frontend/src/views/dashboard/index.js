@@ -350,6 +350,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"
                   }}
                 >
                   <CgProfile size={25} style={{ marginRight: "10px" }} />
@@ -366,6 +367,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px",
                   }}
                 >
                   <SiGooglemaps size={25} style={{ marginRight: "10px" }} />
@@ -386,6 +388,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"
                   }}
                 >
                   <CiDeliveryTruck size={25} style={{ marginRight: "10px" }} />
@@ -402,6 +405,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"
                   }}
                 >
                   <CiDeliveryTruck size={25} style={{ marginRight: "10px" }} />
@@ -422,6 +426,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"
                   }}
                 >
                   <ImManWoman size={25} style={{ marginRight: "10px" }} />
@@ -438,6 +443,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"
                   }}
                 >
                   <ImManWoman size={25} style={{ marginRight: "10px" }} />
@@ -458,6 +464,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"
                   }}
                 >
                   <AiFillCalendar size={25} style={{ marginRight: "10px" }} />
@@ -474,6 +481,7 @@ const Index = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"
                   }}
                 >
                   <VscFeedback size={25} style={{ marginRight: "10px" }} />

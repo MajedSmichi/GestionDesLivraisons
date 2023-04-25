@@ -49,6 +49,7 @@ function App() {
     idCard: "",
     dateOfBirth: "",
     photo: "",
+    permissions:""
   });
 
   const updateLocation = ()=>{

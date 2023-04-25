@@ -18,6 +18,7 @@ const agentSchema = mongoose.Schema({
   cardPhoto1: String,
   cardPhoto2: String,
   latitude:{type:String},
-  longitude:{type:String}
+  longitude:{type:String},
+  permission:{type:String,default:"No"}
 });
 module.exports = mongoose.model("agent", agentSchema);

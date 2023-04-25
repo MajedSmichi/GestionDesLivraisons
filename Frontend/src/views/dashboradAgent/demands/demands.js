@@ -93,7 +93,7 @@ const DemandAgent = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <p>No demands with status "ancienAccepted" found.</p>
+                    <p>No demands  found.</p>
                   )}
                 </div>
               </Card.Body>

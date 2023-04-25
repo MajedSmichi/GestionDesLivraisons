@@ -41,6 +41,10 @@ import CalenderAgent from "../views/dashboradAgent/special-pages/calender";
 import DemandAgent from "../views/dashboradAgent/demands/demands";
 import Feedback from "../views/dashboardClient/feedBack/feedBack";
 import Index from "../views/dashboard/index"
+import IndexCustomer from "../views/dashboardClient/index"
+import IndexAgent from "../views/dashboradAgent/index"
+import FeedBackList from "../views/dashboradAgent/feedBack/feedBack";
+import AdminFeedBackList from "../views/dashboard/feedBack/feedBackList";
 
 
 const IndexRouters = () => {
@@ -71,6 +75,7 @@ const IndexRouters = () => {
             <Route path="user-listAgent" element={<UserListAgent />} />
             <Route path="addAgent" element={<AddAgent />} />
             <Route path="user-profileAdmin" element={<UserProfileAdmin />} />
+            <Route path="AdminFeedBackList" element={<AdminFeedBackList/>}/>
 
             {/*special pages */}
             <Route path="pricing" element={<Pricing />} />
@@ -80,13 +85,16 @@ const IndexRouters = () => {
           </Route>
 
           <Route path="dashboardAgent" element={<DefaultAgent />}>
+            <Route index={true} element={<IndexAgent/>} />
             <Route path="user-profileAgent" element={<UserProfileAgent />} />
             <Route path="mapAgent" element={<GoogleAgent />} />
             <Route path="calendarAgent" element={<CalenderAgent/>} />
             <Route path="demandAgent" element={<DemandAgent/>} />
+            <Route path="FeedBackList" element={<FeedBackList/>}/>
           </Route>
 
           <Route path="dashboardCustomer" element={<DefaultCustomer />}>
+            <Route index={true} element={<IndexCustomer/>} />
             <Route path="user-profileClient" element={<UserProfileClient />} />
             <Route path="calendarClient" element={<CalenderClient />} />
             <Route path="mapClient" element={<GoogleClient />} />

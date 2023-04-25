@@ -40,6 +40,8 @@ const {
   authAgent,
   updateAgentt,
   getNotificationagent,
+  getFeedBack,
+  updatePermission,
 } = require("../controllers/userDataAgent");
 const {
   getAdmin,
@@ -105,6 +107,9 @@ router.put(
 
 //update password
 router.put("/updatePasswordAgent",authAgent, changePasswordAgent);
+
+//update permission
+router.put("/updatePermission/:id",authAdmin, updatePermission);
 
 
 
@@ -174,5 +179,8 @@ router.put("/updateDemands",auth,updateDemand);
 
 //get demands
 router.get("/getDemands",auth,getDemands)
+
+//get feedback
+router.get("/getFeedBack",auth,getFeedBack);
 
 module.exports = router;

@@ -8,39 +8,36 @@ import axios from "axios";
 import { apiUrl } from "../../../Constants";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit, FiSave } from "react-icons/fi";
+import { BsToggleOff, BsToggleOn } from "react-icons/bs";
 import moment from "moment";
-
 
 const UserListAgent = () => {
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(false);
-  const [ agentData, setAgentData ] = useState([]);
- 
+  const [agentData, setAgentData] = useState([]);
+  
 
   const getAllAgent = async () => {
-    const token =localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(`${apiUrl}/users/getAllagent`,{
-        headers:{
-          Authorization: token
-        }
+      const response = await axios.get(`${apiUrl}/users/getAllagent`, {
+        headers: {
+          Authorization: token,
+        },
       });
       setAgentData(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    getAllAgent();
-  }, []);
 
   const deleteuser = async (item) => {
-    const token=localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     try {
-      await axios.delete(`${apiUrl}/users/deleteAgent/${item._id}`,{
-        headers:{
-          Authorization: token
-        }
+      await axios.delete(`${apiUrl}/users/deleteAgent/${item._id}`, {
+        headers: {
+          Authorization: token,
+        },
       });
       getAllAgent();
     } catch (error) {
@@ -49,15 +46,16 @@ const UserListAgent = () => {
   };
   const updateuser = async (item, idx) => {
     setEditData(null);
-    const token=localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     try {
       setLoading(true);
       const response = await axios.put(
         `${apiUrl}/users/updateAgent/${item._id}`,
-        item,{
-          headers:{
-            Authorization: token
-          }
+        item,
+        {
+          headers: {
+            Authorization: token,
+          },
         }
       );
       setAgentData((prevState) => {
@@ -72,6 +70,38 @@ const UserListAgent = () => {
       setLoading(false);
     }
   };
+  const updatePermission = async (item, idx) => {
+    console.log(agentData[idx].email);
+    const updatedPermission = agentData[idx].permission === "No" ? "Yes" : "No";
+    const token = localStorage.getItem("token");
+    try {
+      setLoading(true);
+      const response = await axios.put(
+        `${apiUrl}/users/updatePermission/${item._id}`,
+        { permission: updatedPermission, email: agentData[idx].email },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      setAgentData((prevState) => {
+        const newData = [...prevState];
+        newData[idx].permission = response.data.permission;
+        return newData;
+      });
+      
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllAgent();
+  }, []);
 
   return (
     <>
@@ -106,27 +136,33 @@ const UserListAgent = () => {
                     </thead>
                     <tbody>
                       {loading ? (
-                        <Rings
-                          height="80"
-                          width="100%"
-                          color="#4fa94d"
-                          radius="6"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                          visible={true}
-                          ariaLabel="rings-loading"
-                        />
+                        <tr key="loading">
+                          <td colSpan="8" className="text-center">
+                            <Rings
+                              height="80"
+                              width="100%"
+                              color="#4fa94d"
+                              radius="6"
+                              wrapperStyle={{}}
+                              wrapperClass=""
+                              visible={true}
+                              ariaLabel="rings-loading"
+                            />
+                          </td>
+                        </tr>
                       ) : (
                         agentData.map((item, idx) => {
                           if (editData === idx) {
                             return (
                               <tr key={idx}>
                                 <td className="text-center grow">
-                                     {  <Image
-                                  className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                  src={`${apiUrl}/` + item.photoUrl}
-                                  alt="profile"
-                                />}
+                                  {
+                                    <Image
+                                      className="bg-soft-primary rounded img-fluid avatar-40 me-3"
+                                      src={`${apiUrl}/` + item.photoUrl}
+                                      alt="profile"
+                                    />
+                                  }
                                 </td>
                                 <td>
                                   <input
@@ -193,7 +229,9 @@ const UserListAgent = () => {
                                     }}
                                   />
                                 </td>
-                                <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
+                                <td>
+                                  {moment(item.joinDate).format("DD/MM/YYYY")}
+                                </td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <button
@@ -211,21 +249,43 @@ const UserListAgent = () => {
                           return (
                             <tr key={idx}>
                               <td className="text-center grow">
-                          
-                              {  <Image
-                                  className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                  src={`${apiUrl}/` + item.photoUrl}
-                                  alt="profile"
-                                />}
+                                {
+                                  <Image
+                                    className="bg-soft-primary rounded img-fluid avatar-40 me-3"
+                                    src={`${apiUrl}/` + item.photoUrl}
+                                    alt="profile"
+                                  />
+                                }
                               </td>
                               <td>{item.firstName}</td>
                               <td>{item.lastName}</td>
                               <td>{item.phone}</td>
                               <td>{item.email}</td>
                               <td>{item.adresse}</td>
-                              <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
+                              <td>
+                                {moment(item.joinDate).format("DD/MM/YYYY")}
+                              </td>
                               <td>
                                 <div className="flex align-items-center list-user-action">
+                                  {item.permission === "No" ? (
+                                    <button
+                                      className="btn-inner btn-sm btn-icon btn btn-primary"
+                                      onClick={() =>
+                                        updatePermission(item, idx)
+                                      }
+                                    >
+                                      <BsToggleOff />
+                                    </button>
+                                  ) : (
+                                    <button
+                                      className="btn-inner btn-sm btn-icon btn btn-primary"
+                                      onClick={() =>
+                                        updatePermission(item, idx)
+                                      }
+                                    >
+                                      <BsToggleOn />
+                                    </button>
+                                  )}{" "}
                                   <button
                                     className="btn-inner btn-sm btn-icon btn btn-warning"
                                     onClick={() => setEditData(idx)}
