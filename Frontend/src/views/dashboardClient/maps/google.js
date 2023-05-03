@@ -30,6 +30,7 @@ const GoogleClient = () => {
         Authorization: token,
       },
     });
+    console.log(response);
     for (const agent of response.data) {
       setPoints((points) => points.filter((point) => point.id !== agent._id));
     }

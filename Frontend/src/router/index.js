@@ -45,6 +45,7 @@ import IndexCustomer from "../views/dashboardClient/index"
 import IndexAgent from "../views/dashboradAgent/index"
 import FeedBackList from "../views/dashboradAgent/feedBack/feedBack";
 import AdminFeedBackList from "../views/dashboard/feedBack/feedBackList";
+import DemandList from "../views/dashboardClient/demand/demandList"
 
 
 const IndexRouters = () => {
@@ -99,6 +100,7 @@ const IndexRouters = () => {
             <Route path="calendarClient" element={<CalenderClient />} />
             <Route path="mapClient" element={<GoogleClient />} />
             <Route path="demandClient" element={<DemandClient/>} />
+            <Route path="demandList" element={<DemandList/>}></Route>
             <Route path="feedBack" element={<Feedback/>} />
           </Route>
         </Route>

@@ -157,6 +157,23 @@ const VerticalNavCustomer = () => {
                             </li>
                         </ul>
                     </Accordion.Collapse>
+                    <Accordion.Collapse eventKey="sidebar-demand">
+                        <ul className="sub-nav">
+                            <li className="nav-item">
+                                <Link className={`${location.pathname === 'demandList' ? 'active' : ''} nav-link`} to="demandList">
+                                    <i className="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
+                                            <g>
+                                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                    <i className="sidenav-mini-icon"> DL</i>
+                                    <span className="item-name">Demand List</span>
+                                </Link>
+                            </li>
+                        </ul>
+                    </Accordion.Collapse>
                 </Accordion.Item>
                 <Accordion.Item as="li" eventKey="sidebar-special" bsPrefix="nav-item" style={{marginRight:"0px"}}>
                 <CustomToggle eventKey="sidebar-special" onClick={(activeKey) => setActiveMenu(activeKey)}>

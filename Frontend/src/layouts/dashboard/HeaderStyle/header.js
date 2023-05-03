@@ -11,7 +11,7 @@ import {MdEmail} from 'react-icons/md'
 import shapes1 from "../../../assets/images/shapes/01.png";
 
 import avatars1 from "../../../assets/images/avatars/01.png";
-import { adminContext } from "../../../App";
+import { adminContext, customerContext } from "../../../App";
 import { apiUrl } from "../../../Constants";
 import axios from "axios";
 import moment from "moment";
@@ -27,6 +27,7 @@ const Header = () => {
     document.getElementsByTagName("ASIDE")[0].classList.toggle("sidebar-mini");
   };
   const navigate = useNavigate();
+ 
   const { adminData, setAdminData } = useContext(adminContext);
   const [notifications,setNotifications]=useState([]);
   const [demands,setDemands]=useState([]);
@@ -63,7 +64,8 @@ const Header = () => {
       const response = await axios.get(`${apiUrl}/users/getDemands`, {
         headers: { Authorization: token },
       });
-      setDemands(response.data);
+      const demandsClient = response.data
+      setDemands(demandsClient);
     } catch (error) {
       console.log(error);
     }
@@ -82,9 +84,10 @@ const Header = () => {
   }, [notifications]);
 
   useEffect(() => {
-    const isNewDem = demands.some(({ status }) => status === "new");
+    const isNewDem = demands.some(({ statusAdmin }) => statusAdmin === "new");
     setnewDemands(isNewDem);
   }, [demands]);
+
 
   const updateNotifications = async() => {
     try {
@@ -99,22 +102,21 @@ const Header = () => {
     setnewNotifcation(false)
   }
 
-  const updateDemands = async() => {
-    
+  const updateDemands = async () => {
     try {
       const token = localStorage.getItem("token");
-      
       await axios.put(
         `${apiUrl}/users/updateDemands`,
-        { status: "ancien"},
+        { statusAdmin: "ancien" },
         {
           headers: { Authorization: token },
         }
       );
+      getDemands();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   const changeDemsStatus = () => {
     updateDemands();
     setnewDemands(false)
@@ -213,8 +215,12 @@ const Header = () => {
                         <h5 className="mb-0 text-white">All Demands</h5>
                       </div>
                     </div>
-                    <div className="p-0 card-body" style={{ height: '250px', overflowY: 'scroll'}}>
-                      {demands.map(demand => (
+                    <div
+                      className="p-0 card-body"
+                      style={{ height: "250px", overflowY: "scroll" }}
+                    >
+                     
+                      {demands.map((demand) => (
                         <Link to="#" className="iq-sub-card">
                           <div className="d-flex align-items-center">
                             <img
@@ -223,17 +229,42 @@ const Header = () => {
                               alt=""
                             />
                             <div className="ms-3 w-100">
-                              <h6 key={demand.id} className="mb-0 ">
-                                {demand.data}
-                              </h6>
-                              <div className="d-flex justify-content-between align-items-center">
+                              {demand.status === 'new'?( <h6 key={demand.id} className="mb-0 " style={{backgroundColor:"blue"}}>
+                                {`${demand.clientData.firstName} ${demand.clientData.lastName} send you a demand to ${demand.agentData.firstName} ${demand.agentData.lastName}`}
+                                <div className="d-flex justify-content-between align-items-center">
                                 <small className="float-right font-size-12">
-                                  {moment(demand.createdAt).format("DD/MM/YYYY")}
+                                  {moment(demand.createdAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
                                 </small>
                               </div>
+                              </h6>):demand.status === 'ancienAccepted'? (
+                                <h6 key={demand.id} className="mb-0 " style={{backgroundColor:"green"}}>
+                                {`${demand.agentData.firstName} ${demand.agentData.lastName} accept the demand of ${demand.agentData.firstName} ${demand.agentData.lastName}`}
+                                <div className="d-flex justify-content-between align-items-center">
+                                <small className="float-right font-size-12">
+                                  {moment(demand.createdAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </small>
+                              </div>
+                              </h6>
+                              ):(
+                                <h6 key={demand.id} className="mb-0 " style={{backgroundColor:"red"}}>
+                                {`${demand.agentData.firstName} ${demand.agentData.lastName} reject the demand of ${demand.agentData.firstName} ${demand.agentData.lastName}`}
+                                <div className="d-flex justify-content-between align-items-center">
+                                <small className="float-right font-size-12">
+                                  {moment(demand.createdAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </small>
+                              </div>
+                              </h6>
+                              )}
+                              
+                             
                             </div>
                           </div>
-                         
                         </Link>
                       ))}
                     </div>

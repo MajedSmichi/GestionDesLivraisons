@@ -71,7 +71,6 @@ const UserListAgent = () => {
     }
   };
   const updatePermission = async (item, idx) => {
-    console.log(agentData[idx].email);
     const updatedPermission = agentData[idx].permission === "No" ? "Yes" : "No";
     const token = localStorage.getItem("token");
     try {
@@ -86,11 +85,7 @@ const UserListAgent = () => {
         }
       );
 
-      setAgentData((prevState) => {
-        const newData = [...prevState];
-        newData[idx].permission = response.data.permission;
-        return newData;
-      });
+      getAllAgent()
       
     } catch (error) {
       console.error(error);
@@ -98,6 +93,7 @@ const UserListAgent = () => {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     getAllAgent();

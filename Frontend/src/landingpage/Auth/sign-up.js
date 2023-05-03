@@ -142,7 +142,7 @@ const SignUp = () => {
                         <Col lg="6">
                           <Form.Group className="form-group">
                             <Form.Label htmlFor="phone" className="">
-                              Phone No.
+                              Phone 
                             </Form.Label>
                             <Form.Control
                               type="text"

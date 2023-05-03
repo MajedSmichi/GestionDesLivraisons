@@ -56,16 +56,20 @@ const HeaderAgent = () => {
       const response = await axios.get(`${apiUrl}/users/getDemands`, {
         headers: { Authorization: token },
       });
-      setDemands(response.data);
+      const demandAgent = response.data.filter(item=>item.agentData._id===agentData._id)
+      setDemands(demandAgent);
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getUserData();
     getNotifications();
-    getDemands();
+    
   }, []);
+
+  useEffect(()=>{getDemands()},[agentData])
 
   useEffect(() => {
     const isNewNot = notifications.some(({ status }) => status === "new");
@@ -102,56 +106,14 @@ const HeaderAgent = () => {
 
   const acceptDemand = async (demandId) => {
     try {
-      const demand = demands.find((demand) => demand.id === demandId);
-      await axios.post(
-        `${apiUrl}/users/createDemand`,
-        {
-          receiver: demand.receiver,
-          adress: demand.adress,
-          commandDescription: demand.commandDescription,
-          clientName: demand.clientName,
-          clientPhone: demand.clientPhone,
-          agentPhone: demand.agentPhone,
-          agentName: demand.agentName,
-          data: demand.agentName + " accept your demand",
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      const Data =
-        demand.agentName + " accept the demand of " + demand.clientName;
-      const reciverAdmin = "0";
-      await axios.post(
-        `${apiUrl}/users/createDemand`,
-        {
-          adress: demand.adress,
-          commandDescription: demand.commandDescription,
-          clientName: demand.clientName,
-          clientPhone: demand.clientPhone,
-          agentPhone: demand.agentPhone,
-          agentName: demand.agentName,
-          data: Data,
-          receiver: reciverAdmin,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      demand.status = "ancienAccepted";
       await axios.put(
-        `${apiUrl}/users/updateDemands`,
-        { status: demand.status },
+        `${apiUrl}/users/updateDemands/${demandId}`,
+        { status: 'ancienAccepted' },
         {
           headers: { Authorization: token },
         }
       );
+      getDemands()
       setnewNotifcation(false);
     } catch (error) {
       console.log(error);
@@ -160,56 +122,15 @@ const HeaderAgent = () => {
 
   const rejectDemand = async (demandId) => {
     try {
-      const demand = demands.find((demand) => demand.id === demandId);
-      await axios.post(
-        `${apiUrl}/users/createDemand`,
-        {
-          receiver: demand.receiver,
-          adress: demand.adress,
-          commandDescription: demand.commandDescription,
-          clientName: demand.clientName,
-          clientPhone: demand.clientPhone,
-          agentPhone: demand.agentPhone,
-          agentName: demand.agentName,
-          data: demand.agentName + " reject your demand",
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      const Data =
-        demand.agentName + " reject the demand of " + demand.clientName;
-      const reciverAdmin = "0";
-      await axios.post(
-        `${apiUrl}/users/createDemand`,
-        {
-          adress: demand.adress,
-          commandDescription: demand.commandDescription,
-          clientName: demand.clientName,
-          clientPhone: demand.clientPhone,
-          agentPhone: demand.agentPhone,
-          agentName: demand.agentName,
-          data: Data,
-          receiver: reciverAdmin,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      demand.status = "ancienrejected";
+     
       await axios.put(
-        `${apiUrl}/users/updateDemands`,
-        { status: demand.status },
+        `${apiUrl}/users/updateDemands/${demandId}`,
+        {  status : "ancienrejected" },
         {
           headers: { Authorization: token },
         }
       );
+      getDemands()
       setnewNotifcation(false);
     } catch (error) {
       console.log(error);
@@ -319,6 +240,8 @@ const HeaderAgent = () => {
                       className="p-0 card-body"
                       style={{ height: "250px", overflowY: "scroll" }}
                     >
+
+                     
                       {demands.map((demand) => (
                         <Link to="#" className="iq-sub-card">
                           <div className="d-flex align-items-center">
@@ -329,7 +252,7 @@ const HeaderAgent = () => {
                             />
                             <div className="ms-3 w-100">
                               <h6 key={demand.id} className="mb-0 ">
-                                {demand.data}
+                                {`${demand.clientData.firstName} ${demand.clientData.lastName} send you a demand`}
                               </h6>
                               <div className="d-flex justify-content-between align-items-center">
                                 <small className="float-right font-size-12">
@@ -342,8 +265,8 @@ const HeaderAgent = () => {
                           </div>
                           {demand.status === "new" && (
                             <>
-                              <Button onClick={()=>rejectDemand(demand.id)}>Cancel</Button>{" "}
-                              <Button onClick={() => acceptDemand(demand.id)}>
+                              <Button onClick={()=>rejectDemand(demand._id)}>Cancel</Button>{" "}
+                              <Button onClick={() => acceptDemand(demand._id)}>
                                 Accept
                               </Button>
                             </>

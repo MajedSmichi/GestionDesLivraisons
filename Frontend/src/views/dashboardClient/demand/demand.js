@@ -19,12 +19,12 @@ const DemandClient = () => {
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     clientName:`${userData.firstName} ${userData.lastName}`,
-    data:`${userData.firstName} ${userData.lastName} send you a demand`,
+    data:"",
     receiver:user,
     agentName: "",
-    clientPhone: `${userData.phone}`,
+    clientPhone:"",
     agentPhone:"",
-    adress:`${userData.adresse}`,
+     adress:"",
     commandDescription: "",
     receiverAgent:""
   });
@@ -58,9 +58,18 @@ const DemandClient = () => {
       console.log(error);
     }
   };
+
+  useEffect(()=>{
+    console.log({userData})
+  },[userData])
+
+  const getAllData = async()=>{
+    await getAllAgent();
+    await getUserData();
+  }
   useEffect(() => {
-    getAllAgent();
-    getUserData();
+    getAllData()
+  
   }, []);
 
   const handleChange = (event) => {
@@ -73,6 +82,7 @@ const DemandClient = () => {
     const  {value}  = e.target;
     const receiverAgent=value.split(' ')[3];
     const agentName = value.split(' ')[0]+value.split(' ')[1]
+    console.log({agent: value})
     setFormData((prevData) => ({ ...prevData, agentName,receiverAgent,agentPhone:value.split(' ')[2]}));
     
   }
@@ -86,19 +96,18 @@ const DemandClient = () => {
       return
     }
     try {
-    
-     await axios.post(`${apiUrl}/users/createDemand`,{...formData},{
+     await axios.post(`${apiUrl}/users/createDemand`, 
+     {
+      clientData: userData._id,
+      agentData: formData.receiverAgent,
+      commandDescription: formData.commandDescription
+     },
+      {
         headers: {
           Authorization: token,
         },
       })
-      const Data=formData.clientName + " send a demand to " + formData.agentName
-      const reciverAdmin="0"
-      await axios.post(`${apiUrl}/users/createDemand`,{...formData,data:Data,receiver:reciverAdmin},{
-        headers: {
-          Authorization: token,
-        },
-      })
+      setFormData(prev=>({...prev,agentName:'', agentPhone:'',commandDescription:'', receiverAgent:''}))
       setShowQRCode(true);
     } catch (error) {
       console.error(error)
@@ -239,6 +248,7 @@ const DemandClient = () => {
                             name="commandDescription"
                             onChange={handleChange}
                             onFocus={() => setError("")}
+                            value={formData.commandDescription}
                           />
                           <br />
                           <br />

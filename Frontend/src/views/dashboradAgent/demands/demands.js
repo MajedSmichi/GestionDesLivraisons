@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Row, Col } from "react-bootstrap";
 import Card from "../../../components/Card";
@@ -7,28 +7,48 @@ import { apiUrl } from "../../../Constants";
 import axios from "axios";
 import QRCode from "qrcode.react";
 import "../../../style.css";
+import { agentContext } from "../../../App";
 
 const DemandAgent = () => {
   const [demands, setDemands] = useState([]);
   const [newdemands, setnewDemands] = useState([]);
+  const { agentData, setAgentData } = useContext(agentContext);
 
 
+  const getUserData = async () => {
+    console.log('enter here')
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}/users/getAgent`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setAgentData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   const getDemands = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${apiUrl}/users/getDemands`, {
         headers: { Authorization: token },
       });
-      setDemands(response.data);
+      const demansAgent = response.data.filter(demand=>demand.agentData._id === agentData._id)
+      setDemands(demansAgent);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    getDemands();
-   
-  }, []);
+
+  
+  useEffect(()=>{getUserData()},[])
+ 
+
+  useEffect(()=>{ getDemands()},[agentData])
 
   useEffect(() => {
     const isNewDem = demands.filter(
@@ -70,14 +90,16 @@ const DemandAgent = () => {
                         {newdemands.map((demand, index) => (
                           <tr key={index}>
                             <td style={{ width: "150px" }}>
-                              {demand.clientName}
+                              {`${demand.clientData.firstName} ${demand.clientData.lastName}`}
                             </td>
                             <td style={{ width: "150px" }}>
-                              {demand.clientPhone}
+                              {demand.clientData.phone}
                             </td>
-                            <td style={{ width: "150px" }}>{demand.adress}</td>
                             <td style={{ width: "150px" }}>
-                              {demand.agentName}
+                              {demand.clientData.adresse}
+                            </td>
+                            <td style={{ width: "150px" }}>
+                            {`${demand.agentData.firstName} ${demand.agentData.lastName}`}
                             </td>
                             <td className="fixed-width-td ">
                               {demand.commandDescription}

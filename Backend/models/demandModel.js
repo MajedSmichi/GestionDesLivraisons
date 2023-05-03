@@ -1,16 +1,14 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 const demandSchema = mongoose.Schema({
-  data: String,
-  receiver: { type: String, default: "0" },
-  receiverAgent: { type: String, default: "0" },
+  clientData : {type: Schema.Types.ObjectId, ref: 'client'},
+  agentData : {type:Schema.Types.ObjectId, ref : 'agent'},
   status: { type: String, default: "new" },
   createdAt: { type: Date, default: Date.now },
-  clientName: String,
-  clientPhone: Number,
-  clientAdress: String,
-  agentName: String,
-  agentPhone: Number,
-  adress:String,
+  statusClient: { type: String, default: "new" },
+  statusAdmin: { type: String, default: "new" },
   commandDescription: String,
+
+  
 });
 module.exports = mongoose.model("demand", demandSchema);

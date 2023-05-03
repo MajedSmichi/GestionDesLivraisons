@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import CustomToggle from "../../../components/dropdowns";
-import {MdNotifications} from "react-icons/md"
-import {MdEmail} from 'react-icons/md'
+import { MdNotifications } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
 //img
 
 import shapes1 from "../../../assets/images/shapes/01.png";
@@ -21,7 +21,7 @@ const HeaderCustomer = () => {
   };
   const { userData, setUserData } = useContext(customerContext);
   const [notifications, setNotifications] = useState([]);
-  const [demands,setDemands]=useState([]);
+  const [demands, setDemands] = useState([]);
   const [newNotifcation, setnewNotifcation] = useState(false);
   const [newDemands, setnewDemands] = useState([]);
   const navigate = useNavigate();
@@ -42,12 +42,9 @@ const HeaderCustomer = () => {
   const getNotifications = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${apiUrl}/users/getNotification`,
-        {
-          headers: { Authorization: token },
-        }
-      );
+      const response = await axios.get(`${apiUrl}/users/getNotification`, {
+        headers: { Authorization: token },
+      });
       setNotifications(response.data);
     } catch (error) {
       console.log(error);
@@ -60,7 +57,10 @@ const HeaderCustomer = () => {
       const response = await axios.get(`${apiUrl}/users/getDemands`, {
         headers: { Authorization: token },
       });
-      setDemands(response.data);
+      const demandsClient = response.data.filter(
+        (item) => item.clientData._id === userData._id
+      );
+      setDemands(demandsClient);
     } catch (error) {
       console.log(error);
     }
@@ -69,54 +69,56 @@ const HeaderCustomer = () => {
   useEffect(() => {
     getUserData();
     getNotifications();
-    getDemands();
   }, []);
 
   useEffect(() => {
-   const isNewNot = notifications.some(({status})=>status==="new");
-   setnewNotifcation(isNewNot);
+    getDemands();
+  }, [userData]);
+
+  useEffect(() => {
+    const isNewNot = notifications.some(({ status }) => status === "new");
+    setnewNotifcation(isNewNot);
   }, [notifications]);
 
   useEffect(() => {
-    const isNewDem = demands.some(({status})=>status==="new");
+    const isNewDem = demands.some(({ statusClient }) => statusClient === "new");
     setnewDemands(isNewDem);
-   }, [demands]);
+  }, [demands]);
 
- 
-
-  const updateNotifications = async() => {
+  const updateNotifications = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(`${apiUrl}/users/updateNotification`, null, {headers:{"Authorization": token}})
+      await axios.put(`${apiUrl}/users/updateNotification`, null, {
+        headers: { Authorization: token },
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   const changeNotesStatus = () => {
     updateNotifications();
-    setnewNotifcation(false)
-  }
+    setnewNotifcation(false);
+  };
 
-  const updateDemands = async() => {
-    
+  const updateDemands = async () => {
     try {
       const token = localStorage.getItem("token");
-      
       await axios.put(
         `${apiUrl}/users/updateDemands`,
-        { status: "ancien"},
+        { statusClient: "ancien" },
         {
           headers: { Authorization: token },
         }
       );
+      getDemands();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   const changeDemsStatus = () => {
     updateDemands();
-    setnewDemands(false)
-  }
+    setnewDemands(false);
+  };
 
   const handleLogoutClick = () => {
     localStorage.removeItem("token");
@@ -155,9 +157,13 @@ const HeaderCustomer = () => {
                   href="#"
                   variant=" nav-link"
                   id="notification-drop"
-                  >
-                    <MdNotifications size={25} color={newNotifcation? 'red':'blue'} onClick={changeNotesStatus}/>
-                  
+                >
+                  <MdNotifications
+                    size={25}
+                    color={newNotifcation ? "red" : "blue"}
+                    onClick={changeNotesStatus}
+                  />
+
                   <span className="bg-danger dots"></span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
@@ -208,7 +214,11 @@ const HeaderCustomer = () => {
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                 <MdEmail  size={25} color={newDemands? 'red':'blue'} onClick={changeDemsStatus}/>
+                  <MdEmail
+                    size={25}
+                    color={newDemands ? "red" : "blue"}
+                    onClick={changeDemsStatus}
+                  />
                   <span className="bg-primary count-mail"></span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
@@ -221,8 +231,12 @@ const HeaderCustomer = () => {
                         <h5 className="mb-0 text-white">All Demands</h5>
                       </div>
                     </div>
-                    <div className="p-0 card-body" style={{ height: '250px', overflowY: 'scroll'}}>
-                      {demands.map(demand => (
+                    <div
+                      className="p-0 card-body"
+                      style={{ height: "250px", overflowY: "scroll" }}
+                    >
+                     
+                      {demands.map((demand) => (
                         <Link to="#" className="iq-sub-card">
                           <div className="d-flex align-items-center">
                             <img
@@ -231,17 +245,42 @@ const HeaderCustomer = () => {
                               alt=""
                             />
                             <div className="ms-3 w-100">
-                              <h6 key={demand.id} className="mb-0 ">
-                                {demand.data}
-                              </h6>
-                              <div className="d-flex justify-content-between align-items-center">
+                              {demand.status === 'new'?( <h6 key={demand.id} className="mb-0 " style={{backgroundColor:"blue"}}>
+                                {`Your demand for ${demand.agentData.firstName} ${demand.agentData.lastName} is waiting`}
+                                <div className="d-flex justify-content-between align-items-center">
                                 <small className="float-right font-size-12">
-                                  {moment(demand.createdAt).format("DD/MM/YYYY")}
+                                  {moment(demand.createdAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
                                 </small>
                               </div>
+                              </h6>):demand.status === 'ancienAccepted'? (
+                                <h6 key={demand.id} className="mb-0 " style={{backgroundColor:"green"}}>
+                                {`${demand.agentData.firstName} ${demand.agentData.lastName} accept your demand`}
+                                <div className="d-flex justify-content-between align-items-center">
+                                <small className="float-right font-size-12">
+                                  {moment(demand.createdAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </small>
+                              </div>
+                              </h6>
+                              ):(
+                                <h6 key={demand.id} className="mb-0 " style={{backgroundColor:"red"}}>
+                                {`${demand.agentData.firstName} ${demand.agentData.lastName} reject your demand`}
+                                <div className="d-flex justify-content-between align-items-center">
+                                <small className="float-right font-size-12">
+                                  {moment(demand.createdAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </small>
+                              </div>
+                              </h6>
+                              )}
+                              
+                             
                             </div>
                           </div>
-                         
                         </Link>
                       ))}
                     </div>
@@ -285,7 +324,7 @@ const HeaderCustomer = () => {
                   <Dropdown.Item href="/dashboardCustomer/user-profileClient">
                     Profile
                   </Dropdown.Item>
-                  
+
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={handleLogoutClick}>
                     Logout

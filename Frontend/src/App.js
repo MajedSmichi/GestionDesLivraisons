@@ -25,6 +25,7 @@ function App() {
     adresse: "",
     photo: "",
     dateOfBirth: "",
+    
   });
 
   const [userData, setUserData] = useState({
@@ -37,6 +38,7 @@ function App() {
     photo: "",
     // joindate: new Date().toISOString()
     dateOfBirth: "",
+    _id: ''
   });
   const [agentData, setAgentData] = useState({
     firstName: "",
@@ -49,7 +51,8 @@ function App() {
     idCard: "",
     dateOfBirth: "",
     photo: "",
-    permissions:""
+    permissions:"",
+    _id: ''
   });
 
   const updateLocation = ()=>{

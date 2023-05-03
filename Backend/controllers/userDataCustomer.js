@@ -329,30 +329,37 @@ const changePassword = async (req, res) => {
 
 //create demand
 const createDemand = async (req, res) => {
-  const {
-    data,
-    receiver,
-    receiverAgent,
-    clientName,
-    agentName,
-    clientAdress,
-    clientPhone,
-    agentPhone,
-    commandDescription,
-    adress,
-  } = req.body;
+  // const {
+  //   data,
+  //   dataAgent,
+  //   dataAdmin,
+  //   receiver,
+  //   receiverAgent,
+  //   clientName,
+  //   agentName,
+  //   clientAdress,
+  //   clientPhone,
+  //   agentPhone,
+  //   commandDescription,
+  //   adress,
+  // } = req.body;
+
+  const {clientData, agentData, commandDescription} = req.body;
 
   try {
     const commande = {
-      data,
-      receiver,
-      receiverAgent,
-      clientName,
-      agentName,
-      clientAdress,
-      clientPhone,
-      agentPhone,
-      adress,
+      // data,
+      // dataAgent,
+      // dataAdmin,
+      // receiver,
+      // receiverAgent,
+      // clientName,
+      // agentName,
+      // clientAdress,
+      // clientPhone,
+      // agentPhone,
+      // adress,
+      clientData, agentData,
       commandDescription,
     };
 
@@ -367,66 +374,43 @@ const createDemand = async (req, res) => {
 //get demands
 
 const getDemands = async (req, res) => {
-  const { username } = req.user;
-  try {
-    const user =
-      (await client.findOne({ email: username })) ||
-      (await agent.findOne({ email: username })) ||
-      (await admin.findOne({ email: username }));
-    const data = await demand.find();
 
-    if (user.role === "0") {
-      const result = data.filter((note) => note.receiver === "0");
-      return res.status(200).json(result);
-    } else if (user.role === "2") {
-      const result = data.filter(
-        (note) =>
-          note.receiverAgent === user._id.toString() && note.receiver !== "0"
-      );
-      return res.status(200).json(result);
-    } else {
-      const result = data.filter(
-        (note) =>
-          note.receiver === user._id.toString() && note.receiverAgent === "0"
-      );
-      return res.status(200).json(result);
-    }
+  try {
+    const data = await demand.find().populate('clientData').populate('agentData');
+    return res.status(200).json(data);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
 
-
-
 const updateDemand = async (req, res) => {
-  const { status } = req.body;
-  const { username } = req.user;
-
   try {
-    const user =
-      (await client.findOne({ email: username })) ||
-      (await agent.findOne({ email: username })) ||
-      (await admin.findOne({ email: username }));
-    const dataToUpdate =
-      user.role === "0"
-        ? await demand.find({ receiver: "0" })
-        : await demand.find({
-            $or: [
-              { receiverAgent: user._id.toString() },
-              { receiver: user._id.toString() },
-            ],
-            receiver: { $ne: "0" },
-            status:"new"
-          });
+    const { id } = req.params;
+     await demand.findByIdAndUpdate({ _id: id },
+       { status: req.body.status ,
+        statusClient:"new"
+      })
+    return res
+      .status(200)
+      .json({ message: "Status demand changed successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
-    dataToUpdate.map(async (demands) => {
-      await demand.findByIdAndUpdate(
-        { _id: demands._id },
-        { status: status },
-        
-      );
-    });
+const updateDemandClientAndAdmin = async (req, res) => {
+  try {
+    if(req.body.statusClient) {
+
+      await demand.updateMany({statusClient: req.body.statusClient})
+    }
+
+    if(req.body.statusAdmin) {
+
+      await demand.updateMany({statusAdmin: req.body.statusAdmin})
+    }
 
     return res
       .status(200)
@@ -437,34 +421,33 @@ const updateDemand = async (req, res) => {
   }
 };
 
-const addFeedBack= async (req, res) => {
+const addFeedBack = async (req, res) => {
   try {
-    
-    const { data, clientName, agentName, rate ,receiverAgent,emailAgent} = req.body;
+    const { data, clientName, agentName, rate, receiverAgent, emailAgent } =
+      req.body;
 
-  
-      const feed = {
-        data,
-        rate,
-        receiverAgent,
-        clientName,
-        agentName,
-      };
-  
-      await feedBack.create(feed);
-      await notification.create({
-        data: `the client ${clientName} rate the agent ${agentName}`,
-        receiver: "0",
-      });
-      const subject="feedBack"
-      const text=`the client ${clientName} rate you in Delivery `
-      await feedBackEmail(emailAgent, subject, text);
-      
-    
-    res.status(201).json({message: "Feedback created successfully!" });
+    const feed = {
+      data,
+      rate,
+      receiverAgent,
+      clientName,
+      agentName,
+    };
+
+    await feedBack.create(feed);
+    await notification.create({
+      data: `the client ${clientName} rate the agent ${agentName}`,
+      receiver: "0",
+    });
+    const subject = "feedBack";
+    const text = `the client ${clientName} rate you in Delivery `;
+    await feedBackEmail(emailAgent, subject, text);
+
+    res.status(201).json({ message: "Feedback created successfully!" });
   } catch (error) {
-    
-    res.status(500).json({message: "Failed to create feedback", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to create feedback", error: error.message });
   }
 };
 
@@ -483,4 +466,5 @@ exports.updateNotification = updateNotification;
 exports.createDemand = createDemand;
 exports.getDemands = getDemands;
 exports.updateDemand = updateDemand;
-exports.addFeedBack=addFeedBack;
+exports.addFeedBack = addFeedBack;
+exports.updateDemandClientAndAdmin = updateDemandClientAndAdmin

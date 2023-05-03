@@ -224,7 +224,7 @@ const Index = (props) => {
                     </div>
                   </div>
                 </SwiperSlide>
-                <SwiperSlide className=" card card-slide" style={{ width: 370, height: 150 }}>
+                <SwiperSlide className=" card card-slide" style={{ width: 400, height: 150 }}>
                   <div className="card-body">
                     <div className="progress-widget">
                       <Circularprogressbar

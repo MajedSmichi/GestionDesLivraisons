@@ -27,6 +27,7 @@ const {
   getDemands,
   updateDemand,
   addFeedBack,
+  updateDemandClientAndAdmin,
 } = require("../controllers/userDataCustomer");
 
 const {
@@ -174,8 +175,12 @@ router.get("/getNotification",auth,getNotification);
 //update status notification
 router.put("/updateNotification",auth,updateNotification);
 
+//update statusClient and statusAdmin
+router.put("/updateDemands",auth,updateDemandClientAndAdmin);
+
+
 //update status notification
-router.put("/updateDemands",auth,updateDemand);
+router.put("/updateDemands/:id",auth,updateDemand);
 
 //get demands
 router.get("/getDemands",auth,getDemands)

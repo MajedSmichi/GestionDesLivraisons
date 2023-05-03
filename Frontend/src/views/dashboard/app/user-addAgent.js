@@ -101,12 +101,12 @@ const AddAgent = () => {
     <>
       <div>
         <Row>
-          <Col xl="9" lg="8">
+        <Col md={{ span: 8, offset: 2 }}>
             <Card>
               <Card.Header className="d-flex justify-content-between">
                 <div className="header-title">
-                  <h3 className="card-title">Add New User:</h3>
-                  <h4 className="card-title">New User Information:</h4>
+                  <h3 className="card-title">Add New Agent:</h3>
+                  <h4 className="card-title">New Agent Information:</h4>
                 </div>
               </Card.Header>
               <Card.Body>
@@ -318,7 +318,7 @@ const AddAgent = () => {
                       variant="btn btn-primary"
                       onClick={onRegister}
                     >
-                      Add New User
+                      Add New Agent
                     </Button>
                   </form>
                 </div>
