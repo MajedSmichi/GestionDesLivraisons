@@ -14,16 +14,15 @@ const UserList = () => {
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(false);
   const [userData, setUserData] = useState([]);
-
-
+  const [error, setError] = useState("");
 
   const getAllCustomersUser = async () => {
-    const token =localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(`${apiUrl}/users/AllCustomersUsers`,{
-        headers:{
-          Authorization: token
-        }
+      const response = await axios.get(`${apiUrl}/users/AllCustomersUsers`, {
+        headers: {
+          Authorization: token,
+        },
       });
       setUserData(response.data);
     } catch (error) {
@@ -35,12 +34,12 @@ const UserList = () => {
   }, []);
 
   const deleteuser = async (item) => {
-    const token =localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     try {
-      await axios.delete(`${apiUrl}/users/delete/${item._id}`,{
-        headers:{
-          Authorization: token
-        }
+      await axios.delete(`${apiUrl}/users/delete/${item._id}`, {
+        headers: {
+          Authorization: token,
+        },
       });
       getAllCustomersUser();
     } catch (error) {
@@ -49,15 +48,16 @@ const UserList = () => {
   };
   const updateuser = async (item, idx) => {
     setEditData(null);
-  const token =localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     try {
       setLoading(true);
       const response = await axios.put(
         `${apiUrl}/users/updateClient/${item._id}`,
-        item,{
-          headers:{
-            Authorization: token
-          }
+        item,
+        {
+          headers: {
+            Authorization: token,
+          },
         }
       );
       setUserData((prevState) => {
@@ -65,12 +65,12 @@ const UserList = () => {
         newData[idx] = response.data;
         return newData;
       });
-      getAllCustomersUser();
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      setError(e.response.data.error);
     } finally {
       setLoading(false);
     }
+    getAllCustomersUser();
   };
 
   return (
@@ -82,6 +82,10 @@ const UserList = () => {
               <Card.Header className="d-flex justify-content-between">
                 <div className="header-title">
                   <h4 className="card-title">User List</h4>
+                  <br></br>
+                  {error && (
+                    <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+                  )}
                 </div>
               </Card.Header>
               <Card.Body className="px-0">
@@ -106,16 +110,20 @@ const UserList = () => {
                     </thead>
                     <tbody>
                       {loading ? (
-                        <Rings
-                          height="80"
-                          width="100%"
-                          color="#4fa94d"
-                          radius="6"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                          visible={true}
-                          ariaLabel="rings-loading"
-                        />
+                        <tr key="loading">
+                          <td colSpan="8" className="text-center">
+                            <Rings
+                              height="80"
+                              width="100%"
+                              color="#4fa94d"
+                              radius="6"
+                              wrapperStyle={{}}
+                              wrapperClass=""
+                              visible={true}
+                              ariaLabel="rings-loading"
+                            />
+                          </td>
+                        </tr>
                       ) : (
                         userData.map((item, idx) => {
                           if (editData === idx) {
@@ -124,9 +132,7 @@ const UserList = () => {
                                 <td className="text-center grow">
                                   <Image
                                     className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                    src={
-                                      `${apiUrl}/` + item.photoUrl
-                                    }
+                                    src={`${apiUrl}/` + item.photoUrl}
                                     alt="profile"
                                   />
                                 </td>
@@ -180,6 +186,7 @@ const UserList = () => {
                                       userData[idx] = user;
                                       setUserData([...userData]);
                                     }}
+                                    onFocus={() => setError("")}
                                   />
                                 </td>
                                 <td>
@@ -195,7 +202,9 @@ const UserList = () => {
                                     }}
                                   />
                                 </td>
-                                <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
+                                <td>
+                                  {moment(item.joinDate).format("DD/MM/YYYY")}
+                                </td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <button
@@ -213,18 +222,22 @@ const UserList = () => {
                           return (
                             <tr key={idx}>
                               <td className="text-center grow">
-                              {  <Image
-                                  className="bg-soft-primary rounded img-fluid avatar-40 me-3"
-                                  src={`${apiUrl}/` + item.photoUrl}
-                                  alt="profile"
-                                />}
+                                {
+                                  <Image
+                                    className="bg-soft-primary rounded img-fluid avatar-40 me-3"
+                                    src={`${apiUrl}/` + item.photoUrl}
+                                    alt="profile"
+                                  />
+                                }
                               </td>
                               <td>{item.firstName}</td>
                               <td>{item.lastName}</td>
                               <td>{item.phone}</td>
                               <td>{item.email}</td>
                               <td>{item.adresse}</td>
-                              <td>{moment(item.joinDate).format('DD/MM/YYYY')}</td>
+                              <td>
+                                {moment(item.joinDate).format("DD/MM/YYYY")}
+                              </td>
                               <td>
                                 <div className="flex align-items-center list-user-action">
                                   <button

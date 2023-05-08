@@ -6,7 +6,7 @@ import { MdNotifications } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
 //img
 
-import shapes1 from "../../../assets/images/shapes/01.png";
+
 
 import avatars1 from "../../../assets/images/avatars/01.png";
 
@@ -277,13 +277,13 @@ const HeaderCustomer = () => {
                               </div>
                               </h6>
                               )}
-                              
-                             
+  
                             </div>
                           </div>
                         </Link>
                       ))}
                     </div>
+                    
                   </div>
                 </Dropdown.Menu>
               </Dropdown>

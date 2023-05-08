@@ -114,28 +114,24 @@ const update = async (req, res) => {
 
 //update user from dashbord admin
 const updateClient = async (req, res) => {
-  const { firstName, lastName, email, phone, whatsApp, adresse, dateOfBirth } =
+  const { firstName, lastName, email, phone, adresse } =
     req.body;
+
   const { id } = req.params;
   try {
     const user = await client.findById(id);
-    if (email !== user.email) {
-      const exist = await client.findOne({ email });
-      if (exist) return res.status(400).json({ error: "User already exist" });
+    if (req.body.email !== user.email) {
+      const exist = await client.findOne({ email:req.body.email });
+      if (exist) 
+      return res.status(400).json({ error: "User already exist" });
     }
-
     const newUser = {
       firstName,
       lastName,
       email,
       phone,
-      whatsApp,
       adresse,
-      dateOfBirth,
     };
-
-    if (req.locals?.filePath) newUser.photoUrl = req.locals.filePath;
-
     await client.findByIdAndUpdate(
       { _id: id },
       {
@@ -237,12 +233,12 @@ const getNotification = async (req, res) => {
       (await admin.findOne({ email: username }));
     const data = await notification.find();
     if (user.role === "0") {
-      const result = data.filter((note) => note.receiver === "0");
+      const result = data.filter((note) => note.receiver === "0").reverse();
       return res.status(200).json(result);
     } else {
       const result = data.filter(
         (note) => note.receiver === user._id.toString()
-      );
+      ).reverse();
       return res.status(200).json(result);
     }
   } catch (error) {
@@ -329,36 +325,12 @@ const changePassword = async (req, res) => {
 
 //create demand
 const createDemand = async (req, res) => {
-  // const {
-  //   data,
-  //   dataAgent,
-  //   dataAdmin,
-  //   receiver,
-  //   receiverAgent,
-  //   clientName,
-  //   agentName,
-  //   clientAdress,
-  //   clientPhone,
-  //   agentPhone,
-  //   commandDescription,
-  //   adress,
-  // } = req.body;
-
+  
   const {clientData, agentData, commandDescription} = req.body;
 
   try {
     const commande = {
-      // data,
-      // dataAgent,
-      // dataAdmin,
-      // receiver,
-      // receiverAgent,
-      // clientName,
-      // agentName,
-      // clientAdress,
-      // clientPhone,
-      // agentPhone,
-      // adress,
+
       clientData, agentData,
       commandDescription,
     };
@@ -376,7 +348,7 @@ const createDemand = async (req, res) => {
 const getDemands = async (req, res) => {
 
   try {
-    const data = await demand.find().populate('clientData').populate('agentData');
+    const data = (await demand.find().populate('clientData').populate('agentData')).reverse();
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

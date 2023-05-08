@@ -34,7 +34,6 @@ const Feedback = () => {
         },
       });
       setUserData(response.data);
-      feedbackData.clientName = userData.firstName + " " + userData.lastName;
     } catch (error) {
       console.log(error);
     }
@@ -52,6 +51,7 @@ const Feedback = () => {
       setError("enter your description");
       return;
     }
+    feedbackData.clientName = userData.firstName + " " + userData.lastName;
     try {
       await axios.post(
         `${apiUrl}/users/addFeedback`,
@@ -64,6 +64,7 @@ const Feedback = () => {
       );
       
       setSuccessMessage("feedbackcreated");
+      setFeedbackData(prev=>({...prev,rate:'', data:'',agentName:''}))
       setTimeout(() => {
         setSuccessMessage("");
       }, 2000);

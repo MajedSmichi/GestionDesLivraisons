@@ -106,7 +106,7 @@ const DemandAgent = () => {
                             </td>
                             <td>
                               <QRCode
-                                value={`clientName:${demand.clientName}\nclientPhone:${demand.clientPhone}\nClientAdress:${demand.adress}\nagentName:${demand.agentName}\ncommandDescription:${demand.commandDescription}`}
+                                value={`clientName:${demand.clientData.firstName} ${demand.clientData.lastName}\nclientPhone:${demand.clientData.phone}\nClientAdress:${demand.clientData.adresse}\nagentName:${demand.agentData.firstName} ${demand.agentData.lastName}\ncommandDescription:${demand.commandDescription}`}
                                 size={100}
                               />
                             </td>

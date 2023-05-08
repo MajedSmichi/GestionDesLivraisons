@@ -352,7 +352,7 @@ const VerticalNavAgent = () => {
               </svg>
             </i>
           </CustomToggle>
-          {agentData.permission === "Yes " ? (
+          {agentData.permission === "Yes" ? (
             <Accordion.Collapse eventKey="sidebar-maps">
               <ul className="sub-nav">
                 <li className="nav-item">

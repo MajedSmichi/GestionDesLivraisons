@@ -22,8 +22,6 @@ const DemandList = () => {
           Authorization: token,
         },
       });
-
-      console.log({ response });
       setUserData(response.data);
     } catch (error) {
       console.log(error);
@@ -70,12 +68,11 @@ const DemandList = () => {
                     <table className="table">
                       <thead>
                         <tr>
-                          <th>Agent Name</th> 
+                          <th>Agent Name</th>
                           <th> </th>
-                          <th>Command Description</th>{" "}
-                          <th> </th>
+                          <th>Command Description</th> <th> </th>
                           <th>QR Code</th>
-                           <th>State</th>
+                          <th>State</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -85,13 +82,13 @@ const DemandList = () => {
                               {`${demand.agentData.firstName} ${demand.agentData.lastName}`}
                             </td>
                             <td></td>
-                            <td style={{ width: "150px" ,textAlign:"center"}}>
+                            <td style={{ width: "150px", textAlign: "center" }}>
                               {`${demand.commandDescription}`}
                             </td>
                             <td></td>
                             <td>
                               <QRCode
-                                value={`clientName:${demand.clientName}\nclientPhone:${demand.clientPhone}\nClientAdress:${demand.adress}\nagentName:${demand.agentName}\ncommandDescription:${demand.commandDescription}`}
+                                value={`ClientName:${userData.firstName} ${userData.lastName}  \nClientPhone:${userData.phone}\nClientAdress:${userData.adresse}\nAgentName:${demand.agentData.firstName} ${demand.agentData.lastName}\nCommandDescription:${demand.commandDescription}`}
                                 size={100}
                               />
                             </td>

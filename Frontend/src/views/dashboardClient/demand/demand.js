@@ -9,41 +9,35 @@ import { apiUrl } from "../../../Constants";
 import axios from "axios";
 import { customerContext } from "../../../App";
 const token = localStorage.getItem("token");
-const user=localStorage.getItem("user");
 
 const DemandClient = () => {
-  const [showQRCode, setShowQRCode] = useState(false);
   
   const { userData, setUserData } = useContext(customerContext);
   const [agentData, setAgentData] = useState([]);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    clientName:`${userData.firstName} ${userData.lastName}`,
-    data:"",
-    receiver:user,
+    clientName: `${userData.firstName} ${userData.lastName}`,
     agentName: "",
-    clientPhone:"",
-    agentPhone:"",
-     adress:"",
+    clientPhone: `${userData.phone}`,
+    agentPhone: "",
+    adress: `${userData.adresse}`,
     commandDescription: "",
-    receiverAgent:""
+    receiverAgent: "",
   });
+  const [showQRCode, setShowQRCode] = useState(false);
 
   const getUserData = async () => {
     try {
-      
-      const response = await axios.get(`${apiUrl}/users/getCustomer`,{
-        headers:{
-          Authorization: token
-        }
+      const response = await axios.get(`${apiUrl}/users/getCustomer`, {
+        headers: {
+          Authorization: token,
+        },
       });
       setUserData(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-
- 
 
   const getAllAgent = async () => {
     const token = localStorage.getItem("token");
@@ -59,62 +53,68 @@ const DemandClient = () => {
     }
   };
 
-  useEffect(()=>{
-    console.log({userData})
-  },[userData])
-
-  const getAllData = async()=>{
+  const getAllData = async () => {
     await getAllAgent();
     await getUserData();
-  }
+  };
   useEffect(() => {
-    getAllData()
-  
+    getAllData();
   }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleChangeDataAgent = (e) => {
+    const { value } = e.target;
+    const receiverAgent = value.split(" ")[3];
+    const agentName = value.split(" ")[0] + value.split(" ")[1];
+    setFormData((prevData) => ({
+      ...prevData,
+      agentName,
+      receiverAgent,
+      agentPhone: value.split(" ")[2],
+    }));
     
   };
 
-  const handleChangeDataAgent=(e)=>{
-    const  {value}  = e.target;
-    const receiverAgent=value.split(' ')[3];
-    const agentName = value.split(' ')[0]+value.split(' ')[1]
-    console.log({agent: value})
-    setFormData((prevData) => ({ ...prevData, agentName,receiverAgent,agentPhone:value.split(' ')[2]}));
-    
-  }
-
-  const createDemand= async ()=> {
-    if(formData.agentPhone==="")
-    {setError('select an agent')
-    return}
-    if(formData.commandDescription===""){
-      setError('enter your command description')
-      return
+  const createDemand = async () => {
+    if (formData.agentPhone === "") {
+      setError("select an agent");
+      return;
+    }
+    if (formData.commandDescription === "") {
+      setError("enter your command description");
+      return;
     }
     try {
-     await axios.post(`${apiUrl}/users/createDemand`, 
-     {
-      clientData: userData._id,
-      agentData: formData.receiverAgent,
-      commandDescription: formData.commandDescription
-     },
-      {
-        headers: {
-          Authorization: token,
+      await axios.post(
+        `${apiUrl}/users/createDemand`,
+        {
+          clientData: userData._id,
+          agentData: formData.receiverAgent,
+          commandDescription: formData.commandDescription,
         },
-      })
-      setFormData(prev=>({...prev,agentName:'', agentPhone:'',commandDescription:'', receiverAgent:''}))
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setFormData((prev) => ({
+        ...prev,
+        agentName: "",
+        agentPhone: "",
+        commandDescription: "",
+        receiverAgent: "",
+      }));
       setShowQRCode(true);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
-  
   return (
     <>
       <Tab.Container defaultActiveKey="first">
@@ -162,7 +162,7 @@ const DemandClient = () => {
                             className="form-control"
                             name="clientName"
                             onChange={handleChange}
-                            value={userData.firstName +" "+ userData.lastName}
+                            value={userData.firstName + " " + userData.lastName}
                             disabled
                           />
                           <br />
@@ -176,7 +176,7 @@ const DemandClient = () => {
                             className="form-control"
                             name="clientPhone"
                             onChange={handleChange}
-                            value={userData.phone }
+                            value={userData.phone}
                             disabled
                           />
                           <br />
@@ -190,37 +190,33 @@ const DemandClient = () => {
                             className="form-control"
                             name="address"
                             onChange={handleChange}
-                            value={userData.adresse }
+                            value={userData.adresse}
                             disabled
                           />
                           <br />
-                          
+
                           <h5 className="label label-default">
                             Agent Full Name:
                           </h5>
-                            <select
-                              className="form-control"
-                              name="agentName"
-                              onChange={handleChangeDataAgent}
-                              onFocus={() => setError("")}
-                            >
-                             
-                              <option value="">--Select Agent --</option>
-                              {agentData.map((agent) => (
-                                <option
-                                  key={agent.id}
-                                  
-                                  value={`${agent.firstName} ${agent.lastName} ${agent.phone} ${agent._id}`}
-                                >                                    
-                                    {`${agent.firstName} ${agent.lastName}`} 
-                                    
-                                </option>
-                              ))}
-                            </select>
-                          
-                       
+                          <select
+                            className="form-control"
+                            name="agentName"
+                            onChange={handleChangeDataAgent}
+                            onFocus={() => setError("")}
+                          >
+                            <option value="">--Select Agent --</option>
+                            {agentData.map((agent) => (
+                              <option
+                                key={agent.id}
+                                value={`${agent.firstName} ${agent.lastName} ${agent.phone} ${agent._id}`}
+                              >
+                                {`${agent.firstName} ${agent.lastName}`}
+                              </option>
+                            ))}
+                          </select>
+
                           <br />
-                          
+
                           <h5>
                             <span className="label label-default">
                               Agent Phone:
@@ -233,10 +229,8 @@ const DemandClient = () => {
                             value={formData.agentPhone}
                             disabled
                             placeholder="select agent please"
-                          
                           />
                           <br />
-                       
 
                           <h5>
                             <span className="label label-default">
@@ -253,23 +247,22 @@ const DemandClient = () => {
                           <br />
                           <br />
                           {error && (
-                          <p style={{ color: "red", textAlign: "center" }}>
-                            {error}
-                          </p>
-                        )}
-                          <Button
-                            className=" btn-inner"
-                            onClick={createDemand}
-                          >
+                            <p style={{ color: "red", textAlign: "center" }}>
+                              {error}
+                            </p>
+                          )}
+                          <Button className=" btn-inner" onClick={createDemand}>
                             Qr code
                             <AiOutlineQrcode />
                           </Button>
                         </div>
                       </form>
-                       
                       {showQRCode && (
                         <div className="mt-3">
-                          <QRCode value={`clientName:${formData.clientName}\nclientPhone:${formData.clientPhone}\nClientAdress:${formData.adress}\nagentName:${formData.agentName}\ncommandDescription:${formData.commandDescription}`} size={100} />
+                          <QRCode
+                            value={`clientName:${formData.clientName}\nclientPhone:${formData.clientPhone}\nClientAdress:${formData.adress}\nAgentName:${formData.agentName}\nCommandDescription:${formData.commandDescription}`}
+                            size={100}
+                          />
                         </div>
                       )}
                     </div>

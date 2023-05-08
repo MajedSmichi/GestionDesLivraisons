@@ -8,7 +8,5 @@ const demandSchema = mongoose.Schema({
   statusClient: { type: String, default: "new" },
   statusAdmin: { type: String, default: "new" },
   commandDescription: String,
-
-  
 });
 module.exports = mongoose.model("demand", demandSchema);

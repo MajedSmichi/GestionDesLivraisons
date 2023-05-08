@@ -15,7 +15,7 @@ const UserListAgent = () => {
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(false);
   const [agentData, setAgentData] = useState([]);
-  
+  const [error, setError] = useState("");
 
   const getAllAgent = async () => {
     const token = localStorage.getItem("token");
@@ -63,19 +63,19 @@ const UserListAgent = () => {
         newData[idx] = response.data;
         return newData;
       });
-      getAllAgent();
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      setError(e.response.data.error);
     } finally {
       setLoading(false);
     }
+    getAllAgent();
   };
   const updatePermission = async (item, idx) => {
     const updatedPermission = agentData[idx].permission === "No" ? "Yes" : "No";
     const token = localStorage.getItem("token");
     try {
       setLoading(true);
-      const response = await axios.put(
+      await axios.put(
         `${apiUrl}/users/updatePermission/${item._id}`,
         { permission: updatedPermission, email: agentData[idx].email },
         {
@@ -85,15 +85,13 @@ const UserListAgent = () => {
         }
       );
 
-      getAllAgent()
-      
+      getAllAgent();
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     getAllAgent();
@@ -108,6 +106,9 @@ const UserListAgent = () => {
               <Card.Header className="d-flex justify-content-between">
                 <div className="header-title">
                   <h4 className="card-title">User List</h4>
+                  {error && (
+                    <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+                  )}
                 </div>
               </Card.Header>
               <Card.Body className="px-0">
@@ -210,6 +211,7 @@ const UserListAgent = () => {
                                       agentData[idx] = user;
                                       setAgentData([...agentData]);
                                     }}
+                                    onFocus={() => setError("")}
                                   />
                                 </td>
                                 <td>

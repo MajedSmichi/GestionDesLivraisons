@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 
-import { Link } from "react-router-dom";
 // img
 import { AiOutlineEdit } from "react-icons/ai";
 import { FiSave } from "react-icons/fi";
@@ -22,6 +21,7 @@ const UserProfileClient = () => {
   });
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
+  
   const getUserData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -31,7 +31,7 @@ const UserProfileClient = () => {
         }
       });
     
-      console.log({response})
+    
       setUserData(response.data);
     } catch (error) {
       console.log(error);
@@ -58,7 +58,6 @@ const UserProfileClient = () => {
       }
       body.append("adresse", userData.adresse);
       body.append("dateOfBirth", userData.dateOfBirth);
-
       await axios.put(`${apiUrl}/users/update`, body,{
         headers:{
           Authorization: token
@@ -113,9 +112,6 @@ const UserProfileClient = () => {
                     id="profile-pills-tab"
                     role="tablist"
                   >
-                    {/* <Nav.Item as="li">
-                      <Nav.Link eventKey="first">Activity</Nav.Link>
-                    </Nav.Item> */}
                     <Nav.Item as="li">
                       <Nav.Link eventKey="second">Profile</Nav.Link>
                     </Nav.Item>
@@ -126,106 +122,6 @@ const UserProfileClient = () => {
           </Col>
           <Col md={{ span: 8, offset: 2 }}>
             <Tab.Content className="profile-content">
-              {/* <Tab.Pane eventKey="first" id="profile-activity">
-                <Card>
-                  <Card.Header className="d-flex justify-content-between">
-                    <div className="header-title">
-                      <h4 className="card-title">Activity</h4>
-                    </div>
-                  </Card.Header>
-                  <Card.Body>
-                    <div className="iq-timeline0 m-0 d-flex align-items-center justify-content-between position-relative">
-                      <ul className="list-inline p-0 m-0">
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-primary p-primary"></div>
-                          <h6 className="float-left mb-1">Client Login</h6>
-                          <small className="float-right mt-1">
-                            24 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-success p-success"></div>
-                          <h6 className="float-left mb-1">
-                            Scheduled Maintenance
-                          </h6>
-                          <small className="float-right mt-1">
-                            23 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-danger p-danger"></div>
-                          <h6 className="float-left mb-1">Dev Meetup</h6>
-                          <small className="float-right mt-1">
-                            20 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans{" "}
-                              <Link to="#">gummi bears</Link>gummi bears jelly
-                              lollipop apple
-                            </p>
-                            <div className="iq-media-group iq-media-group-1">
-                              <Link to="#" className="iq-media-1">
-                                <div className="icon iq-icon-box-3 rounded-pill">
-                                  SP
-                                </div>
-                              </Link>
-                              <Link to="#" className="iq-media-1">
-                                <div className="icon iq-icon-box-3 rounded-pill">
-                                  PP
-                                </div>
-                              </Link>
-                              <Link to="#" className="iq-media-1">
-                                <div className="icon iq-icon-box-3 rounded-pill">
-                                  MM
-                                </div>
-                              </Link>
-                            </div>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-primary p-primary"></div>
-                          <h6 className="float-left mb-1">Client Call</h6>
-                          <small className="float-right mt-1">
-                            19 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-dots timeline-dot1 border-warning p-warning"></div>
-                          <h6 className="float-left mb-1">Mega event</h6>
-                          <small className="float-right mt-1">
-                            15 November 2019
-                          </small>
-                          <div className="d-inline-block w-100">
-                            <p>
-                              Bonbon macaroon jelly beans gummi bears jelly
-                              lollipop apple
-                            </p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Tab.Pane> */}
               <Tab.Pane eventKey="second" id="profile-profile">
                 <Card>
                   <Card.Header>
@@ -258,11 +154,7 @@ const UserProfileClient = () => {
                           {" "}
                           - Delivery Client
                         </p>
-                        <p className="mb-0">
-                          Lorem Ipsum is simply dummy p of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy p ever since the 1500s
-                        </p>
+                   
                       </div>
                     </div>
                   </Card.Body>
@@ -431,6 +323,7 @@ const UserProfileClient = () => {
                                   whatsApp: e.target.value,
                                 })
                               }
+                              
                             />
                             <br />
                             <h5>
@@ -474,6 +367,7 @@ const UserProfileClient = () => {
                               Save
                               <FiSave />
                             </Button>
+                            
                           </div>
                         </form>
                       )}

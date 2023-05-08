@@ -3,7 +3,6 @@ import moment from 'moment';
 import { Row, Col, Image, Nav, Tab, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 
-import { Link } from "react-router-dom";
 // img
 import { AiOutlineEdit } from "react-icons/ai";
 import { FiSave } from "react-icons/fi";
@@ -502,10 +501,10 @@ const UserProfileAgent = () => {
                               min="1960-01-01"
                               max="2010-12-31"
                               className="form-control"
-                              //value={agentContext.dateOfBirth}
+                              
                               value={agentData.dateOfBirth}
                               onChange={(e) =>
-                                {console.log({type:typeof e.target.value})
+                                {
                                 setAgentData({
                                   ...agentData,
                                   dateOfBirth: e.target.value,
