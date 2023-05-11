@@ -48,9 +48,8 @@ const AddAgent = () => {
       data.whatsApp === "" ||
       data.dateOfBirth === "" ||
       data.idCard===""||
-      data.vehicule===""
-      
-      
+      data.vehicule==="",
+      data.photo === ""
     ) {
       setError("Please enter your data!");
       return;
@@ -73,9 +72,7 @@ const AddAgent = () => {
       body.append("email", data.email);
       body.append("phone", data.phone);
       body.append("whatsApp", data.whatsApp);
-      if (data.photo?.name) {
-        body.append("photo", data.photo, data.photo.name);
-      }
+      body.append("photo", data.photo, data.photo.name); 
       body.append("adresse", data.adresse);
       body.append("password",data.password);
       body.append("dateOfBirth", data.dateOfBirth);

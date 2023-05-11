@@ -65,8 +65,7 @@ router.get("/getCustomer", auth, getuser);
 
 router.get("/AllCustomersUsers",auth, getAllCustomersUsers);
 
-//addCustomer
-router.post("/addCustomer", upload.single("photo"), addCustomer);
+
 
 //update Customer route
 router.put("/update", auth, upload.single("photo"), update);
@@ -86,8 +85,7 @@ router.post("/addFeedback",auth,addFeedBack);
 
 /********************************************Agent route **************************************************************************/
 
-//add agent route
-router.post("/addAgent",authAdmin, uploadd.single("photo"), addAgent);
+
 
 //get agent
 router.get("/getAgent",authAgent, getAgent);
@@ -136,7 +134,11 @@ router.post("/recover", recoverPassword);
 //adminlogin route
 router.post("/adminLog", AdminLog);
 
+//add agent route
+router.post("/addAgent",authAdmin, upload.single("photo"), addAgent);
 
+//addCustomer
+router.post("/addCustomer",authAdmin, upload.single("photo"), addCustomer);
 
 //delete customer route
 router.delete("/delete/:id", authAdmin, deleteuser);

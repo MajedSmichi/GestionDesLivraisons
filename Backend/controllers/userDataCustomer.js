@@ -184,6 +184,7 @@ const addCustomer = async (req, res) => {
       role,
       photoUrl: req.locals.filePath,
     };
+    console.log(user)
     await client.create(user);
     return res.status(201).json({ message: "user create" });
   } catch (e) {

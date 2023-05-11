@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect} from "react";
 import { Row, Col, Card } from "react-bootstrap";
-import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation } from "swiper";
 import { bindActionCreators } from "redux";
 
@@ -8,16 +7,11 @@ import { bindActionCreators } from "redux";
 import AOS from "aos";
 import "../../../node_modules/aos/dist/aos";
 import "../../../node_modules/aos/dist/aos.css";
-//apexcharts
-import Chart from "react-apexcharts";
-import CountUp from "react-countup";
 // Import Swiper styles
 import "swiper/swiper-bundle.min.css";
 import "swiper/components/navigation/navigation.scss";
 import { CgProfile } from "react-icons/cg";
 import {SiGooglemaps} from "react-icons/si"
-import {CiDeliveryTruck} from "react-icons/ci"
-import {ImManWoman} from "react-icons/im"
 import {VscFeedback} from "react-icons/vsc"
 import {AiFillCalendar} from "react-icons/ai"
 
@@ -43,8 +37,8 @@ import {
 import { connect } from "react-redux";
 import axios from "axios";
 import { apiUrl } from "../../Constants";
-import Circularprogressbar from "../../components/circularprogressbar";
 import { Link } from "react-router-dom";
+import { agentContext } from "../../App";
 
 // install Swiper modules
 SwiperCore.use([Navigation]);
@@ -92,7 +86,24 @@ const IndexAgent = (props) => {
   });
 
 
-  //chart2
+  const { agentData, setAgentData } = useContext(agentContext);
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}/users/getAgent`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setAgentData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getUserData();
+    console.log(agentData.permission);
+  }, []);
 
 
   return (
@@ -119,6 +130,7 @@ const IndexAgent = (props) => {
                 </Card>
               </Link>
             </Col>
+            {agentData.permission === "Yes" ?(
             <Col>
               <Link to="mapAgent">
                 <Card
@@ -136,7 +148,26 @@ const IndexAgent = (props) => {
                   Maps
                 </Card>
               </Link>
-            </Col>
+            </Col>):(
+               <Col>
+               <Link to="">
+                 <Card
+                   style={{
+                     backgroundColor: "#b6e1e0",
+                     display: "flex",
+                     alignItems: "center",
+                     justifyContent: "center",
+                     cursor: "pointer",
+                     boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px",
+                     height:"150px"
+                   }}
+                 >
+                   <SiGooglemaps size={35} style={{ marginRight: "10px" }} />
+                   Maps
+                 </Card>
+               </Link>
+             </Col>
+            )}
           </Row>
         </Col>
         <Col md={{ span: 8, offset: 2 }}>
@@ -181,6 +212,7 @@ const IndexAgent = (props) => {
         </Col>
         <Col md={{ span: 8, offset: 2 }}>
           <Row>
+          {agentData.permission === "Yes" ?(
           <Col>
               <Link to="demandAgent">
                 <Card
@@ -198,7 +230,24 @@ const IndexAgent = (props) => {
                   Demand
                 </Card>
               </Link>
-            </Col>
+            </Col>):( <Col>
+              <Link to="">
+                <Card
+                  style={{
+                    backgroundColor: "#b6e1e0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px",
+                    height:"150px"
+                  }}
+                >
+                  <AiFillCalendar size={35} style={{ marginRight: "10px" }} />
+                  Demand
+                </Card>
+              </Link>
+            </Col>)}
           </Row>
         </Col>
       </Row>

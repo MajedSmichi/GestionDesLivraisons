@@ -14,7 +14,7 @@ const agentSchema = mongoose.Schema({
   longitude: { type: String },
   role: { type: String, required: true },
   joinDate: { type: Date, default: Date.now },
-  photoUrl: String,
+  photoUrl: {type:String,required:false},
   cardPhoto1: String,
   cardPhoto2: String,
   latitude:{type:String},

@@ -230,7 +230,7 @@ const Header = () => {
                             />
                             <div className="ms-3 w-100">
                               {demand.status === 'new'?( <h6 key={demand.id} className="mb-0 " style={{backgroundColor:"blue"}}>
-                                {`${demand.clientData.firstName} ${demand.clientData.lastName} send you a demand to ${demand.agentData.firstName} ${demand.agentData.lastName}`}
+                                {`${demand.clientData.firstName} ${demand.clientData.lastName} send a demand to ${demand.agentData.firstName} ${demand.agentData.lastName}`}
                                 <div className="d-flex justify-content-between align-items-center">
                                 <small className="float-right font-size-12">
                                   {moment(demand.createdAt).format(

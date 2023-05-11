@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { Row, Col, Card } from "react-bootstrap";
-import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation } from "swiper";
 import { bindActionCreators } from "redux";
 
@@ -8,16 +7,12 @@ import { bindActionCreators } from "redux";
 import AOS from "aos";
 import "../../../node_modules/aos/dist/aos";
 import "../../../node_modules/aos/dist/aos.css";
-//apexcharts
-import Chart from "react-apexcharts";
-import CountUp from "react-countup";
+
 // Import Swiper styles
 import "swiper/swiper-bundle.min.css";
 import "swiper/components/navigation/navigation.scss";
 import { CgProfile } from "react-icons/cg";
 import {SiGooglemaps} from "react-icons/si"
-import {CiDeliveryTruck} from "react-icons/ci"
-import {ImManWoman} from "react-icons/im"
 import {VscFeedback} from "react-icons/vsc"
 import {AiFillCalendar} from "react-icons/ai"
 
@@ -41,9 +36,6 @@ import {
   getSidebarTypeMode,
 } from "../../store/setting/setting";
 import { connect } from "react-redux";
-import axios from "axios";
-import { apiUrl } from "../../Constants";
-import Circularprogressbar from "../../components/circularprogressbar";
 import { Link } from "react-router-dom";
 
 // install Swiper modules
@@ -102,7 +94,7 @@ const IndexCustomer = (props) => {
         <Col md={{ span: 8, offset: 2 }}>
           <Row>
             <Col>
-              <Link to="profileClient">
+              <Link to="user-profileClient">
                 <Card
                   style={{
                     backgroundColor: "#b6e1e0",

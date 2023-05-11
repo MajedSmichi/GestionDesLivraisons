@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import validateEmail from "../../../components/helpers";
 import axios from "axios";
 import { apiUrl } from "../../../Constants";
-
+const token = localStorage.getItem('token')
 const UserAdd = () => {
   const Navigate = useNavigate();
   const [data, setData] = useState({
@@ -29,7 +29,7 @@ const UserAdd = () => {
   const server = `${apiUrl}/users/addCustomer`
   const onRegister = async (e) => {
     e.preventDefault();
-    console.log(data);
+    
 
     if (
       data.email === "" ||
@@ -71,14 +71,19 @@ const UserAdd = () => {
       body.append("password",data.password);
       body.append("role",role);
       
-      await axios.post(server, body);
+      await axios.post(server, body,{
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(data)
       setSuccessMessage("User created");
       setTimeout(() => {
         Navigate("/dashboard/user-list");
       }, 2000);
     } catch (e) {
       console.log(e)
-      setError(e.response);
+      setError(e.response.data.error);
       
     }
   };
@@ -86,7 +91,7 @@ const UserAdd = () => {
     <>
       <div>
         <Row>
-          <Col xl="9" lg="8">
+        <Col md={{ span: 8, offset: 2 }}>
             <Card>
               <Card.Header className="d-flex justify-content-between">
                 <div className="header-title">

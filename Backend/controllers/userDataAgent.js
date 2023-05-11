@@ -141,10 +141,9 @@ const addAgent = async (req, res) => {
       vehicule,
       idCard,
       dateOfBirth,
+      photoUrl:req.locals.filePath
     };
-    if (req.locals?.filePath) user.photoUrl = req.locals.filePath;
-    if (req.locals?.filePath) user.cardPhoto1 = req.locals.filePath;
-    if (req.locals?.filePath) user.cardPhoto2 = req.locals.filePath;
+    console.log(user)
     await agent.create(user);
     return res.status(201).json({ message: "user create" });
   } catch (e) {
